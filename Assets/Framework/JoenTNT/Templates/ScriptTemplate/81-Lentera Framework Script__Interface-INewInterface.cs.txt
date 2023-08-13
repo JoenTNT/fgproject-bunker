@@ -1,0 +1,10 @@
+namespace ProjectName
+{
+    public interface #SCRIPTNAME#
+    {
+        public interface Data
+        {
+
+        }
+    }
+}

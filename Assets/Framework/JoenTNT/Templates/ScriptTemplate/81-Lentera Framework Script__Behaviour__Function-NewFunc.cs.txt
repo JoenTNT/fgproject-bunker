@@ -1,0 +1,34 @@
+using LenteraFramework.SOA;
+using LenteraFramework.SOA.Behaviour;
+using LenteraFramework.SOA.Variables;
+
+namespace ProjectName.Behaviour.Function
+{
+    // Change Variable with specific type
+    public class #SCRIPTNAME# : FunctionBehaviour<Variable>
+    {
+        #region FunctionBehaviour
+
+        public override void Execute(BehaviourData data)
+        {
+            Data newData = (Data)data;
+
+            // Do something with newData
+        }
+
+        #endregion
+
+        #region class
+
+        public class Data : BehaviourData
+        {
+            #region BehaviourData
+
+            // Override OnInit method manually here
+
+            #endregion
+        }
+
+        #endregion
+    }
+}

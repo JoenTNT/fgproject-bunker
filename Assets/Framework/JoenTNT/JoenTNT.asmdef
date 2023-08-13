@@ -1,0 +1,16 @@
+{
+    "name": "JoenTNT",
+    "rootNamespace": "",
+    "references": [
+        "GUID:5c6320c96f327264798aed428d2828e2"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

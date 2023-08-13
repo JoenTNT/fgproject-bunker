@@ -1,0 +1,27 @@
+using LenteraFramework.SOA;
+using LenteraFramework.SOA.Flow;
+
+namespace ProjectName.FSM.State
+{
+    public class #SCRIPTNAME# : StateBase
+    {
+        #region StateBase
+
+        // Override everything you need
+
+        #endregion
+
+        #region class
+
+        public class Data : BehaviourData
+        {
+            #region BehaviourData
+
+            // Override OnInit method manually here
+
+            #endregion
+        }
+
+        #endregion
+    }
+}

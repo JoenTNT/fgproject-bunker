@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2eb9b9b11f05b64892f0c4707a4b05d, type: 3}
+  m_Name: Conversation 1
+  m_EditorClassIdentifier: 
+  _sentences:
+  - _characterProfile: {fileID: 21300000, guid: 2e38d20a46a96514a9fc2b6b53679503, type: 3}
+    _characterName: Ibnu
+    _text: Ada apa?
+    _soundType: 0
+    _voiceID: Boy Talk Sound
+  - _characterProfile: {fileID: 21300000, guid: 2e38d20a46a96514a9fc2b6b53679503, type: 3}
+    _characterName: Udin
+    _text: Aneh, tekanan udara diruangan ini berbeda dan atmosfernya terasa lain.
+      Sepertinya memang cuma karena tidak pernah dibuka, aku akan mengecek ke dalam
+      sebentar!
+    _soundType: 0
+    _voiceID: Girl Talk Sound
+  - _characterProfile: {fileID: 21300000, guid: 2e38d20a46a96514a9fc2b6b53679503, type: 3}
+    _characterName: Ibnu
+    _text: Tembok di dalam sana retak! Sepertinya terjadi kebocoran!
+    _soundType: 0
+    _voiceID: Boy Talk Sound
+  - _characterProfile: {fileID: 21300000, guid: 2e38d20a46a96514a9fc2b6b53679503, type: 3}
+    _characterName: Canda
+    _text: Sepertinya itulah yang membuat rekan kita yang lain sakit setelah dari
+      sini!
+    _soundType: 0
+    _voiceID: Girl Talk Sound
+  - _characterProfile: {fileID: 21300000, guid: 2e38d20a46a96514a9fc2b6b53679503, type: 3}
+    _characterName: Udin
+    _text: Apa ada yang salah? Ah sial, aku merasa sedikit pusing.
+    _soundType: 0
+    _voiceID: Boy Talk Sound

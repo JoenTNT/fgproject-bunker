@@ -1,0 +1,32 @@
+using LenteraFramework.SOA;
+using LenteraFramework.SOA.Behaviour;
+
+namespace ProjectName.Behaviour.Action
+{
+    public class #SCRIPTNAME# : ActionBehaviour
+    {
+        #region ActionBehaviour
+
+        public override void Execute(BehaviourData data)
+        {
+            Data newData = (Data)data;
+
+            // Do something with newData
+        }
+
+        #endregion
+
+        #region class
+
+        public class Data : BehaviourData
+        {
+            #region BehaviourData
+
+            // Override OnInit method manually here
+
+            #endregion
+        }
+
+        #endregion
+    }
+}

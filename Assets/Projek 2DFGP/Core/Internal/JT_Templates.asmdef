@@ -1,0 +1,16 @@
+{
+    "name": "JT.Templates",
+    "rootNamespace": "",
+    "references": [
+        "GUID:107d1971f97d5874aa69a80f0a1d9535"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
