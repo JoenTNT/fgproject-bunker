@@ -36,6 +36,9 @@ namespace JT.FGP
 
         private void Awake()
         {
+            // Assign weapon ownership on awake.
+            if (_data.Weapon != null) _data.Weapon = _data.Weapon;
+
             // Subscribe events
             _onActionCommandBegin.AddListener(ListenOnActionCommandBegin);
             _onActionCommandEnded.AddListener(ListenOnActionCommandEnded);
@@ -148,7 +151,16 @@ namespace JT.FGP
         /// <summary>
         /// Weapon on player's hand.
         /// </summary>
-        public IWeaponActionState Weapon => _weaponOnHand;
+        public WeaponActionState Weapon
+        {
+            get => _weaponOnHand;
+            set
+            {
+                // Set weapon ownership.
+                _weaponOnHand.Owner = _entityID;
+                _weaponOnHand = value;
+            }
+        }
 
         #endregion
     }

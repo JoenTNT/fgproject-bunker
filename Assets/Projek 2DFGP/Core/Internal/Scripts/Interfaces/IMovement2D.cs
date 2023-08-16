@@ -8,9 +8,18 @@ namespace JT.FGP
     public interface IMovement2D
     {
         /// <summary>
+        /// Move direction.
+        /// </summary>
+        Vector2 Direction { get; set; }
+
+        /// <summary>
+        /// Speed of movement.
+        /// </summary>
+        float Speed { get; set; }
+
+        /// <summary>
         /// Move method, run this in update.
         /// </summary>
-        /// <param name="dir">Move direction</param>
-        void Move(Vector2 dir);
+        void Move();
     }
 }

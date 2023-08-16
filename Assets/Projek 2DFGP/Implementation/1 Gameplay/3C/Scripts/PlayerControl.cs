@@ -31,7 +31,6 @@ namespace JT.FGP
         private GameEventTransform _setFollowTargetCallback = null;
 
         // Temporary variable data.
-        private Vector2 _moveDir = Vector2.zero;
         private float _tempBeforeROM = 0f;
         private bool _isLookingAround = false;
 
@@ -69,7 +68,7 @@ namespace JT.FGP
             //Debug.Log($"On Update: {_moveDir}");
 #endif
             // Handle movement
-            _data.MoveFunc.Move(_moveDir);
+            _data.MoveFunc.Move();
 
             // Delaye rotate on move.
             if (_tempBeforeROM > 0f)
@@ -85,8 +84,8 @@ namespace JT.FGP
             // TEMPORARY: Ignore Look Rotation at Zero Move Direction
             // TODO: Fix to Remove this Issue.
             // Check if currently not looking around action.
-            if (!_isLookingAround && _moveDir != Vector2.zero)
-                _data.LookFunc.LookAtDirection(_moveDir);
+            if (!_isLookingAround && _data.MoveFunc.Direction != Vector2.zero)
+                _data.LookFunc.LookAtDirection(_data.MoveFunc.Direction);
         }
 
         #endregion
@@ -100,7 +99,7 @@ namespace JT.FGP
 #endif
             if (_data.ID != id) return;
 
-            _moveDir = moveDir;
+            _data.MoveFunc.Direction = moveDir;
 #if UNITY_EDITOR
             //Debug.Log($"Assign Move Direction: {_moveDir}");
 #endif

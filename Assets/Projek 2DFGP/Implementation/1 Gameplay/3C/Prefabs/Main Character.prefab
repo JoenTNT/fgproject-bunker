@@ -244,7 +244,10 @@ MonoBehaviour:
   _data:
     _entityID: {fileID: 921480180229159078}
     _areaOfInteraction: {fileID: 0}
+    _weaponOnHand: {fileID: 0}
   _openInteractionCommandCallback: {fileID: 11400000, guid: 6b57be073a649e44db97deb1d6ef6782, type: 2}
+  _onActionCommandBegin: {fileID: 0}
+  _onActionCommandEnded: {fileID: 0}
 --- !u!114 &921480180229159077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -263,6 +266,7 @@ MonoBehaviour:
     _moveFunc: {fileID: 921480180229159079}
     _lookFunc: {fileID: 1133706591754004808}
     _focusPoint: {fileID: 1724469133862935259}
+    secondsBeforeRotateOnMove: 3
   _onMoveInput: {fileID: 11400000, guid: ff01d6ddcc4f8654e95993543dcdc0ba, type: 2}
   _onLookPositionInput: {fileID: 11400000, guid: 091ded19bb6b9ee45a113e3fe158498a, type: 2}
   _onLookDirectionInput: {fileID: 11400000, guid: ca76377e15483e94783fa2a919dc365a, type: 2}
@@ -281,6 +285,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 5
+  _useRigidbody: 0
+  _rigidbody2D: {fileID: 921480180229159072}
 --- !u!114 &1133706591754004808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -294,6 +300,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pivotRotation: {fileID: 921480180229159083}
+  _lookMode: 0
+  _damping: 1
 --- !u!1 &4539745702521593104
 GameObject:
   m_ObjectHideFlags: 0

@@ -23,6 +23,11 @@ namespace JT.FGP
         /// </summary>
         public IWeaponActionState WeaponState => _weaponState;
 
+        /// <summary>
+        /// Weapon holder ID if exists.
+        /// </summary>
+        public string HolderID => _weaponState.Owner?.ID;
+
         #endregion
     }
 }
