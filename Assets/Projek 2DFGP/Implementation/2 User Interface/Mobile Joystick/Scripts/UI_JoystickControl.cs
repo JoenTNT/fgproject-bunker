@@ -66,6 +66,9 @@ namespace JT.FGP
             if (_data.OnJoystickDownSend) SendInputCallback();
             //SendInputCallback();
             //_data.InnerJoystick.OnPointerDown(eventData);
+
+            // Set joystick pressed status.
+            _data.IsJoystickPressed = true;
         }
 
         #endregion
@@ -86,6 +89,9 @@ namespace JT.FGP
             _data.JoystickDirection = Vector2.zero;
 
             //_data.InnerJoystick.OnPointerUp(eventData);
+
+            // Set joystick pressed status.
+            _data.IsJoystickPressed = false;
         }
 
         #endregion
@@ -145,18 +151,18 @@ namespace JT.FGP
     {
         #region Variable
 
+        [Header("Requirements")]
         [SerializeField]
         private string _targetID = null;
 
         [SerializeField]
         private RectTransform _joystickHandle = null;
 
-        [SerializeField]
-        [Min(0)]
+        [Header("Properties")]
+        [SerializeField, Min(0)]
         private float _maxHandleLength = 100f;
 
-        [SerializeField]
-        [Min(0)]
+        [SerializeField, Min(0)]
         private float _deadZoneLength = 0.1f;
 
         [SerializeField]
@@ -172,6 +178,7 @@ namespace JT.FGP
         private Vector2 _joystickDirection = Vector2.zero;
         private float _joystickMagnitude = 0f;
         private float _magnitudePercentage = 0f;
+        private bool _isJoystickPressed = false;
 
         #endregion
 
@@ -230,6 +237,15 @@ namespace JT.FGP
         {
             get => _magnitudePercentage;
             internal set => _magnitudePercentage = value;
+        }
+
+        /// <summary>
+        /// The state when joystick is currently being pressed.
+        /// </summary>
+        public bool IsJoystickPressed
+        {
+            get => _isJoystickPressed;
+            internal set => _isJoystickPressed = value;
         }
 
         #endregion

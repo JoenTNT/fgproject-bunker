@@ -9,35 +9,29 @@ namespace JT.FGP
     {
         #region Variables
 
-        [Header("Optional")]
-        [SerializeField]
-        private EntityID _owner = null;
-
         // Runtime variable data.
+        private string _ownerOnState = null;
         private bool _isInAction = false;
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Weapon belongs to.
-        /// </summary>
-        public EntityID Owner
-        {
-            get => _owner;
-            set => _owner = value;
-        }
 
         #endregion
 
         #region IWeaponState
 
+        public event System.Action OnInstantUse;
+
         public bool IsInAction => _isInAction;
+
+        public string OwnerOfState
+        {
+            get => _ownerOnState;
+            set => _ownerOnState = value;
+        }
 
         public void StartAim() => _isInAction = true;
 
         public void Release() => _isInAction = false;
+
+        public void InstantUse() => OnInstantUse?.Invoke();
 
         #endregion
     }

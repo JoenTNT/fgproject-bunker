@@ -21,10 +21,16 @@ namespace JT.FGP
 
         [Header("Game Events")]
         [SerializeField]
+        private GameEventString _onActionCommandInstantCallback = null;
+
+        [SerializeField]
         private GameEventString _onActionCommandBegin = null;
 
         [SerializeField]
         private GameEventString _onActionCommandEnded = null;
+
+        [SerializeField]
+        private GameEventTwoStringUnityObject _equipWeaponCallback = null;
 
         // Temporary variable data
         private GameObject _nearestInteractionTarget = null;
@@ -36,19 +42,20 @@ namespace JT.FGP
 
         private void Awake()
         {
-            // Assign weapon ownership on awake.
-            if (_data.Weapon != null) _data.Weapon = _data.Weapon;
-
             // Subscribe events
+            _onActionCommandInstantCallback.AddListener(ListenOnActionCommandInstantCallback);
             _onActionCommandBegin.AddListener(ListenOnActionCommandBegin);
             _onActionCommandEnded.AddListener(ListenOnActionCommandEnded);
+            _equipWeaponCallback.AddListener(ListeonEquipWeaponCallback);
         }
 
         private void OnDestroy()
         {
             // Unsubscribe events
+            _onActionCommandInstantCallback.RemoveListener(ListenOnActionCommandInstantCallback);
             _onActionCommandBegin.RemoveListener(ListenOnActionCommandBegin);
             _onActionCommandEnded.RemoveListener(ListenOnActionCommandEnded);
+            _equipWeaponCallback.RemoveListener(ListeonEquipWeaponCallback);
         }
 
         private void Update()
@@ -94,13 +101,22 @@ namespace JT.FGP
 
         #region Main
 
+        private void ListenOnActionCommandInstantCallback(string id)
+        {
+            // Check if this entity is not the target ID, then abort process.
+            if (_data.ID != id) return;
+
+            // Instant call action.
+            _data.Weapon?.InstantUse();
+        }
+
         private void ListenOnActionCommandBegin(string id)
         {
             // Check if this entity is not the target ID, then abort process.
             if (_data.ID != id) return;
 
             // Set weapon state to start aim.
-            _data.Weapon.StartAim();
+            _data.Weapon?.StartAim();
         }
 
         private void ListenOnActionCommandEnded(string id)
@@ -109,7 +125,25 @@ namespace JT.FGP
             if (_data.ID != id) return;
 
             // Set weapon state to release.
-            _data.Weapon.Release();
+            _data.Weapon?.Release();
+        }
+
+        private void ListeonEquipWeaponCallback(string id, string elementID, Object weapon)
+        {
+            // Check if this entity is not the target ID, then abort process.
+            if (_data.ID != id) return;
+            if (elementID != $"{PhysicalWeaponEquipment.WEAPON_ID_INDEX}0") return;
+
+            // Check the weapon object.
+            if (weapon is not GenericWeapon)
+            {
+                // Remove weapon if equipped.
+                _data.Weapon = null;
+                return;
+            }
+
+            // Proceed dependency injection.
+            _data.Weapon = ((GenericWeapon)weapon).WeaponState;
         }
 
         #endregion
@@ -130,9 +164,8 @@ namespace JT.FGP
         [SerializeField]
         private InsideAreaObjectCollector2D _areaOfInteraction = null;
 
-        [Header("Optional")]
-        [SerializeField]
-        private WeaponActionState _weaponOnHand = null;
+        // Runtime variable data.
+        private IWeaponActionState _weaponOnHand = null;
 
         #endregion
 
@@ -150,14 +183,20 @@ namespace JT.FGP
 
         /// <summary>
         /// Weapon on player's hand.
+        /// This can be null because player may not equip any weapon.
         /// </summary>
-        public WeaponActionState Weapon
+        public IWeaponActionState Weapon
         {
             get => _weaponOnHand;
             set
             {
-                // Set weapon ownership.
-                _weaponOnHand.Owner = _entityID;
+                // Unset old one.
+                if (_weaponOnHand != null)
+                    _weaponOnHand.OwnerOfState = string.Empty;
+
+                // Set weapon ownership if not null.
+                if (value != null)
+                    value.OwnerOfState = _entityID.ID;
                 _weaponOnHand = value;
             }
         }

@@ -49,8 +49,10 @@ namespace JT.FGP
 
         private void ListenSetActiveCommand(string commandID, bool active)
         {
+            // Check if command ID is valid to be run.
             if (_data.CommandID != commandID) return;
 
+            // Set active or deactive the UI interaction.
             gameObject.SetActive(active);
         }
 

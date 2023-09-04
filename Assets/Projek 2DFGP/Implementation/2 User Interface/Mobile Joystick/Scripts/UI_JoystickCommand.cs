@@ -10,7 +10,7 @@ namespace JT.FGP
     {
         #region Variables
 
-        // Temporary variable data.
+        // Runtime variable data.
         private UI_JoystickControlData _dataRef = null;
 
         #endregion

@@ -13,6 +13,9 @@ namespace JT.FGP
 
         [Header("Properties")]
         [SerializeField, Min(0f)]
+        private float _actionPressedBeforeSeconds = 0.15f;
+
+        [SerializeField, Min(0f)]
         private float _activeOnPercentBiggerThan = 0.65f;
 
         [SerializeField]
@@ -20,12 +23,17 @@ namespace JT.FGP
 
         [Header("Game Events")]
         [SerializeField]
+        private GameEventString _onJoystickPressed = null;
+
+        [SerializeField]
         private GameEventString _onJoystickActionBegin = null;
 
         [SerializeField]
         private GameEventString _onJoystickActionEnded = null;
 
-        // Temporary variable data.
+        // Runtime variable data.
+        private float _tempSecPress = 0f;
+        private bool _isPressed = false;
         private bool _isCalled = false;
 
         #endregion
@@ -34,6 +42,34 @@ namespace JT.FGP
 
         private void Update()
         {
+            // Pressed seconds.
+            if (_isPressed) _tempSecPress += Time.deltaTime;
+
+            // Check joystick pressed begin from the source.
+            if (JoystickData.IsJoystickPressed && !_isPressed)
+            {
+                // Reset time press.
+                _tempSecPress = 0f;
+
+                // Pressed status.
+                _isPressed = true;
+            }
+
+            // Check joystick pressed end from the source.
+            else if (!JoystickData.IsJoystickPressed && _isPressed)
+            {
+                // Check event called.
+                if (_tempSecPress <= _actionPressedBeforeSeconds)
+                {
+                    // Call event.
+                    _onJoystickPressed.Invoke(JoystickData.TargetID);
+                }
+
+                // Change press released status.
+                _isPressed = false;
+            }
+
+            // Check if joystick must be moved first before call.
             bool needToBeActive = IsCheckerValid(JoystickData.MagnitudePercentage);
 
             // Check if it is need to be active and yet haven't active.

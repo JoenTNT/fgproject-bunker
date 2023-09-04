@@ -47,7 +47,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.58
+  m_Radius: 0.36
 --- !u!1 &921480179125651527
 GameObject:
   m_ObjectHideFlags: 0
@@ -120,8 +120,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1578581839
   m_SortingLayer: 3
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 758806722, guid: b82def5db8d044246841080aa0fd1375, type: 3}
+  m_SortingOrder: 3
+  m_Sprite: {fileID: 21300000, guid: 14d99b38bc1f18143ad88cd4eb774d65, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -246,8 +246,10 @@ MonoBehaviour:
     _areaOfInteraction: {fileID: 0}
     _weaponOnHand: {fileID: 0}
   _openInteractionCommandCallback: {fileID: 11400000, guid: 6b57be073a649e44db97deb1d6ef6782, type: 2}
-  _onActionCommandBegin: {fileID: 0}
-  _onActionCommandEnded: {fileID: 0}
+  _onActionCommandInstantCallback: {fileID: 11400000, guid: b3fa0c7fad7db5c479c1c02a0b0ee0a4, type: 2}
+  _onActionCommandBegin: {fileID: 11400000, guid: 3246d278a242dea46891017a1d85fddf, type: 2}
+  _onActionCommandEnded: {fileID: 11400000, guid: 46cb0128bd5f73743ae76713a2dc82d4, type: 2}
+  _equipWeaponCallback: {fileID: 11400000, guid: 0ee2063273ff48840a21f4598323a44f, type: 2}
 --- !u!114 &921480180229159077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -284,7 +286,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2661a5e9dc6e49049a828c216266eecd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 5
+  _moveSpeed: 2.45
   _useRigidbody: 0
   _rigidbody2D: {fileID: 921480180229159072}
 --- !u!114 &1133706591754004808

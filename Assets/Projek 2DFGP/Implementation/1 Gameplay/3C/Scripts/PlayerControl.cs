@@ -30,7 +30,7 @@ namespace JT.FGP
         [SerializeField]
         private GameEventTransform _setFollowTargetCallback = null;
 
-        // Temporary variable data.
+        // Runtime variable data.
         private float _tempBeforeROM = 0f;
         private bool _isLookingAround = false;
 

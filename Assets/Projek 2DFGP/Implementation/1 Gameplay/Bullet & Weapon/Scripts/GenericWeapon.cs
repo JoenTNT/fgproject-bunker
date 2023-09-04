@@ -14,6 +14,9 @@ namespace JT.FGP
         [SerializeField]
         private WeaponActionState _weaponState = null;
 
+        [SerializeField]
+        private WeaponStatsSO _weaponStats = null;
+
         #endregion
 
         #region Properties
@@ -24,9 +27,19 @@ namespace JT.FGP
         public IWeaponActionState WeaponState => _weaponState;
 
         /// <summary>
-        /// Weapon holder ID if exists.
+        /// Weapon stats design information.
         /// </summary>
-        public string HolderID => _weaponState.Owner?.ID;
+        public WeaponStatsSO WeaponStats => _weaponStats;
+
+        #endregion
+
+        #region Main
+
+        /// <summary>
+        /// Set send info target element ID.
+        /// </summary>
+        /// <param name="elementID">Target element ID</param>
+        public abstract void SetTargetElementID(string elementID);
 
         #endregion
     }

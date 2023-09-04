@@ -29,18 +29,18 @@ namespace JT.FGP
             _openInteractionCommandCallback.AddListener(ListenOpenInteractionCommandCallback);
         }
 
+        private void OnDestroy()
+        {
+            // Unsubscribe events
+            _openInteractionCommandCallback.RemoveListener(ListenOpenInteractionCommandCallback);
+        }
+
         private void Start()
         {
             // Initially disabled
             _data.UIGroup.alpha = _data.DisabledAlpha;
             _data.SetInteractionIcon(-1);
             _onNotifyInteractionHint.Invoke(_data.TargetID, -1);
-        }
-
-        private void OnDestroy()
-        {
-            // Unsubscribe events
-            _openInteractionCommandCallback.RemoveListener(ListenOpenInteractionCommandCallback);
         }
 
         #endregion

@@ -6,6 +6,16 @@ namespace JT.FGP
     public interface IWeaponActionState
     {
         /// <summary>
+        /// Event called when instant use happen.
+        /// </summary>
+        event System.Action OnInstantUse;
+
+        /// <summary>
+        /// Who use this weapon?
+        /// </summary>
+        string OwnerOfState { get; set; }
+
+        /// <summary>
         /// Current action state.
         /// </summary>
         bool IsInAction { get; }
@@ -19,5 +29,10 @@ namespace JT.FGP
         /// Set weapon to released state.
         /// </summary>
         void Release();
+
+        /// <summary>
+        /// Use it instantly with this method.
+        /// </summary>
+        void InstantUse();
     }
 }
