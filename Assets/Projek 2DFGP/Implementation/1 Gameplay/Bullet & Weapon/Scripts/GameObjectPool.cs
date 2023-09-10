@@ -23,6 +23,19 @@ namespace JT.FGP
         [SerializeField]
         private bool _extendable = false;
 
+        [Tooltip("If the pool object is all active, " +
+            "then grab the next active one even thought the process ain't finish yet.\n" +
+            "This option is ignored if extendable is active.")]
+        [SerializeField]
+        private bool _interuptWhenEmpty = false;
+
+        [SerializeField]
+        private bool _disableObjsOnStart = true;
+
+        [Header("Optional")]
+        [SerializeField]
+        private Transform _parentOfObject = null;
+
         // Runtime variable data.
         private GameObject[] _pool = null;
         private int _latestObjectIndex = -1;
@@ -40,7 +53,10 @@ namespace JT.FGP
             for (int i = 0; i < _initialAmount; i++)
             {
                 _pool[i] = Instantiate(_prefab);
-                _pool[i].SetActive(false);
+                if (_disableObjsOnStart)
+                    _pool[i].SetActive(false);
+                if (_parentOfObject != null)
+                    _pool[i].transform.SetParent(_parentOfObject);
             }
         }
 
@@ -72,7 +88,17 @@ namespace JT.FGP
             {
                 // Check extendable pool.
                 if (!_extendable)
+                {
+                    if (_interuptWhenEmpty)
+                    {
+                        // Get next object index.
+                        _latestObjectIndex++;
+                        if (_latestObjectIndex >= _pool.Length) _latestObjectIndex = 0;
+                        return _pool[_latestObjectIndex];
+                    }
+
                     return null; // No object in pool.
+                }
 
                 // Extend the object pool.
                 Extend(_extendIfEmpty);

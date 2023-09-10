@@ -26,13 +26,13 @@ namespace JT.FGP
         [SerializeField]
         private Mode _lookMode = Mode.Fixed;
 
-        [SerializeField]
-        private float _damping = 1f;
+        //[SerializeField]
+        //private float _damping = 1f;
 
         // Runtime variable data.
         private Vector2 _lookDirection = Vector2.zero;
         private float _lookDegree = 0f;
-        private float _currentRotateSpeed = 0f;
+        //private float _currentRotateSpeed = 0f;
 
         #endregion
 

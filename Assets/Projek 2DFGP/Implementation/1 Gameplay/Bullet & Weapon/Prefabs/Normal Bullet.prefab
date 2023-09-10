@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8583859468342633520}
   - component: {fileID: 8583859468342633521}
+  - component: {fileID: 9072580931694607660}
   m_Layer: 0
   m_Name: Light 2D
   m_TagString: Untagged
@@ -25,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8583859468342633523}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.42, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -49,7 +50,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.5
+  m_Intensity: 0.35
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 000000002b38c2c91fa8a96e4f3f175e83448117
@@ -99,8 +100,8 @@ MonoBehaviour:
     m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 0.2
-  m_PointLightOuterRadius: 1.2
+  m_PointLightInnerRadius: 0
+  m_PointLightOuterRadius: 0.85
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
@@ -111,6 +112,39 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
+--- !u!114 &9072580931694607660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8583859468342633523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 418197051
+      Data2: 1079142197
+      Data3: 735260603
+      Data4: 554268313
+    Path: event:/SFX/SFX Character Talk
+  Event: 
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  AllowNonRigidbodyDoppler: 0
+  Params:
+  - Name: Character Talk
+    Value: 0
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &8583859469333870814
 GameObject:
   m_ObjectHideFlags: 0
@@ -122,6 +156,7 @@ GameObject:
   - component: {fileID: 8583859469333870815}
   - component: {fileID: 8583859469333870808}
   - component: {fileID: 8583859469333870811}
+  - component: {fileID: 3533317075523475714}
   - component: {fileID: 8583859469333870810}
   - component: {fileID: 8583859469333870813}
   - component: {fileID: 4386873619105639549}
@@ -165,6 +200,7 @@ MonoBehaviour:
     _moveFunc: {fileID: 8583859469333870810}
     _lookFunc: {fileID: 8583859469333870813}
     _hitter: {fileID: 8583859469333870811}
+    _soundEmitter: {fileID: 9072580931694607660}
 --- !u!114 &8583859469333870811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,11 +213,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c802005b977a0440bd9e94150fdd590, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _controller: {fileID: 8583859469333870808}
+  _attackStats: {fileID: 3533317075523475714}
   _targetHit:
     serializedVersion: 2
-    m_Bits: 513
-  _collisionRadius: 0.2
-  _maxOverlapHit: 1
+    m_Bits: 577
+  _collisionDetection: 0
+  _collisionRadius: 0.05
+  _maxTargetHit: 1
+  _maxOverlapHit: 2
+  _doNotDamage: 0
+--- !u!114 &3533317075523475714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8583859469333870814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af6f54efafafeb2468c619571822ef26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _attackPoint: 10
 --- !u!114 &8583859469333870810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -211,7 +265,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _pivotRotation: {fileID: 8583859469333870815}
   _lookMode: 0
-  _damping: 1
 --- !u!114 &4386873619105639549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -255,7 +308,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8583859469348273919}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.2, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -167,12 +167,6 @@ namespace JT.FGP
 
         #endregion
 
-        #region GenericWeapon
-
-        public override void SetTargetElementID(string elementID) { }
-
-        #endregion
-
         #region IPowerCharge
 
         public float PercentPower => !_isAnticipate ? 0f : _powerReleasePercent;

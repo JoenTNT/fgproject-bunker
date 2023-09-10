@@ -15,7 +15,13 @@ namespace JT.FGP
         private WeaponActionState _weaponState = null;
 
         [SerializeField]
-        private WeaponStatsSO _weaponStats = null;
+        private WeaponDefaultStatsSO _weaponStats = null;
+
+        [SerializeField]
+        private string _targetElementID = string.Empty;
+
+        [SerializeField]
+        private string _weaponKeyword = string.Empty;
 
         #endregion
 
@@ -29,17 +35,27 @@ namespace JT.FGP
         /// <summary>
         /// Weapon stats design information.
         /// </summary>
-        public WeaponStatsSO WeaponStats => _weaponStats;
+        public WeaponDefaultStatsSO WeaponStats => _weaponStats;
+
+        /// <summary>
+        /// Target data element ID.
+        /// </summary>
+        protected string TargetElementID => _targetElementID;
+
+        /// <summary>
+        /// This weapon keyword.
+        /// </summary>
+        public string WeaponKeyword => _weaponKeyword;
 
         #endregion
 
         #region Main
 
         /// <summary>
-        /// Set send info target element ID.
+        /// To send info target element ID.
         /// </summary>
         /// <param name="elementID">Target element ID</param>
-        public abstract void SetTargetElementID(string elementID);
+        public void SetTargetElementID(string elementID) => _targetElementID = elementID;
 
         #endregion
     }

@@ -6,14 +6,11 @@ namespace JT.FGP
     /// Handle data for weapon gun.
     /// </summary>
     [System.Serializable]
-    public sealed class WeaponGunData : ITargetID<string>, IAmmo, IReload
+    public sealed class WeaponGunData : IAmmo, IReload
     {
         #region Variables
 
         [Header("Properties")]
-        [SerializeField]
-        private string _targetElementID = string.Empty;
-
         [SerializeField, Min(-1)]
         private int _maxAmmoInBag = -1; // Minus one means infinite.
 
@@ -42,19 +39,6 @@ namespace JT.FGP
         {
             get => _reloadTimeLeft;
             set => _reloadTimeLeft = value;
-        }
-
-        #endregion
-
-        #region ITargetID
-
-        /// <summary>
-        /// Target element ID, not entity ID.
-        /// </summary>
-        public string TargetID
-        {
-            get => _targetElementID;
-            set => _targetElementID = value;
         }
 
         #endregion

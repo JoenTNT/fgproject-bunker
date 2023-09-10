@@ -6,7 +6,7 @@ namespace JT.FGP
     /// <summary>
     /// Weapon that can shoot bullets.
     /// </summary>
-    public sealed class WeaponGun : GenericWeapon, IShootCommand, IReloadCommand
+    public sealed class WeaponGun : GenericWeapon, IReloadCommand
     {
         #region structs
 
@@ -14,9 +14,28 @@ namespace JT.FGP
         /// Contains meta data for weapon gun type.
         /// </summary>
         [System.Serializable]
-        private struct WeaponGunMeta
+        private struct Meta
         {
-            // TODO: Migrate weapon gun meta.
+            #region Variables
+
+            [Tooltip("In data used one ammo, this is the physical bullets per ammo used.")]
+            public float shotsPerAmmo;
+            public float firstShootDelay;
+            public float roundsPerSeconds;
+
+            [SerializeField]
+            private bool _initAmmoOnStart;
+
+            #endregion
+
+            #region Properties
+
+            /// <summary>
+            /// Does the weapon must be loaded on start?
+            /// </summary>
+            public bool InitAmmoOnStart => _initAmmoOnStart;
+
+            #endregion
         }
 
         #endregion
@@ -25,29 +44,17 @@ namespace JT.FGP
 
         // Requirements.
         [SerializeField]
-        private WeaponGunData _data = new();
+        private Shooter2DFunc _shooterFunc = null;
 
         [SerializeField]
-        private Transform _shootPoint = null;
+        private WeaponGunData _data = new();
 
         [Header("Properties")]
         [SerializeField]
         private string _bulletType = string.Empty;
 
         [SerializeField]
-        private float _shootForce = 100f; // Unit per second.
-
-        [SerializeField]
-        private float _firstShootDelay = 0f;
-
-        [SerializeField]
-        private float _roundsPerSeconds = 20f;
-
-        [SerializeField]
-        private bool _initAmmoOnStart = false;
-
-        [SerializeField]
-        private bool _initBulletOnStart = true;
+        private Meta _meta = new Meta { shotsPerAmmo = 1, firstShootDelay = 0f, roundsPerSeconds = 20f, };
 
         [Header("Optional")]
         [SerializeField]
@@ -96,14 +103,11 @@ namespace JT.FGP
         private void Awake()
         {
             // Set initialize values for ammo information.
-            if (_initAmmoOnStart)
+            if (_meta.InitAmmoOnStart)
             {
                 // Initialize ammo value.
                 _data.Ammo = _data.MaxAmmo;
                 _data.AmmoInBag = _data.MaxAmmoInBag;
-
-                // Send information changes to UI.
-                _onAmmoDataChange.Invoke(_data.TargetID, _data.Ammo, _data.AmmoInBag);
             }
 
             // Subscribe events
@@ -121,8 +125,38 @@ namespace JT.FGP
         private void Start()
         {
             // Request a bullet type on start.
-            if (_initBulletOnStart)
-                _requestBulletPoolCallback.Invoke(WeaponState.OwnerOfState, _bulletType);
+            _requestBulletPoolCallback.Invoke(WeaponState.OwnerOfState, _bulletType);
+
+            // Run after 2 frame of the game.
+            System.Collections.IEnumerator WaitAnotherEndFrames()
+            {
+                // End of frame.
+                yield return new WaitForEndOfFrame();
+
+                // Send information changes to UI.
+                _onAmmoDataChange.Invoke(TargetElementID, _data.Ammo, _data.AmmoInBag);
+
+                // Send reloading timer data.
+                _onReloadingDataChange.Invoke(TargetElementID, _data.ReloadTimeLeft);
+            }
+            StartCoroutine(WaitAnotherEndFrames());
+        }
+
+        private void OnEnable()
+        {
+            // Check if weapon immediately need to be reloaded.
+            if (_data.IsReloading && _data.MaxAmmo != -1)
+            {
+                // Check if there is still ammo leftovers, then dont reload it immediately.
+                if (_data.Ammo > 0)
+                {
+                    _data.ReloadTimeLeft = 0f;
+                    return;
+                }
+
+                // Reset reload timer.
+                _data.ResetTimer();
+            }
         }
 
         private void Update()
@@ -131,7 +165,7 @@ namespace JT.FGP
             if (WeaponState.IsInAction && !_isShooting)
             {
                 _isShooting = true;
-                _secondsBeforeShoot = _firstShootDelay;
+                _secondsBeforeShoot = _meta.firstShootDelay;
                 return;
             }
 
@@ -152,7 +186,7 @@ namespace JT.FGP
                 if (!_data.IsReloading) Reload();
 
                 // Send reloading timer data.
-                _onReloadingDataChange.Invoke(_data.TargetID, _data.ReloadTimeLeft);
+                _onReloadingDataChange.Invoke(TargetElementID, _data.ReloadTimeLeft);
 
                 // Do not run the shooting method while reloading.
                 return;
@@ -167,11 +201,27 @@ namespace JT.FGP
             // Check if shoot command must called.
             if (_secondsBeforeShoot <= 0f)
             {
-                // Shoot command.
-                Shoot();
+                // Release shots per ammo.
+                for (int i = 0; i < _meta.shotsPerAmmo; i++)
+                {
+                    // Get bullet object from pool.
+                    _bulletObj = _bulletPool.GetObject();
+
+                    // Cancel shoot if there are invalid information.
+                    if (_bulletObj == null) return;
+                    if (!_bulletObj.TryGetComponent(out _bullet)) return;
+
+                    // Shoot command.
+                    _bullet.ShooterID = WeaponState.OwnerOfState;
+                    _shooterFunc.Shoot(_bullet);
+                }
+
+                // Send information changes to UI.
+                _data.Ammo--;
+                _onAmmoDataChange.Invoke(TargetElementID, _data.Ammo, _data.AmmoInBag);
 
                 // Reset shoot timer.
-                _secondsBeforeShoot = 1f / _roundsPerSeconds;
+                _secondsBeforeShoot = 1f / _meta.roundsPerSeconds;
             }
 
             // Check ammo is not yet empty, then dont reload yet.
@@ -182,34 +232,6 @@ namespace JT.FGP
 
             // Reset reload timer.
             _data.ResetTimer();
-        }
-
-        #endregion
-
-        #region GenericWeapon
-
-        public override void SetTargetElementID(string elementID) => _data.TargetID = elementID;
-
-        #endregion
-
-        #region IShootCommand
-
-        public void Shoot()
-        {
-            // Get bullet object from pool.
-            _bulletObj = _bulletPool.GetObject();
-
-            // Cancel shoot if there are invalid information.
-            if (_bulletObj == null) return;
-            if (!_bulletObj.TryGetComponent(out _bullet)) return;
-
-            // Calculate facing forward of the weapon and then shoot the bullet.
-            _bullet.transform.position = _shootPoint.position;
-            _bullet.Shoot(transform.right, _shootForce);
-
-            // Send information changes to UI.
-            _data.Ammo--;
-            _onAmmoDataChange.Invoke(_data.TargetID, _data.Ammo, _data.AmmoInBag);
         }
 
         #endregion
@@ -241,7 +263,7 @@ namespace JT.FGP
             _data.Ammo += tempReloadAmount;
 
             // Update UI Ammo.
-            _onAmmoDataChange.Invoke(_data.TargetID, _data.Ammo, _data.AmmoInBag);
+            _onAmmoDataChange.Invoke(TargetElementID, _data.Ammo, _data.AmmoInBag);
         }
 
         public void SkipReload()
@@ -250,7 +272,7 @@ namespace JT.FGP
             _data.ReloadTimeLeft = 0f;
 
             // Send reloading timer data.
-            _onReloadingDataChange.Invoke(_data.TargetID, _data.ReloadTimeLeft);
+            _onReloadingDataChange.Invoke(TargetElementID, _data.ReloadTimeLeft);
 
             // Instant Reload.
             Reload();
@@ -262,7 +284,7 @@ namespace JT.FGP
             _data.ReloadTimeLeft = 0f;
 
             // Send reloading timer data.
-            _onReloadingDataChange.Invoke(_data.TargetID, _data.ReloadTimeLeft);
+            _onReloadingDataChange.Invoke(TargetElementID, _data.ReloadTimeLeft);
         }
 
         #endregion

@@ -157,11 +157,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _elementID: {fileID: 572855928686659597}
+  _assetPack: {fileID: 11400000, guid: 050a25a38592e32498a5c8d98bb95df0, type: 2}
   _weaponGunInfo: {fileID: 3334228092560849053}
   _reloadTimer: {fileID: 0}
+  _iconPlaceholder: {fileID: 1045061690923819695}
   _onChangeWeaponCommand: {fileID: 11400000, guid: fa6629dd6309d8841a9fac4650c7562d, type: 2}
   _onEquipWeaponCommand: {fileID: 11400000, guid: 25b842be0d9a9c9439c1c354f8bbde17, type: 2}
+  _onAmmoDataChange: {fileID: 11400000, guid: 935193918103bfb44ad76e936f6b3ee7, type: 2}
   _equipWeaponCallback: {fileID: 11400000, guid: 0ee2063273ff48840a21f4598323a44f, type: 2}
+  _onReloadingDataChange: {fileID: 11400000, guid: 30ce56cd095d9de4ea0943807457e8d2, type: 2}
 --- !u!114 &3334228092560849053
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -175,7 +179,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _ammoAmountText: {fileID: 1195800983879631275}
-  _onAmmoDataChange: {fileID: 11400000, guid: 935193918103bfb44ad76e936f6b3ee7, type: 2}
 --- !u!1 &8877905539723003983
 GameObject:
   m_ObjectHideFlags: 0

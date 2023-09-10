@@ -339,6 +339,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Character Aura Light
       objectReference: {fileID: 0}
+    - target: {fileID: 8526122239062206753, guid: fbeed57fe4d894d45b37d49137eab9c8, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 8526122239062206754, guid: fbeed57fe4d894d45b37d49137eab9c8, type: 3}
       propertyPath: m_PointLightOuterRadius
       value: 5

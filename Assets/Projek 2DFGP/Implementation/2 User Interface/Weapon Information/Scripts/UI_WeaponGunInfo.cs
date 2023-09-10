@@ -1,5 +1,4 @@
-﻿using JT.GameEvents;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 namespace JT.FGP
@@ -7,7 +6,7 @@ namespace JT.FGP
     /// <summary>
     /// Handle weapon selection.
     /// </summary>
-    [RequireComponent(typeof(UI_WeaponInfoManager))]
+    [RequireComponent(typeof(RectTransform))]
     public class UI_WeaponGunInfo : MonoBehaviour
     {
         #region Variables
@@ -16,31 +15,9 @@ namespace JT.FGP
         [SerializeField]
         private TextMeshProUGUI _ammoAmountText = null;
 
-        [Header("Game Events")]
-        [SerializeField]
-        private GameEventStringTwoInt _onAmmoDataChange = null;
-
-        // Runtime variable data.
-        private UI_WeaponInfoManager _manager = null;
-
         #endregion
 
         #region Mono
-
-        private void Awake()
-        {
-            // Get manager component.
-            TryGetComponent(out _manager);
-
-            // Subscribe events.
-            _onAmmoDataChange.AddListener(ListenOnAmmoDataChange);
-        }
-
-        private void OnDestroy()
-        {
-            // Unsubscribe events.
-            _onAmmoDataChange.RemoveListener(ListenOnAmmoDataChange);
-        }
 
         private void OnEnable() => _ammoAmountText.gameObject.SetActive(true);
 
@@ -49,15 +26,6 @@ namespace JT.FGP
         #endregion
 
         #region Main
-
-        private void ListenOnAmmoDataChange(string elementID, int ammo, int ammoInBag)
-        {
-            // Check element ID matches, if not then abort process.
-            if (_manager.ElementID != elementID) return;
-
-            // Set information.
-            SetInfo(ammo, ammoInBag);
-        }
 
         public void SetInfo(int ammo, int ammoInBag)
         {

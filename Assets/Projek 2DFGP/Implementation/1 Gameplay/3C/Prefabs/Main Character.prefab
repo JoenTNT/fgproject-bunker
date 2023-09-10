@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 921480178502978763}
   - component: {fileID: 921480178502978756}
-  m_Layer: 0
+  - component: {fileID: 7739024221319301028}
+  m_Layer: 6
   m_Name: Collider
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -48,6 +49,23 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.36
+--- !u!114 &7739024221319301028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 921480178502978762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3693abfc8041e3349b485d2c80aca4e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _entityID: {fileID: 921480180229159078}
+  _maxHP: 100
+  _isDamageable: 1
+  _splatter: {fileID: 0}
+  _onEntityGotDamageBy: {fileID: 11400000, guid: 1b0a431ba3702454a87f100d89da5a8c, type: 2}
 --- !u!1 &921480179125651527
 GameObject:
   m_ObjectHideFlags: 0
@@ -58,7 +76,7 @@ GameObject:
   m_Component:
   - component: {fileID: 921480179125651520}
   - component: {fileID: 921480179125651521}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,7 +166,7 @@ GameObject:
   - component: {fileID: 921480180229159077}
   - component: {fileID: 921480180229159079}
   - component: {fileID: 1133706591754004808}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Main Character
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -244,7 +262,6 @@ MonoBehaviour:
   _data:
     _entityID: {fileID: 921480180229159078}
     _areaOfInteraction: {fileID: 0}
-    _weaponOnHand: {fileID: 0}
   _openInteractionCommandCallback: {fileID: 11400000, guid: 6b57be073a649e44db97deb1d6ef6782, type: 2}
   _onActionCommandInstantCallback: {fileID: 11400000, guid: b3fa0c7fad7db5c479c1c02a0b0ee0a4, type: 2}
   _onActionCommandBegin: {fileID: 11400000, guid: 3246d278a242dea46891017a1d85fddf, type: 2}
@@ -303,7 +320,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _pivotRotation: {fileID: 921480180229159083}
   _lookMode: 0
-  _damping: 1
 --- !u!1 &4539745702521593104
 GameObject:
   m_ObjectHideFlags: 0
@@ -313,7 +329,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1724469133862935259}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Camera Focus Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}

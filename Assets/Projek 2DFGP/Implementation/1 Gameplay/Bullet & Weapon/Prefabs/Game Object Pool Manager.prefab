@@ -48,6 +48,9 @@ MonoBehaviour:
   _initialAmount: 35
   _extendIfEmpty: 5
   _extendable: 0
+  _interuptWhenEmpty: 0
+  _disableObjsOnStart: 1
+  _parentOfObject: {fileID: 0}
 --- !u!1 &4605748850569040741
 GameObject:
   m_ObjectHideFlags: 0
@@ -78,6 +81,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4605748849462603120}
+  - {fileID: 983239479776071749}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -98,3 +102,54 @@ MonoBehaviour:
     pool: {fileID: 4605748849462603127}
   _requestPoolCallback: {fileID: 11400000, guid: 6a2474b1485ec544d84bed40ddd75e76, type: 2}
   _assignPoolCallback: {fileID: 11400000, guid: b6fe54b5018b0ef4fa4914fbeda9314f, type: 2}
+--- !u!1 &7766186813019443454
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 983239479776071749}
+  - component: {fileID: 2516349698900178235}
+  m_Layer: 0
+  m_Name: Hit Damage Cloud Pool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &983239479776071749
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7766186813019443454}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4605748850569040740}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2516349698900178235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7766186813019443454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d4a103d0916ed847b8f73b7024702de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefab: {fileID: 5401937023756211222, guid: e44569c45ad02da41a669912085e66fb, type: 3}
+  _initialAmount: 35
+  _extendIfEmpty: 5
+  _extendable: 0
+  _interuptWhenEmpty: 1
+  _disableObjsOnStart: 1
+  _parentOfObject: {fileID: 0}

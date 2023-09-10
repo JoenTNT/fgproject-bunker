@@ -49,8 +49,19 @@ namespace JT.FGP
         private void Start()
         {
             // TEMP: Initialize physical weapon on start while there is no starter pack.
-            for (int i = 0; i < _weaponHolds.Length; i++)
-                _equipWeaponCallback.Invoke(_ownerID.ID, $"{WEAPON_ID_INDEX}{i}", _weaponHolds[i]);
+            System.Collections.IEnumerator WaitAnotherFrame()
+            {
+                // Wait for one frame.
+                yield return null;
+
+                // Invoke initial info for each weapon.
+                for (int i = 0; i < _weaponHolds.Length; i++)
+                {
+                    _equipWeaponCallback.Invoke(_ownerID.ID, $"{WEAPON_ID_INDEX}{i}", _weaponHolds[i]);
+                    if (i != 0) _weaponHolds[i]?.gameObject.SetActive(false);
+                }
+            }
+            StartCoroutine(WaitAnotherFrame());
         }
 
         #endregion
@@ -70,6 +81,10 @@ namespace JT.FGP
                 _weaponHolds[0] = _weaponHolds[1];
                 _weaponHolds[1] = temp;
 
+                // Set active weapon.
+                _weaponHolds[0]?.gameObject.SetActive(true);
+                _weaponHolds[1]?.gameObject.SetActive(false);
+
                 // Send equipments information callback.
                 _equipWeaponCallback.Invoke(_ownerID.ID, $"{WEAPON_ID_INDEX}0", _weaponHolds[0]);
                 _equipWeaponCallback.Invoke(_ownerID.ID, $"{WEAPON_ID_INDEX}1", _weaponHolds[1]);
@@ -80,6 +95,10 @@ namespace JT.FGP
                 var temp = _weaponHolds[0];
                 _weaponHolds[0] = _weaponHolds[2];
                 _weaponHolds[2] = temp;
+
+                // Set active weapon.
+                _weaponHolds[0]?.gameObject.SetActive(true);
+                _weaponHolds[2]?.gameObject.SetActive(false);
 
                 // Send equipments information callback.
                 _equipWeaponCallback.Invoke(_ownerID.ID, $"{WEAPON_ID_INDEX}0", _weaponHolds[0]);

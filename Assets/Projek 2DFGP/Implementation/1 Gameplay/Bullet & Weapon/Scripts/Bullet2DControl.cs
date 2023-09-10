@@ -1,4 +1,5 @@
 using UnityEngine;
+using FMODUnity;
 
 namespace JT.FGP
 {
@@ -6,7 +7,7 @@ namespace JT.FGP
     /// Bullet 2D object control.
     /// </summary>
     [RequireComponent(typeof(DestroyTimer))]
-    public class Bullet2DControl : MonoBehaviour, IShootDirectionCommand<Vector2>
+    public class Bullet2DControl : MonoBehaviour, IShootDirectionCommand<Vector2>, IRequiredReset
     {
         #region Variables
 
@@ -14,29 +15,60 @@ namespace JT.FGP
         private Bullet2DControlData _data = new Bullet2DControlData();
 
         // Runtime variable data.
+        private DestroyTimer _destroyTimer = null;
+        private string _shooterID = string.Empty;
         private bool _isShoot = false;
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// The shooter ID.
+        /// </summary>
+        public string ShooterID
+        {
+            get => _shooterID;
+            set => _shooterID = value;
+        }
 
         #endregion
 
         #region Mono
 
-        private void Update()
+        private void FixedUpdate()
         {
             // Check if bullet has been shoot.
             if (!_isShoot) return;
 
+            // Detect any target hit.
+            _data.Hitter.OnDetectHit(transform.position, _data.MoveFunc.Direction,
+                _data.MoveFunc.Speed * Time.deltaTime);
+
             // Move a bullet.
             _data.MoveFunc.Move();
-
-            // Detect any target hit.
-            _data.Hitter.OnDetectHit(transform.position, transform.forward, _data.MoveFunc.Speed * Time.deltaTime);
         }
 
         private void OnDisable() => _isShoot = false;
 
+        #region IRequiredReset
+
+        public void Reset()
+        {
+            // Get destroy timer component.
+            if (_destroyTimer == null)
+                TryGetComponent(out _destroyTimer);
+
+            // Reset the timer and the bullet hitter.
+            _destroyTimer.Reset();
+            _data.Hitter.Reset();
+        }
+
         #endregion
 
-        #region IShootCommand
+        #endregion
+
+        #region IShootDirectionCommand
 
         public void Shoot(Vector2 direction, float speed)
         {
@@ -47,6 +79,10 @@ namespace JT.FGP
 
             // Bullet facing forward of the aim direction.
             _data.LookFunc.LookAtDirection(direction);
+
+            // Play sound if exists.
+            if (_data.SoundEmitter != null)
+                _data.SoundEmitter.Play();
         }
 
         #endregion
@@ -70,6 +106,10 @@ namespace JT.FGP
         [SerializeField]
         private Bullet2DHitter _hitter = null;
 
+        [Header("Optional")]
+        [SerializeField]
+        private StudioEventEmitter _soundEmitter = null;
+
         #endregion
 
         #region Properties
@@ -88,6 +128,11 @@ namespace JT.FGP
         /// Hitter handler.
         /// </summary>
         public Bullet2DHitter Hitter => _hitter;
+
+        /// <summary>
+        /// Bullet shot sound effect.
+        /// </summary>
+        public StudioEventEmitter SoundEmitter => _soundEmitter;
 
         #endregion
     }

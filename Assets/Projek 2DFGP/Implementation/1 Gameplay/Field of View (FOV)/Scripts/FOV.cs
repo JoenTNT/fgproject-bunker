@@ -36,10 +36,10 @@ namespace JT.FGP
         [SerializeField]
         private bool _reshapeCollider = true;
 
-        // Temporary variable
-        private Sprite _fovSprite = null;
-        private Rect _fovSpriteRect = Rect.zero;
-        private Texture2D _fovTexture = null;
+        // Runtime variable data.
+        //private Sprite _fovSprite = null;
+        //private Rect _fovSpriteRect = Rect.zero;
+        //private Texture2D _fovTexture = null;
         
         private Vector2[] _tempPoints = null;
         private Vector2[] _tempOffsetedPoints = null;

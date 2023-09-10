@@ -1,0 +1,128 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &9084416917738952395
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9084416917738952394}
+  - component: {fileID: 2759825892526404278}
+  m_Layer: 2
+  m_Name: Bullet Barrel
+  m_TagString: Untagged
+  m_Icon: {fileID: 7422848464349959988, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9084416917738952394
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9084416917738952395}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.365, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9084416918877065009}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2759825892526404278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9084416917738952395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0fa41238b7d0084a9f0446da0184e46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _shootPoint: {fileID: 9084416917738952394}
+  _shootForce: 80
+  _accuracyAngle: 5
+  _maxLengthDrawRay: 5
+--- !u!1 &9084416918877065010
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9084416918877065009}
+  - component: {fileID: 9084416918877065015}
+  - component: {fileID: 9084416918877065008}
+  m_Layer: 2
+  m_Name: SMG
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9084416918877065009
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9084416918877065010}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 9084416917738952394}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9084416918877065015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9084416918877065010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b624f103d67e664fb4df0d6c3d54b36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _weaponState: {fileID: 9084416918877065008}
+  _weaponStats: {fileID: 0}
+  _targetElementID: 
+  _weaponKeyword: SMG
+  _shooterFunc: {fileID: 2759825892526404278}
+  _data:
+    _maxAmmoInBag: 300
+    _maxAmmo: 50
+    _reloadTime: 3
+  _bulletType: Normal Bullet
+  _meta:
+    firstShootDelay: 0
+    roundsPerSeconds: 20
+    _initAmmoOnStart: 1
+  _bulletPool: {fileID: 0}
+  _requestBulletPoolCallback: {fileID: 11400000, guid: 6a2474b1485ec544d84bed40ddd75e76, type: 2}
+  _assignBulletPoolCallback: {fileID: 11400000, guid: b6fe54b5018b0ef4fa4914fbeda9314f, type: 2}
+  _onAmmoDataChange: {fileID: 11400000, guid: 935193918103bfb44ad76e936f6b3ee7, type: 2}
+  _onReloadingDataChange: {fileID: 11400000, guid: 30ce56cd095d9de4ea0943807457e8d2, type: 2}
+  _onReloadCommand: {fileID: 11400000, guid: 526fc6479b2fa8f4bb81bbae35f291b5, type: 2}
+--- !u!114 &9084416918877065008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9084416918877065010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11d019568ebffd644901af07d32e3115, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

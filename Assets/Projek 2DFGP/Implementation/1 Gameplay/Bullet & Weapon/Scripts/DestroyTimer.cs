@@ -5,7 +5,7 @@ namespace JT.FGP
     /// <summary>
     /// Using timer to destroy an object.
     /// </summary>
-    public sealed class DestroyTimer : MonoBehaviour
+    public sealed class DestroyTimer : MonoBehaviour, IRequiredReset
     {
         #region Variables
 
@@ -33,13 +33,24 @@ namespace JT.FGP
             _timer.OnTimesUp -= ListenOnTimesUp;
         }
 
-        private void OnEnable()
+        // OBSOLETE: Has been handled by Reset method.
+        //private void OnEnable()
+        //{
+        //    _timer.Reset();
+        //    _timer.Start();
+        //}
+
+        private void Update() => _timer.Tick(Time.deltaTime);
+
+        #region IRequiredReset
+
+        public void Reset()
         {
             _timer.Reset();
             _timer.Start();
         }
 
-        private void Update() => _timer.Tick(Time.deltaTime);
+        #endregion
 
         #endregion
 

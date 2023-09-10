@@ -11,7 +11,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Entity
   - Interactable
   - 
   - Wall
@@ -35,7 +35,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - Camera Bound
   - 
   m_SortingLayers:
   - name: Default
