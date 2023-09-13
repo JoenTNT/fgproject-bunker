@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1568316723349357623}
   - component: {fileID: 7945222773427862681}
+  - component: {fileID: 8217412846547991422}
+  - component: {fileID: 2859720207160383345}
   m_Layer: 2
   m_Name: Collider
   m_TagString: Untagged
@@ -42,7 +44,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -56,8 +58,34 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.7, y: 0.25}
+  m_Size: {x: 1.4, y: 0.25}
   m_EdgeRadius: 0
+--- !u!114 &8217412846547991422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708726911951730124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af6f54efafafeb2468c619571822ef26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _attackPoint: 20
+--- !u!114 &2859720207160383345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708726911951730124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00f3981626230384eaa95bad096dee32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _attackStats: {fileID: 8217412846547991422}
 --- !u!1 &1044058418489988257
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,6 +222,7 @@ MonoBehaviour:
   _targetElementID: 
   _weaponKeyword: Baseball Bat
   _swingPivot: {fileID: 3861571010885001295}
+  _weaponHitBox: {fileID: 2859720207160383345}
   _meleeSprite: {fileID: 1722380154523194511}
   _meleeCollider: {fileID: 7945222773427862681}
   _meta:
@@ -201,8 +230,8 @@ MonoBehaviour:
     firstMove: 2
     comboHit: 1
     degreeSwing: 150
-    swingInterval: 0.25
-    randomSwing: 0
+    swingInterval: 0.15
+    randomSwing: 1
   _fullChargeInSecond: 0.5
   _isInteruptable: 0
   _placeholderHint: {fileID: 0}

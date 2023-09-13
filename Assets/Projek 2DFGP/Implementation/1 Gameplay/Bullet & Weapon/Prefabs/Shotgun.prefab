@@ -55,6 +55,7 @@ MonoBehaviour:
     _maxAmmoInBag: 30
     _maxAmmo: 5
     _reloadTime: 3
+    _audio: {fileID: 2567738061690266718}
   _bulletType: Normal Bullet
   _meta:
     shotsPerAmmo: 8
@@ -89,6 +90,8 @@ GameObject:
   m_Component:
   - component: {fileID: 552012591320843744}
   - component: {fileID: 7391992236840761316}
+  - component: {fileID: 5432778000911424827}
+  - component: {fileID: 2567738061690266718}
   m_Layer: 2
   m_Name: Bullet Barrel
   m_TagString: Untagged
@@ -127,3 +130,65 @@ MonoBehaviour:
   _shootForce: 75
   _accuracyAngle: 35
   _maxLengthDrawRay: 5
+--- !u!114 &5432778000911424827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 552012591320843745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 2144212189
+      Data2: 1283809977
+      Data3: -2111516032
+      Data4: -791753588
+    Path: event:/SFX/SFX Shotgun
+  Event: 
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 0
+  TriggerOnce: 0
+  Preload: 0
+  AllowNonRigidbodyDoppler: 0
+  Params:
+  - Name: Shotgun
+    Value: 0
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!114 &2567738061690266718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 552012591320843745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 186315a9efbe0874a8afaa6c8ce7ecb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _emitter: {fileID: 5432778000911424827}
+  _parameterName: Shotgun
+  _preDefaultValue: 0
+  _loopDefaultValue: 1
+  _postDefaultValue: 2
+  _initOnAwake: 1
+  _onRunPreSound:
+    m_PersistentCalls:
+      m_Calls: []
+  _onRunSoundLoop:
+    m_PersistentCalls:
+      m_Calls: []
+  _onRunPostSound:
+    m_PersistentCalls:
+      m_Calls: []
+  _debugControl: 0
+  _pressKeyToRun: 323

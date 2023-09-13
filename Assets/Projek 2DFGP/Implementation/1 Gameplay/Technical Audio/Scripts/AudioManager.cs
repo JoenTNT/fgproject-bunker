@@ -17,9 +17,8 @@ namespace JT.FGP
         [Header("Game Events")]
         [SerializeField]
         private GameEventNoParam _onAudioLoaded = null;
-
-        // Temporary variable data
 #if FMOD
+        // Runtime variable data
         private Bus _masterBus;
         private Bus _bgmGroupBus;
         private Bus _sfxGroupBus;

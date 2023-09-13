@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 921480178502978763}
   - component: {fileID: 921480178502978756}
   - component: {fileID: 7739024221319301028}
+  - component: {fileID: 7758366819564344028}
   m_Layer: 6
   m_Name: Collider
   m_TagString: Player
@@ -62,10 +63,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _entityID: {fileID: 921480180229159078}
+  _killCommand: {fileID: 7758366819564344028}
+  _useSplatter: Blood
   _maxHP: 100
+  _hp: 0
   _isDamageable: 1
-  _splatter: {fileID: 0}
   _onEntityGotDamageBy: {fileID: 11400000, guid: 1b0a431ba3702454a87f100d89da5a8c, type: 2}
+  _onEntityHitOnTheSpot: {fileID: 11400000, guid: 91b0d4f0f5f517e42a42cd2e058d643e, type: 2}
+  _onSplatterCallback: {fileID: 11400000, guid: 3020bec0b5999104aa14c2a808f9502b, type: 2}
+--- !u!114 &7758366819564344028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 921480178502978762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b771f4731cfdfed4f8a14584705c0100, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _targetKill: {fileID: 921480180229159082}
+  _destroyOnKill: 0
 --- !u!1 &921480179125651527
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,6 +16,10 @@ namespace JT.FGP
         [SerializeField]
         private TextMeshProUGUI _valueText = null;
 
+        [Header("Runtime Properties")]
+        [SerializeField]
+        private Vector2 _placingPosition = Vector2.zero;
+
         [Header("Properties")]
         [Tooltip("Animation curve moveing to y axis.")]
         [SerializeField]
@@ -58,13 +62,41 @@ namespace JT.FGP
         {
             // Disable object on start if needed.
             if (_disableOnStart)
-                gameObject.SetActive(false);
+            {
+                // Delete routine on start when accidentally ran.
+                if (_routine != null)
+                {
+                    StopCoroutine(_routine);
+                    _routine = null;
+                }
 
-            //// TEMP: Run on start for testing.
-            //RectTransform parent = (RectTransform)rectTransform.parent.transform;
-            //Run(parent.rect.center);
+                // Disable object.
+                gameObject.SetActive(false);
+            }
         }
 
+        private void OnEnable()
+        {
+            // Always run on enable.
+            Run(_placingPosition, false);
+        }
+
+        private void OnDisable()
+        {
+            // Always delete routine on disable when routine not yet finished.
+            if (_routine != null)
+            {
+                StopCoroutine(_routine);
+                _routine = null;
+            }
+        }
+#if UNITY_EDITOR
+        private void OnDrawGizmosSelected()
+        {
+            Debug.DrawRay(_placingPosition + _placementOffset, new Vector3(0f, _yFarJump, 0f), Color.green);
+            Gizmos.DrawWireSphere(_placingPosition + _placementOffset, 0.25f);
+        }
+#endif
         #endregion
 
         #region Main
@@ -79,7 +111,12 @@ namespace JT.FGP
         {
             // Check if game object is not active yet, then set active it.
             if (activateObject && !gameObject.activeSelf)
+            {
+                // Enable the game object before running routine.
+                _placingPosition = startAnchorPoint;
                 gameObject.SetActive(true);
+                return;
+            }
 
             // Stop existing routine, always interupt it.
             if (_routine != null)

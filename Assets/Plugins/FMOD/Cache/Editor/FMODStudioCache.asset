@@ -53,6 +53,58 @@ MonoBehaviour:
   Labels:
   - Default BGM
   Exists: 1
+--- !u!114 &-4127418085995165010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/SFX Shotgun/Shotgun
+  m_EditorClassIdentifier: 
+  Name: Shotgun
+  StudioPath: 
+  Min: 0
+  Max: 2
+  Default: 0
+  ID:
+    data1: 587339162
+    data2: 3623956602
+  Type: 1
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-3119827019403047225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/SFX Rifle Shot
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/SFX Rifle Shot
+  Guid:
+    Data1: -491222592
+    Data2: 1151468349
+    Data3: 1618313915
+    Data4: 1623406637
+  Banks:
+  - {fileID: 8209478230180956962}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 3493277351203043939}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-2253211304299920193
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,6 +132,34 @@ MonoBehaviour:
   - On Grass Footstep
   - On Metal Footstep
   Exists: 1
+--- !u!114 &-1884998936967843985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/SFX Shotgun
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/SFX Shotgun
+  Guid:
+    Data1: 2144212189
+    Data2: 1283809977
+    Data3: -2111516032
+    Data4: -791753588
+  Banks:
+  - {fileID: 8209478230180956962}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -4127418085995165010}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-820295148301074383
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,13 +205,40 @@ MonoBehaviour:
   - {fileID: 6675789126796623992}
   - {fileID: 6218664571553041465}
   - {fileID: -4355209310029453760}
+  - {fileID: -3119827019403047225}
+  - {fileID: -1884998936967843985}
+  - {fileID: 6589881623588292611}
   EditorParameters: []
   MasterBanks:
   - {fileID: 8209478230180956962}
   StringsBanks:
   - {fileID: 6783689200009923661}
-  cacheTime: 638193322341357024
+  cacheTime: 638302021037847096
   cacheVersion: 131603
+--- !u!114 &3493277351203043939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/SFX Rifle Shot/Rifle Shots
+  m_EditorClassIdentifier: 
+  Name: Rifle Shots
+  StudioPath: 
+  Min: 0
+  Max: 2
+  Default: 0
+  ID:
+    data1: 2396306854
+    data2: 851555906
+  Type: 1
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &6218664571553041465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,6 +264,34 @@ MonoBehaviour:
   IsOneShot: 1
   Parameters:
   - {fileID: -2253211304299920193}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &6589881623588292611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/SFX Bullet Hit
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/SFX Bullet Hit
+  Guid:
+    Data1: -448659475
+    Data2: 1205255233
+    Data3: 1449119668
+    Data4: -1554180737
+  Banks:
+  - {fileID: 8209478230180956962}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 8754795720255104719}
   MinDistance: 1
   MaxDistance: 20
   Length: 0
@@ -203,10 +338,10 @@ MonoBehaviour:
   Path: ../fgp-sound/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638193322341357024
+  lastModified: 638302021037847096
   FileSizes:
   - Name: Desktop
-    Value: 1120
+    Value: 1384
   Exists: 1
 --- !u!114 &8209478230180956962
 MonoBehaviour:
@@ -223,8 +358,35 @@ MonoBehaviour:
   Path: ../fgp-sound/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638193322341331818
+  lastModified: 638302021037821822
   FileSizes:
   - Name: Desktop
-    Value: 1741120
+    Value: 1819424
+  Exists: 1
+--- !u!114 &8754795720255104719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/SFX Bullet Hit/Bullet Hit
+  m_EditorClassIdentifier: 
+  Name: Bullet Hit
+  StudioPath: 
+  Min: 0
+  Max: 2
+  Default: 0
+  ID:
+    data1: 23615202
+    data2: 4208198490
+  Type: 2
+  IsGlobal: 0
+  Labels:
+  - Hit Against Living Entity
+  - Hit Against Wall
+  - Hit Against Metal
   Exists: 1

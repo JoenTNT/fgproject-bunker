@@ -1,3 +1,6 @@
+#if FMOD
+using FMODUnity;
+#endif
 using UnityEngine;
 
 namespace JT.FGP
@@ -8,6 +11,16 @@ namespace JT.FGP
     [RequireComponent(typeof(Bullet2DControl))]
     public sealed class Bullet2DHitter : MonoBehaviour, IDamagable, IRequiredReset
     {
+        #region events
+
+        // TODO: Call bounce bullet when hit something.
+        /// <summary>
+        /// Event called when bullet is bouncing target.
+        /// </summary>
+        //public event System.Action BounceCallback;
+
+        #endregion
+
         #region Variables
 
         [Header("Requirements")]
@@ -20,6 +33,10 @@ namespace JT.FGP
         [Header("Properties")]
         [SerializeField]
         private LayerMask _targetHit = ~0;
+
+        // TODO: When hitting this layer target, then destroy bullet immediately.
+        //[SerializeField]
+        //private LayerMask _selfDestroyTargetHit = ~0;
 
         [SerializeField]
         private CollisionDetectionMode2D _collisionDetection = CollisionDetectionMode2D.Discrete;
@@ -35,12 +52,25 @@ namespace JT.FGP
 
         [SerializeField]
         private bool _doNotDamage = false;
-
+#if FMOD
+        [Header("Optional")]
+        [SerializeField]
+        private StudioEventEmitter _hitEmitter = null;
+#endif
         // Runtime variable data.
         private HitpointStats _tempHP = null;
         private RaycastHit2D[] _hitCast = null;
         private int _targetHitCountLeft = 0;
         private int _hitCount = 0;
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Has done hitting all the targets.
+        /// </summary>
+        public bool IsDone => _targetHitCountLeft <= 0;
 
         #endregion
 
@@ -85,6 +115,26 @@ namespace JT.FGP
 
         public void OnDetectHit(Vector2 originPoint, Vector2 hitDir, float castLength)
         {
+            // Disable after the amount of overlap hit.
+            if (IsDone)
+            {
+                // While playing the sound, don't disable yet.
+                if (_hitEmitter != null && _hitEmitter.IsPlaying())
+                {
+                    // Disable sprite only instead.
+                    if (_controller.SpriteEnabled)
+                        _controller.SpriteEnabled = false;
+                    return;
+                }
+
+                // Finally disable bullet.
+                gameObject.SetActive(false);
+                return;
+            }
+
+            // Enable sprite if not yet enabled.
+            if (!_controller.SpriteEnabled) _controller.SpriteEnabled = true;
+
             // Find end point.
             Vector2 endPoint = originPoint + (hitDir * castLength);
 #if UNITY_EDITOR
@@ -116,14 +166,20 @@ namespace JT.FGP
                 if (_hitCast[i].collider.TryGetComponent(out _tempHP))
                 {
 #if UNITY_EDITOR
-                    Debug.Log($"Entity that got Hit is {_hitCast[i].collider.transform.parent.name}");
+                    //Debug.Log($"Entity that got Hit is {_hitCast[i].collider.transform.parent.name}");
 #endif
                     // Check if bullet hit the player self, then ignore it.
-                    if (_tempHP.EntityID == _controller.ShooterID)
+                    if (_tempHP.EntityID == _controller.OwnerID)
                         continue;
 
                     // Give attack damage at other entity.
-                    _tempHP.TakeDamage(hitDir, _attackStats.AttackPointDamage, _controller.ShooterID);
+                    _tempHP.TakeDamage(hitDir, _attackStats.AttackPointDamage, _controller.OwnerID);
+#if FMOD
+                    // Run sound if exists.
+                    // TODO: Change sound parameter when hit something else.
+                    if (_hitEmitter != null)
+                        _hitEmitter.Play();
+#endif
                 }
 
                 // Countdown target hit left.
@@ -132,10 +188,6 @@ namespace JT.FGP
                 // Check for last target hit.
                 if (_targetHitCountLeft <= 0) break;
             }
-
-            // Disable after the amount of overlap hit.
-            if (_targetHitCountLeft <= 0)
-                gameObject.SetActive(false);
         }
 
         #endregion

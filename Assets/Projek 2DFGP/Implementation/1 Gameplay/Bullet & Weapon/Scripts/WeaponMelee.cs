@@ -43,8 +43,12 @@ namespace JT.FGP
 
         #region Variables
 
+        [Header("Weapon Requirements")]
         [SerializeField]
         private Transform _swingPivot = null;
+
+        [SerializeField]
+        private WeaponHitBox2DFunc _weaponHitBox = null;
 
         [SerializeField]
         private SpriteRenderer _meleeSprite = null;
@@ -199,6 +203,10 @@ namespace JT.FGP
             // Check if the routine not yet finish
             // TODO: Do swing immediately if interupted.
             if (_swingRoutine != null && !_isInteruptable) return;
+
+            // Always set owner of weapon if not yet assigned.
+            if (string.IsNullOrEmpty(_weaponHitBox.OwnerID) || _weaponHitBox.OwnerID != WeaponState.OwnerOfState)
+                _weaponHitBox.OwnerID = WeaponState.OwnerOfState;
 
             // Create new routine or start over swing.
             _swingRoutine = SwingRoutine();

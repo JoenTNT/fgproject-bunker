@@ -17,6 +17,7 @@ namespace JT.FGP
         [SerializeField]
         private WeaponDefaultStatsSO _weaponStats = null;
 
+        [Header("Runtime Properties")]
         [SerializeField]
         private string _targetElementID = string.Empty;
 

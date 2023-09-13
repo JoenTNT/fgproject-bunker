@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _invokeLogging: 0
   _limitLoggingCount: 1
+  _logs: []
+  _subscribedEvents: []

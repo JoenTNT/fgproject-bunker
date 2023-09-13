@@ -1,3 +1,4 @@
+using JT.GameEvents;
 using UnityEngine;
 
 namespace JT.FGP
@@ -10,12 +11,20 @@ namespace JT.FGP
     {
         #region Variables
 
+        [Header("Requirements")]
+        [SerializeField]
+        private EntityID _splatterID = null;
+
         [Header("Properties")]
         [SerializeField, Min(1)]
         private int _minParticle = 1;
 
         [SerializeField, Min(1)]
         private int _maxParticle = 10;
+
+        [Header("Game Events")]
+        [SerializeField]
+        private GameEventStringVector2Float _onSplatterCallback = null;
 
         // Runtime variable data.
         private ParticleSystem _particleSystem = null;
@@ -36,6 +45,25 @@ namespace JT.FGP
                 _minParticle = _maxParticle;
                 _maxParticle = temp;
             }
+
+            // Subscribe events
+            _onSplatterCallback.AddListener(ListenOnSplatterCallback);
+        }
+
+        private void ListenOnSplatterCallback(string splatterID, Vector2 splatPosition, float degree)
+        {
+            // Check id validation.
+            if (splatterID != _splatterID.ID) return;
+
+            // Change position immediately before splat.
+            transform.position = splatPosition;
+            Splat(degree);
+        }
+
+        private void OnDestroy()
+        {
+            // Unsubscribe events
+            _onSplatterCallback.RemoveListener(ListenOnSplatterCallback);
         }
 
         //private void Update()
@@ -55,7 +83,7 @@ namespace JT.FGP
             // Set splat direction.
             ParticleSystem.ShapeModule shape = _particleSystem.shape;
             Vector3 rotation = _particleSystem.shape.rotation;
-            rotation.x = direction;
+            rotation.x = direction + transform.eulerAngles.z;
             shape.rotation = rotation;
 
             // Burst emit particles.

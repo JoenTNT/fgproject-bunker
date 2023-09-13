@@ -100,8 +100,13 @@ MonoBehaviour:
   _registeredPools:
   - key: Normal Bullet
     pool: {fileID: 4605748849462603127}
-  _requestPoolCallback: {fileID: 11400000, guid: 6a2474b1485ec544d84bed40ddd75e76, type: 2}
-  _assignPoolCallback: {fileID: 11400000, guid: b6fe54b5018b0ef4fa4914fbeda9314f, type: 2}
+  - key: Damage Cloud
+    pool: {fileID: 2516349698900178235}
+  _requests:
+  - _requestPoolCallback: {fileID: 11400000, guid: 6a2474b1485ec544d84bed40ddd75e76, type: 2}
+    _assignPoolCallback: {fileID: 11400000, guid: b6fe54b5018b0ef4fa4914fbeda9314f, type: 2}
+  - _requestPoolCallback: {fileID: 11400000, guid: ba1871477a674884fb196130a79cc4cf, type: 2}
+    _assignPoolCallback: {fileID: 11400000, guid: 2a422922caabf144689af135b9c7b5de, type: 2}
 --- !u!1 &7766186813019443454
 GameObject:
   m_ObjectHideFlags: 0
@@ -146,7 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d4a103d0916ed847b8f73b7024702de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 5401937023756211222, guid: e44569c45ad02da41a669912085e66fb, type: 3}
+  _prefab: {fileID: 2749655049972396979, guid: 78c173bae0c8704488f1067347b162bd, type: 3}
   _initialAmount: 35
   _extendIfEmpty: 5
   _extendable: 0

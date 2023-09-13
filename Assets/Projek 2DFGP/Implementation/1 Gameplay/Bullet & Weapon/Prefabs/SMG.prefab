@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 9084416917738952394}
   - component: {fileID: 2759825892526404278}
+  - component: {fileID: 7768108855225368031}
+  - component: {fileID: 3887847081579369344}
   m_Layer: 2
   m_Name: Bullet Barrel
   m_TagString: Untagged
@@ -48,6 +50,68 @@ MonoBehaviour:
   _shootForce: 80
   _accuracyAngle: 5
   _maxLengthDrawRay: 5
+--- !u!114 &7768108855225368031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9084416917738952395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -491222592
+      Data2: 1151468349
+      Data3: 1618313915
+      Data4: 1623406637
+    Path: event:/SFX/SFX Rifle Shot
+  Event: 
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 0
+  TriggerOnce: 0
+  Preload: 0
+  AllowNonRigidbodyDoppler: 0
+  Params:
+  - Name: Rifle Shots
+    Value: 0
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!114 &3887847081579369344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9084416917738952395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 186315a9efbe0874a8afaa6c8ce7ecb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _emitter: {fileID: 7768108855225368031}
+  _parameterName: Rifle Shots
+  _preDefaultValue: 1
+  _loopDefaultValue: 1
+  _postDefaultValue: 2
+  _initOnAwake: 1
+  _onRunPreSound:
+    m_PersistentCalls:
+      m_Calls: []
+  _onRunSoundLoop:
+    m_PersistentCalls:
+      m_Calls: []
+  _onRunPostSound:
+    m_PersistentCalls:
+      m_Calls: []
+  _debugControl: 0
+  _pressKeyToRun: 323
 --- !u!1 &9084416918877065010
 GameObject:
   m_ObjectHideFlags: 0
@@ -103,8 +167,10 @@ MonoBehaviour:
     _maxAmmoInBag: 300
     _maxAmmo: 50
     _reloadTime: 3
+    _audio: {fileID: 3887847081579369344}
   _bulletType: Normal Bullet
   _meta:
+    shotsPerAmmo: 1
     firstShootDelay: 0
     roundsPerSeconds: 20
     _initAmmoOnStart: 1

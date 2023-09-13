@@ -1,4 +1,3 @@
-using System;
 using JT.GameEvents;
 using UnityEngine;
 using UnityEngine.UI;

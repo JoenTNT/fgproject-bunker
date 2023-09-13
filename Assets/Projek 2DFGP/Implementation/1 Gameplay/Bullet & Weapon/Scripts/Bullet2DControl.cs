@@ -1,5 +1,7 @@
-using UnityEngine;
+#if FMOD
 using FMODUnity;
+#endif
+using UnityEngine;
 
 namespace JT.FGP
 {
@@ -7,7 +9,8 @@ namespace JT.FGP
     /// Bullet 2D object control.
     /// </summary>
     [RequireComponent(typeof(DestroyTimer))]
-    public class Bullet2DControl : MonoBehaviour, IShootDirectionCommand<Vector2>, IRequiredReset
+    public class Bullet2DControl : MonoBehaviour, IShootDirectionCommand<Vector2>, IRequiredReset,
+        IOwnerID<string>
     {
         #region Variables
 
@@ -24,12 +27,12 @@ namespace JT.FGP
         #region Properties
 
         /// <summary>
-        /// The shooter ID.
+        /// Is sprite enabled?
         /// </summary>
-        public string ShooterID
+        public bool SpriteEnabled
         {
-            get => _shooterID;
-            set => _shooterID = value;
+            get => _data.Sprite.enabled;
+            set => _data.Sprite.enabled = value;
         }
 
         #endregion
@@ -45,8 +48,9 @@ namespace JT.FGP
             _data.Hitter.OnDetectHit(transform.position, _data.MoveFunc.Direction,
                 _data.MoveFunc.Speed * Time.deltaTime);
 
-            // Move a bullet.
-            _data.MoveFunc.Move();
+            // Move a bullet until all target hit.
+            if (!_data.Hitter.IsDone)
+                _data.MoveFunc.Move();
         }
 
         private void OnDisable() => _isShoot = false;
@@ -79,10 +83,24 @@ namespace JT.FGP
 
             // Bullet facing forward of the aim direction.
             _data.LookFunc.LookAtDirection(direction);
-
+#if FMOD
             // Play sound if exists.
-            if (_data.SoundEmitter != null)
+            if (_data.SoundEmitter != null && !_data.DontPlaySoundOnShot)
                 _data.SoundEmitter.Play();
+#endif
+        }
+
+        #endregion
+
+        #region IOwnerID
+
+        /// <summary>
+        /// The shooter ID.
+        /// </summary>
+        public string OwnerID
+        {
+            get => _shooterID;
+            set => _shooterID = value;
         }
 
         #endregion
@@ -106,10 +124,17 @@ namespace JT.FGP
         [SerializeField]
         private Bullet2DHitter _hitter = null;
 
+        [SerializeField]
+        private SpriteRenderer _bulletSprite = null;
+
+        [Header("Properties")]
+        [SerializeField]
+        private bool _dontPlaySoundOnShot = false;
+#if FMOD
         [Header("Optional")]
         [SerializeField]
         private StudioEventEmitter _soundEmitter = null;
-
+#endif
         #endregion
 
         #region Properties
@@ -133,6 +158,16 @@ namespace JT.FGP
         /// Bullet shot sound effect.
         /// </summary>
         public StudioEventEmitter SoundEmitter => _soundEmitter;
+
+        /// <summary>
+        /// Bullet sprite.
+        /// </summary>
+        public SpriteRenderer Sprite => _bulletSprite;
+
+        /// <summary>
+        /// Don't play sound when shot command called.
+        /// </summary>
+        public bool DontPlaySoundOnShot => _dontPlaySoundOnShot;
 
         #endregion
     }

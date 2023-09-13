@@ -20,6 +20,10 @@ namespace JT.FGP
         [SerializeField, Min(0f)]
         private float _reloadTime = 3f;
 
+        [Header("Optional")]
+        [SerializeField]
+        private Audio_RuntimeLogic _audio = null;
+
         // Runtime variable data.
         private int _ammoInBag = 0;
         private int _ammoLeft = 0;
@@ -29,12 +33,23 @@ namespace JT.FGP
 
         #region Properties
 
+        /// <summary>
+        /// Gun audio handler.
+        /// </summary>
+        public IRuntimeHandler AudioRuntime => _audio;
+
+        /// <summary>
+        /// Amount of runtime current ammo in bag.
+        /// </summary>
         public int AmmoInBag
         {
             get => _ammoInBag;
             set => _ammoInBag = value;
         }
 
+        /// <summary>
+        /// Current reloading time in seconds.
+        /// </summary>
         public float ReloadTimeLeft
         {
             get => _reloadTimeLeft;

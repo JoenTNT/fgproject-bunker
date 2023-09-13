@@ -127,11 +127,11 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: 418197051
-      Data2: 1079142197
-      Data3: 735260603
-      Data4: 554268313
-    Path: event:/SFX/SFX Character Talk
+      Data1: -491222592
+      Data2: 1151468349
+      Data3: 1618313915
+      Data4: 1623406637
+    Path: event:/SFX/SFX Rifle Shot
   Event: 
   PlayEvent: 0
   StopEvent: 0
@@ -140,8 +140,8 @@ MonoBehaviour:
   Preload: 0
   AllowNonRigidbodyDoppler: 0
   Params:
-  - Name: Character Talk
-    Value: 0
+  - Name: Rifle Shots
+    Value: 1
   OverrideAttenuation: 0
   OverrideMinDistance: 1
   OverrideMaxDistance: 20
@@ -200,6 +200,8 @@ MonoBehaviour:
     _moveFunc: {fileID: 8583859469333870810}
     _lookFunc: {fileID: 8583859469333870813}
     _hitter: {fileID: 8583859469333870811}
+    _bulletSprite: {fileID: 8583859469348273917}
+    _dontPlaySoundOnShot: 1
     _soundEmitter: {fileID: 9072580931694607660}
 --- !u!114 &8583859469333870811
 MonoBehaviour:
@@ -223,6 +225,7 @@ MonoBehaviour:
   _maxTargetHit: 1
   _maxOverlapHit: 2
   _doNotDamage: 0
+  _hitEmitter: {fileID: 1201677890535595137}
 --- !u!114 &3533317075523475714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -293,6 +296,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8583859469348273916}
   - component: {fileID: 8583859469348273917}
+  - component: {fileID: 1201677890535595137}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -367,3 +371,36 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1201677890535595137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8583859469348273919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -448659475
+      Data2: 1205255233
+      Data3: 1449119668
+      Data4: -1554180737
+    Path: event:/SFX/SFX Bullet Hit
+  Event: 
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 0
+  TriggerOnce: 0
+  Preload: 0
+  AllowNonRigidbodyDoppler: 0
+  Params:
+  - Name: Bullet Hit
+    Value: 0
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20

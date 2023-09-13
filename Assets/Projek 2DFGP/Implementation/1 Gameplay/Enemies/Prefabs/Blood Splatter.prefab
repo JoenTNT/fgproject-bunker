@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 133999761697909815}
   - component: {fileID: 133999761697909813}
+  - component: {fileID: 4320376309388271163}
   - component: {fileID: 133999761697909814}
   - component: {fileID: 133999761697909812}
   m_Layer: 6
@@ -4799,6 +4800,20 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!114 &4320376309388271163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 133999761697909808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0424c19b504274d4ca156c86af82b89c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mode: 2
+  _id: Blood
 --- !u!199 &133999761697909814
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -4883,5 +4898,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f0098c9d1c124f42890842b48b1ac88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _splatterID: {fileID: 4320376309388271163}
   _minParticle: 2
   _maxParticle: 6
+  _onSplatterCallback: {fileID: 11400000, guid: 3020bec0b5999104aa14c2a808f9502b, type: 2}

@@ -42,7 +42,7 @@ namespace JT.FGP
 
         #region Variables
 
-        // Requirements.
+        [Header("Weapon Requirements")]
         [SerializeField]
         private Shooter2DFunc _shooterFunc = null;
 
@@ -166,6 +166,10 @@ namespace JT.FGP
             {
                 _isShooting = true;
                 _secondsBeforeShoot = _meta.firstShootDelay;
+
+                // Run audio if exists.
+                if (_data.AudioRuntime != null)
+                    _data.AudioRuntime.OnPreRuntime();
                 return;
             }
 
@@ -173,6 +177,10 @@ namespace JT.FGP
             else if (!WeaponState.IsInAction && _isShooting)
             {
                 _isShooting = false;
+
+                // Run audio if exists.
+                if (_data.AudioRuntime != null && !_data.IsReloading)
+                    _data.AudioRuntime.OnPostRuntime();
                 return;
             }
 
@@ -212,9 +220,13 @@ namespace JT.FGP
                     if (!_bulletObj.TryGetComponent(out _bullet)) return;
 
                     // Shoot command.
-                    _bullet.ShooterID = WeaponState.OwnerOfState;
+                    _bullet.OwnerID = WeaponState.OwnerOfState;
                     _shooterFunc.Shoot(_bullet);
                 }
+
+                // Run audio if exists.
+                if (_data.AudioRuntime != null)
+                    _data.AudioRuntime.OnRuntimeLoop();
 
                 // Send information changes to UI.
                 _data.Ammo--;
@@ -232,6 +244,10 @@ namespace JT.FGP
 
             // Reset reload timer.
             _data.ResetTimer();
+
+            // Run audio if exists.
+            if (_data.AudioRuntime != null)
+                _data.AudioRuntime.OnPostRuntime();
         }
 
         #endregion

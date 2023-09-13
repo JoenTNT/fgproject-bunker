@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 
 namespace JT.FGP.Dialogue
@@ -17,3 +18,4 @@ namespace JT.FGP.Dialogue
         #endregion
     }
 }
+#endif

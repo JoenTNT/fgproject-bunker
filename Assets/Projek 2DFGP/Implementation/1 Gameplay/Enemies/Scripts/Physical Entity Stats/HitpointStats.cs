@@ -14,24 +14,32 @@ namespace JT.FGP
         [SerializeField]
         private EntityID _entityID = null;
 
+        [SerializeField]
+        private KillCommand _killCommand = null;
+
         [Header("Properties")]
-        [SerializeField, Min(1f)]
+        [SerializeField]
+        private string _useSplatter = string.Empty;
+
+        [SerializeField, Min(0f)]
         private float _maxHP = 100f;
+
+        [SerializeField, Min(0f)]
+        private float _hp = 0f;
 
         [SerializeField]
         private bool _isDamageable = true;
-
-        [Header("Optional")]
-        [SerializeField]
-        private Splatter2DFXControl _splatter = null;
 
         [Header("Game Events")]
         [SerializeField]
         private GameEventTwoStringFloat _onEntityGotDamageBy = null;
 
-        // Runtime variable data.
-        private float _hp = 0f;
+        [SerializeField]
+        private GameEventVector2Float _onEntityHitOnTheSpot = null;
 
+        [SerializeField]
+        private GameEventStringVector2Float _onSplatterCallback = null;
+        
         #endregion
 
         #region Properties
@@ -43,6 +51,17 @@ namespace JT.FGP
 
         #endregion
 
+        #region Mono
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            // Check max limit HP.
+            if (_hp > _maxHP)
+                _hp = _maxHP;
+        }
+#endif
+        #endregion
+
         #region IHitPoint
 
         public float MaxHP => _maxHP;
@@ -51,7 +70,12 @@ namespace JT.FGP
 
         public void Heal(float hp)
         {
-            // TODO: Heal.
+            // Add HP.
+            _hp += hp;
+
+            // Check max limit HP.
+            if (_hp > _maxHP)
+                _hp = _maxHP;
         }
 
         #endregion
@@ -75,12 +99,28 @@ namespace JT.FGP
         /// <param name="by">Who hit the entity?</param>
         public void TakeDamage(Vector2 hitFromDirection, float damage, string by = null)
         {
-            // TODO: Hit me baby one more time.
-            Debug.Log($"Hit from Direction {hitFromDirection}; With Damage {damage}; By {by}");
+            // Take damage on this entity.
+            _hp -= damage;
+            if (_hp < 0f)
+            {
+                damage += _hp;
+                _hp = 0f;
+            }
 
-            // Emit splatter effect if exists.
-            if (_splatter != null)
-                _splatter.Splat(Mathf.Atan2(-hitFromDirection.y, hitFromDirection.x) * Mathf.Rad2Deg);
+            // Check if entity got killed.
+            if (_hp <= 0f)
+                _killCommand.Kill();
+
+            // Call events.
+            _onEntityGotDamageBy.Invoke(_entityID.ID, by, damage);
+            _onEntityHitOnTheSpot.Invoke(transform.position, damage);
+
+            // Check if not using splatter effect.
+            if (string.IsNullOrEmpty(_useSplatter)) return;
+
+            // Call splatter event.
+            _onSplatterCallback.Invoke(_useSplatter, transform.position,
+                Mathf.Atan2(-hitFromDirection.y, hitFromDirection.x) * Mathf.Rad2Deg);
         }
 
         #endregion
