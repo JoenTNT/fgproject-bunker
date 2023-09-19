@@ -87,10 +87,25 @@ namespace JT.FGP
             }
         }
 
-        public void Reset()
+        /// <summary>
+        /// Reset back to initial time.
+        /// </summary>
+        /// <param name="stopTimer">Should the timer stopped?</param>
+        public void Reset(bool stopTimer = true)
         {
             _tempSeconds = _initialTime;
-            _isRunning = false;
+            _isRunning = !stopTimer;
+        }
+
+        /// <summary>
+        /// Reset back at second time.
+        /// </summary>
+        /// <param name="atSecond">Target time reset</param>
+        /// <param name="stopTimer">Should the timer stopped?</param>
+        public void Reset(float atSecond, bool stopTimer = true)
+        {
+            _tempSeconds = atSecond;
+            _isRunning = !stopTimer;
         }
 
         #endregion

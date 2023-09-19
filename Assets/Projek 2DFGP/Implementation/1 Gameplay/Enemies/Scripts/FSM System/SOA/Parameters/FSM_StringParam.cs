@@ -8,7 +8,7 @@ namespace JT.FGP
     [CreateAssetMenu(
         fileName = "New String Param",
         menuName = "JT Framework/FSM/Param/String")]
-    public sealed class FSM_StringParam : FSM_ParameterData, IParameterData<string>
+    public sealed class FSM_StringParam : FSMSO_ParameterData, IParameterData<string>
     {
         #region Variables
 
