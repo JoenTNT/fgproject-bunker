@@ -11,6 +11,10 @@ GameObject:
   - component: {fileID: 6544230547698644045}
   - component: {fileID: 6544230547698644047}
   - component: {fileID: 8707759988858542866}
+  - component: {fileID: 5875170840594628291}
+  - component: {fileID: 8030200805665004606}
+  - component: {fileID: 4575112517574278157}
+  - component: {fileID: 3927163847999676229}
   m_Layer: 6
   m_Name: Dummy Enemy
   m_TagString: Untagged
@@ -25,6 +29,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6544230547698644044}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -33,7 +38,6 @@ Transform:
   - {fileID: 6544230548120049780}
   - {fileID: 6544230548695484921}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6544230547698644047
 MonoBehaviour:
@@ -48,7 +52,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mode: 1
-  _id: 35050
+  _id: 46462
 --- !u!114 &8707759988858542866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,6 +68,115 @@ MonoBehaviour:
   _data:
     _entityID: {fileID: 6544230547698644047}
     _hpStats: {fileID: 6544230548695484923}
+--- !u!114 &5875170840594628291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6544230547698644044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc1a7f55e2e2ea9499975be9f64c464a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rootExecute: {fileID: 11400000, guid: fc046b3d47d6f8c43a4b04b0df4731b3, type: 2}
+  _movementFunc: {fileID: 4575112517574278157}
+  _lookAtFunc: {fileID: 3927163847999676229}
+--- !u!114 &8030200805665004606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6544230547698644044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40a15c8f73249ec4cb453b642f18f26f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _paramPairs:
+  - _paramType: JT.ParamComponent, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    _paramName: Movement Function
+    _parameter: {fileID: 11400000, guid: 741ad018c17ff5c4893f14e2451117f4, type: 2}
+    _foldoutParameter: 1
+    _isValid: 1
+  - _paramType: JT.ParamComponent, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    _paramName: Look At Function
+    _parameter: {fileID: 11400000, guid: db7cbcd72bd6afd4f84f52ce8f2fa13e, type: 2}
+    _foldoutParameter: 1
+    _isValid: 1
+  - _paramType: JT.ParamTransform, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    _paramName: Chase Target
+    _parameter: {fileID: 11400000, guid: 4cd90cd81195a3e499e615d6d0a03348, type: 2}
+    _foldoutParameter: 1
+    _isValid: 1
+  - _paramType: JT.ParamVector2, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    _paramName: Idle Seconds Range
+    _parameter: {fileID: 11400000, guid: 0bf21a1489dd8ed4eab630d4dac1fc84, type: 2}
+    _foldoutParameter: 1
+    _isValid: 1
+  - _paramType: JT.ParamVector2, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    _paramName: Wandering Pivot Position
+    _parameter: {fileID: 11400000, guid: 6f35999038e2e43499fd4042bc28b2c5, type: 2}
+    _foldoutParameter: 1
+    _isValid: 1
+  - _paramType: JT.ParamFloat, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    _paramName: Max Wandering Radius
+    _parameter: {fileID: 11400000, guid: 4fa10663743c11340b3b768deee0732c, type: 2}
+    _foldoutParameter: 1
+    _isValid: 1
+  - _paramType: JT.ParamFloat, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    _paramName: Attack Range
+    _parameter: {fileID: 11400000, guid: 70e663bf1ad7aaa43a96f3cbda805e28, type: 2}
+    _foldoutParameter: 1
+    _isValid: 1
+  - _paramType: JT.ParamFloat, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    _paramName: Walk Speed
+    _parameter: {fileID: 11400000, guid: 26aa05ce0b504cf4c8a66dd9dacdbec1, type: 2}
+    _foldoutParameter: 1
+    _isValid: 1
+  - _paramType: JT.ParamBool, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    _paramName: Is Attacking
+    _parameter: {fileID: 11400000, guid: bca3079b4d4e47640a68b60ef4e0310c, type: 2}
+    _foldoutParameter: 1
+    _isValid: 1
+  - _paramType: JT.ParamBool, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    _paramName: Is Wandering
+    _parameter: {fileID: 11400000, guid: 9dd25e061c0aeb343bd6a0e3fd59ecf8, type: 2}
+    _foldoutParameter: 1
+    _isValid: 1
+  _targetObject: {fileID: 6544230547698644044}
+  _destroyObjectOnBake: 0
+--- !u!114 &4575112517574278157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6544230547698644044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2661a5e9dc6e49049a828c216266eecd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _moveSpeed: 5
+  _useRigidbody: 0
+  _rigidbody2D: {fileID: 0}
+--- !u!114 &3927163847999676229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6544230547698644044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 061064b7fce695c49950a4ff671fc796, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pivotRotation: {fileID: 6544230547698644045}
+  _lookMode: 0
 --- !u!1 &6544230548120049779
 GameObject:
   m_ObjectHideFlags: 0
@@ -88,13 +201,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6544230548120049779}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6544230547698644045}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!212 &6544230548120049781
 SpriteRenderer:
@@ -174,13 +287,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6544230548695484920}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6544230547698644045}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &6544230548695484922
 CircleCollider2D:
@@ -192,6 +305,25 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0

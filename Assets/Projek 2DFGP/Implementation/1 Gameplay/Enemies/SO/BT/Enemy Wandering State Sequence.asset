@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7a06c13ffce71745842084386921987, type: 3}
+  m_Name: Enemy Wandering State Sequence
+  m_EditorClassIdentifier: 
+  _sequences:
+  - {fileID: 11400000, guid: 3070556ec25b09140bd2ad115bbba54c, type: 2}
+  - {fileID: 11400000, guid: b21483d60f250354fbea529bf26a170f, type: 2}
+  - {fileID: 11400000, guid: 8314af1287e8286498d745b1f792d0b5, type: 2}

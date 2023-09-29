@@ -196,7 +196,7 @@ namespace JT.FGP
             // Check running process, if not then ignore process.
             if (!_isTransitioning) return;
 
-
+            // TODO: Switch transition process.
         }
 #if UNITY_EDITOR
         private void OnValidate()
