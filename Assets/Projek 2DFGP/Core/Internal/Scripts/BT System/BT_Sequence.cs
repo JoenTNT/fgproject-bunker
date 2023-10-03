@@ -26,7 +26,7 @@ namespace JT
 
         // Runtime variable data.
         private BT_Execute _tempExecute = null;
-        private int _currentIndex = 0;
+        private int _currentIndex = -1;
         private bool _loopRun = false;
         private bool _holdRun = false;
 
@@ -42,8 +42,15 @@ namespace JT
             State = BT_State.Running;
             _loopRun = true;
 
-            while (_currentIndex < _sequences.Length)
+            // Check index is final, then reset wack to zero.
+            if (_currentIndex == _sequences.Length - 1) _currentIndex = -1;
+
+            // Loop through all executions.
+            while (_currentIndex <= _sequences.Length - 1)
             {
+                // Next process.
+                _currentIndex++;
+
                 // Execute sequence.
                 _tempExecute = _sequences[_currentIndex];
                 _tempExecute.Execute();
@@ -53,7 +60,7 @@ namespace JT
                     // Check if failed, finish the process with failed result.
                     case BT_State.Failed:
                         State = BT_State.Failed;
-                        _loopRun = false;
+                        _loopRun = _holdRun = false;
                         break;
 
                     // Check if running onto action, then pause the process.
@@ -66,19 +73,16 @@ namespace JT
                     // All have been successfully run.
                     case BT_State.Success when _currentIndex == _sequences.Length - 1:
                         State = BT_State.Success;
-                        _loopRun = false;
+                        _loopRun = _holdRun = false;
                         break;
                 }
 
                 // Check loop run.
                 if (!_loopRun) break;
-
-                // Next process.
-                _currentIndex++;
             }
 
             // Reset back to zero if only the execution is not being hold.
-            if (!_holdRun) _currentIndex = 0;
+            if (!_holdRun) _currentIndex = -1;
         }
 
         public override BT_Execute GetCopy(GameObject objRef)

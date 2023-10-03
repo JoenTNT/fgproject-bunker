@@ -25,6 +25,9 @@ namespace JT.FGP
         private GameEventStringVector2 _onLookDirectionInput = null;
 
         [SerializeField]
+        private GameEventString _onReleaseLookAround = null;
+
+        [SerializeField]
         private GameEventString _onInteractCommand = null;
 
         [SerializeField]
@@ -45,6 +48,7 @@ namespace JT.FGP
             _onLookPositionInput.AddListener(ListenOnLookPositionInput);
             _onLookDirectionInput.AddListener(ListenOnLookDirectionInput);
             _onInteractCommand.AddListener(ListenOnInteractCommand);
+            _onReleaseLookAround.AddListener(ListenOnReleaseLookAround);
         }
 
         private void OnDestroy()
@@ -54,6 +58,7 @@ namespace JT.FGP
             _onLookPositionInput.RemoveListener(ListenOnLookPositionInput);
             _onLookDirectionInput.RemoveListener(ListenOnLookDirectionInput);
             _onInteractCommand.RemoveListener(ListenOnInteractCommand);
+            _onReleaseLookAround.RemoveListener(ListenOnReleaseLookAround);
         }
 
         private void Start()
@@ -108,6 +113,7 @@ namespace JT.FGP
         // For mouse controller, look position is the mouse cursor.
         private void ListenOnLookPositionInput(string id, Vector2 lookPos)
         {
+            // Validate ID.
             if (_data.ID != id) return;
 
             _data.LookFunc.LookAtPosition(lookPos);
@@ -116,6 +122,7 @@ namespace JT.FGP
         // For mobile joystick controller, look direction is joystick drag direction.
         private void ListenOnLookDirectionInput(string id, Vector2 lookDir)
         {
+            // Validate ID.
             if (_data.ID != id) return;
 
             // Set looking around status.
@@ -127,9 +134,23 @@ namespace JT.FGP
 
         private void ListenOnInteractCommand(string id)
         {
+            // Validate ID.
             if (_data.ID != id) return;
 
             _data.Entity.Interact();
+        }
+
+        private void ListenOnReleaseLookAround(string id)
+        {
+            // Validate ID.
+            if (_data.ID != id) return;
+
+            _isLookingAround = false;
+            _tempBeforeROM = 0f;
+
+            // Special Case, set move to look direction for runtime update.
+            _data.MoveFunc.Direction = Vector2.zero;
+            _data.LookFunc.LookAtDirection(_data.LookFunc.LookDirection);
         }
 
         #endregion

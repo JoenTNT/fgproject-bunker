@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8707759988858542866}
   - component: {fileID: 5875170840594628291}
   - component: {fileID: 8030200805665004606}
+  - component: {fileID: 7968785170843267031}
   - component: {fileID: 4575112517574278157}
   - component: {fileID: 3927163847999676229}
   m_Layer: 6
@@ -52,7 +53,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mode: 1
-  _id: 46462
+  _id: 40576
 --- !u!114 &8707759988858542866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81,6 +82,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rootExecute: {fileID: 11400000, guid: fc046b3d47d6f8c43a4b04b0df4731b3, type: 2}
+  _agent: {fileID: 7968785170843267031}
   _movementFunc: {fileID: 4575112517574278157}
   _lookAtFunc: {fileID: 3927163847999676229}
 --- !u!114 &8030200805665004606
@@ -96,6 +98,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _paramPairs:
+  - _paramType: JT.ParamComponent, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    _paramName: Nav Mesh Agent
+    _parameter: {fileID: 11400000, guid: a7b353ecff52b38479748256a237d45c, type: 2}
+    _foldoutParameter: 1
+    _isValid: 1
   - _paramType: JT.ParamComponent, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     _paramName: Movement Function
     _parameter: {fileID: 11400000, guid: 741ad018c17ff5c4893f14e2451117f4, type: 2}
@@ -119,6 +126,11 @@ MonoBehaviour:
   - _paramType: JT.ParamVector2, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     _paramName: Wandering Pivot Position
     _parameter: {fileID: 11400000, guid: 6f35999038e2e43499fd4042bc28b2c5, type: 2}
+    _foldoutParameter: 1
+    _isValid: 1
+  - _paramType: JT.ParamVector2, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    _paramName: Move Target Position
+    _parameter: {fileID: 11400000, guid: 0475e412ec9203f44b903ff1d0afff5f, type: 2}
     _foldoutParameter: 1
     _isValid: 1
   - _paramType: JT.ParamFloat, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -148,6 +160,28 @@ MonoBehaviour:
     _isValid: 1
   _targetObject: {fileID: 6544230547698644044}
   _destroyObjectOnBake: 0
+--- !u!195 &7968785170843267031
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6544230547698644044}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 5.5
+  m_Acceleration: 100
+  avoidancePriority: 50
+  m_AngularSpeed: 720
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 1
 --- !u!114 &4575112517574278157
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -23,8 +23,8 @@ namespace JT
         private BT_Execute _rootExecute = null;
 
         // Runtime variable data.
-        private IBTProcessHolder _processHolder = null;
         private BT_Execute _currentExecution = null;
+        private IBTProcessHolder _processHolder = null;
         private IBTRuntimeAction _runtimeAction = null;
         private bool _isInit = false;
 
@@ -103,10 +103,7 @@ namespace JT
 
         RunSingleAction:
             // Check if there's runtime action running, if not the abort process.
-            if (_runtimeAction == null) return;
-
-            // Check action running is done.
-            if (_runtimeAction.IsDone) return;
+            if (_runtimeAction == null || _runtimeAction.IsDone) return;
 
             // Run current action running.
             _runtimeAction.OnTickAction();

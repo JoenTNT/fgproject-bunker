@@ -19,7 +19,6 @@ namespace JT.FGP
         [SerializeField]
         private GameEventStringInt _openInteractionCommandCallback = null;
 
-        [Header("Game Events")]
         [SerializeField]
         private GameEventString _onActionCommandInstantCallback = null;
 
@@ -32,7 +31,7 @@ namespace JT.FGP
         [SerializeField]
         private GameEventTwoStringUnityObject _equipWeaponCallback = null;
 
-        // Temporary variable data
+        // Runtime variable data
         private GameObject _nearestInteractionTarget = null;
         private InteractionMark _nearestInteractionMark = null;
 
@@ -68,7 +67,7 @@ namespace JT.FGP
                 if (_nearestInteractionMark?.gameObject == _nearestInteractionTarget) return;
                 if (!_nearestInteractionTarget.TryGetComponent(out _nearestInteractionMark)) return;
 #if UNITY_EDITOR
-                Debug.Log("Enable Interaction Command Interface.");
+                //Debug.Log("[DEBUG] Enable Interaction Command Interface.");
 #endif
                 _openInteractionCommandCallback.Invoke(_data.ID, (int)_nearestInteractionMark.DisplayTypeInteraction);
             }
@@ -76,7 +75,7 @@ namespace JT.FGP
             {
                 if (_nearestInteractionMark == null) return;
 #if UNITY_EDITOR
-                Debug.Log("Disable Interaction Command Interface.");
+                //Debug.Log("[DEBUG] Disable Interaction Command Interface.");
 #endif
                 _openInteractionCommandCallback.Invoke(_data.ID, (int)InteractionType.None);
                 _nearestInteractionMark = null;

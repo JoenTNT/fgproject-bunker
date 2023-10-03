@@ -13,6 +13,9 @@ namespace JT.FGP
         public const string IDLE_SECONDS_RANGE_KEY = "Idle Seconds Range";
         public const string WANDERING_PIVOT_POSITION_KEY = "Wandering Pivot Position";
         public const string MAX_WANDERING_RADIUS_KEY = "Max Wandering Radius";
+        public const string WALK_SPEED_KEY = "Walk Speed";
+        public const string NAVMESH_AGENT_KEY = "Nav Mesh Agent";
+        public const string MOVE_TARGET_POSITION = "Move Target Position";
 
         #endregion
     }

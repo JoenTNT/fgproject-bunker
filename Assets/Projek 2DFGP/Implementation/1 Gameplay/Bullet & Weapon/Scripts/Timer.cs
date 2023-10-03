@@ -33,6 +33,7 @@ namespace JT.FGP
         private bool _isCountingUp = false;
 
         // Runtime variable data.
+        [SerializeField]
         private float _tempSeconds = 0f;
         private bool _isRunning = false;
 

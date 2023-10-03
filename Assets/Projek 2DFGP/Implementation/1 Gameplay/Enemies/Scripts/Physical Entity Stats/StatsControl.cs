@@ -9,8 +9,8 @@ namespace JT.FGP
     {
         #region Variables
 
-        [SerializeField]
-        private StatsControlData _data = null;
+        //[SerializeField]
+        //private StatsControlData _data = null;
 
         // Runtime variable data.
 

@@ -33,7 +33,6 @@ RectTransform:
   m_Children:
   - {fileID: 440026679419678791}
   m_Father: {fileID: 2440626812945291303}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.4, y: 0.4}
@@ -121,7 +120,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 440026679419678791}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -199,11 +197,10 @@ RectTransform:
   m_Children:
   - {fileID: 440026678917896935}
   m_Father: {fileID: 440026678784947578}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 224, y: 84}
+  m_AnchoredPosition: {x: 196, y: 84}
   m_SizeDelta: {x: 240, y: 240}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &440026679419678785
@@ -264,6 +261,8 @@ MonoBehaviour:
     _onJoystickDownSend: 0
     _onJoystickUpSend: 1
   _joystickInputCallback: {fileID: 11400000, guid: ff01d6ddcc4f8654e95993543dcdc0ba, type: 2}
+  _onJoystickPressBegin: {fileID: 0}
+  _onJoystickPressEnd: {fileID: 0}
 --- !u!1 &1041880034077970845
 GameObject:
   m_ObjectHideFlags: 0
@@ -295,7 +294,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3660555354851891270}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.2, y: 0.2}
   m_AnchorMax: {x: 0.8, y: 0.8}
@@ -323,7 +321,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -374,7 +372,6 @@ RectTransform:
   - {fileID: 5179289837665424201}
   - {fileID: 3660555354851891270}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -439,11 +436,10 @@ RectTransform:
   m_Children:
   - {fileID: 6091753050515190149}
   m_Father: {fileID: 2440626812945291303}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -224, y: 84}
+  m_AnchoredPosition: {x: -196, y: 84}
   m_SizeDelta: {x: 240, y: 240}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &3392459258258617245
@@ -504,6 +500,8 @@ MonoBehaviour:
     _onJoystickDownSend: 0
     _onJoystickUpSend: 0
   _joystickInputCallback: {fileID: 11400000, guid: ca76377e15483e94783fa2a919dc365a, type: 2}
+  _onJoystickPressBegin: {fileID: 0}
+  _onJoystickPressEnd: {fileID: 11400000, guid: 52bc6e1cb87f51e4081783ec5ca93b45, type: 2}
 --- !u!1 &7589779213869255624
 GameObject:
   m_ObjectHideFlags: 0
@@ -535,7 +533,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5179289837665424201}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -617,11 +614,10 @@ RectTransform:
   m_Children:
   - {fileID: 1417123245539426420}
   m_Father: {fileID: 2440626812945291303}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -524, y: 80}
+  m_AnchoredPosition: {x: -536, y: 64}
   m_SizeDelta: {x: 136, y: 136}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &7345599664804276237
@@ -652,7 +648,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f2fc4f66ffecce34482516cd7a43f05d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c2651d9b40c75754791554c34818afd8, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1

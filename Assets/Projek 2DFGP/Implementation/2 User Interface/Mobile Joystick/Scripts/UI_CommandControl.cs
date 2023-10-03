@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace JT.FGP
 {
+    /// <summary>
+    /// Button command control.
+    /// </summary>
     [RequireComponent(typeof(RectTransform))]
     public class UI_CommandControl : MonoBehaviour, ICommand
     {

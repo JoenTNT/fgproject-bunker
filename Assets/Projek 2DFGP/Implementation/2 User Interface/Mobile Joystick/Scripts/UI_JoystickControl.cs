@@ -20,6 +20,13 @@ namespace JT.FGP
         [SerializeField]
         private GameEventStringVector2 _joystickInputCallback = null;
 
+        [Header("Optional Game Events")]
+        [SerializeField]
+        private GameEventString _onJoystickPressBegin = null;
+
+        [SerializeField]
+        private GameEventString _onJoystickPressEnd = null;
+
         // Temp variable data
         private RectTransform _rectTransform = null;
         //private Vector2 _touchDownPoint = Vector2.zero;
@@ -69,6 +76,10 @@ namespace JT.FGP
 
             // Set joystick pressed status.
             _data.IsJoystickPressed = true;
+
+            // Call event if exists.
+            if (_onJoystickPressBegin != null)
+                _onJoystickPressBegin.Invoke(_data.TargetID, this);
         }
 
         #endregion
@@ -92,6 +103,10 @@ namespace JT.FGP
 
             // Set joystick pressed status.
             _data.IsJoystickPressed = false;
+
+            // Call event if exists.
+            if (_onJoystickPressEnd != null)
+                _onJoystickPressEnd.Invoke(_data.TargetID, this);
         }
 
         #endregion

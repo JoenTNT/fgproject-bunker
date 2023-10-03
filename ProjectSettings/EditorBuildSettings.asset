@@ -6,6 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Projek 2DFGP/Implementation/2 User Interface/Main Menu/Scenes/Main
+      Menu.unity
+    guid: a073ef77eefd3964eb465a3ebabd3579
+  - enabled: 1
     path: Assets/Projek 2DFGP/Prototype/Scenes/Gameplay.unity
     guid: 384cc5d952e10c640ac4cbba3ceff28c
   m_configObjects:

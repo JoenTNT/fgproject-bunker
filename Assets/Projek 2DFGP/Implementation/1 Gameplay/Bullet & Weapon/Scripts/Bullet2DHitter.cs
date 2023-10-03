@@ -38,8 +38,8 @@ namespace JT.FGP
         //[SerializeField]
         //private LayerMask _selfDestroyTargetHit = ~0;
 
-        [SerializeField]
-        private CollisionDetectionMode2D _collisionDetection = CollisionDetectionMode2D.Discrete;
+        //[SerializeField]
+        //private CollisionDetectionMode2D _collisionDetection = CollisionDetectionMode2D.Discrete;
 
         [SerializeField]
         private float _collisionRadius = 0.2f;

@@ -1,5 +1,4 @@
 using JT.GameEvents;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -32,10 +31,6 @@ namespace JT.FGP
             [SerializeField]
             private bool _cacheFixDuration = true;
 
-            // Runtime variable data.
-            private float _cacheDuration = 0f;
-            private bool _isCached = false;
-
             #endregion
 
             #region Properties
@@ -59,17 +54,9 @@ namespace JT.FGP
 
             /// <summary>
             /// Duration of this day time.
+            /// WARNING: This will read the last key of curve, cache this data for better performance.
             /// </summary>
-            public float Duration
-            {
-                get
-                {
-                    if (_cacheFixDuration && _isCached) return _cacheDuration;
-                    _cacheDuration = _lightIntensity.keys[_lightIntensity.keys.Length - 1].time;
-                    _isCached = true;
-                    return _cacheDuration;
-                }
-            }
+            public float Duration => _lightIntensity.keys[_lightIntensity.keys.Length - 1].time;
 
             #endregion
         }
@@ -91,14 +78,27 @@ namespace JT.FGP
 
         [Header("Game Events")]
         [SerializeField]
-        private GameEventUnityObject _registerLightCallback = null;
+        private GameEventFloat _onTickDayPercentage = null;
 
         // Runtime variable data.
-        private Dictionary<InGameLightingType, List<Light2DSwitchFunc>> _lights = new();
         private DayTimeDuration _tempDTD = null;
         private int _dayTimeCurrentIndex = 0;
         private int _dayCount = 0;
         private float _tempOnSecond = 0f;
+        private float _tempOnSecondToday = 0f;
+
+        // Cache variable data.
+        private float[] _cacheDurations = null;
+        private float _secondsInOneDayCache = 0f;
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// How much seconds in real life for one day in gameplay.
+        /// </summary>
+        public float SecondsInOneDay => _secondsInOneDayCache;
 
         #endregion
 
@@ -106,42 +106,29 @@ namespace JT.FGP
 
         private void Awake()
         {
-            // Instantiate container if not yet init.
-            if (_lights == null) _lights = new();
-            if (_lights.Count == 0)
+            // Cache all data requirements.
+            int seqCount = _dayTimeSequenceLoop.Length;
+            _cacheDurations = new float[seqCount];
+            _secondsInOneDayCache = 0f;
+            for (int i = 0; i < seqCount; i++)
             {
-                System.Array e = System.Enum.GetValues(typeof(InGameLightingType));
-                InGameLightingType lightingType;
-                for (int i = 0; i < e.Length; i++)
-                {
-                    lightingType = (InGameLightingType)e.GetValue(i);
-                    _lights[lightingType] = new List<Light2DSwitchFunc>();
-                }
+                _cacheDurations[i] = _dayTimeSequenceLoop[i].Duration;
+                _secondsInOneDayCache += _cacheDurations[i];
             }
-
-            // Subscribe events.
-            _registerLightCallback.AddListener(ListenRegisterLightCallback);
-        }
-
-        private void OnDestroy()
-        {
-            // Unsubscribe events.
-            _registerLightCallback.RemoveListener(ListenRegisterLightCallback);
         }
 
         private void Start()
         {
             // Check timeline starting point.
             float initialStart = _timer.InitialSecond;
-            float tempDuration;
+            float tempDuration = 0f;
             while (initialStart > 0f)
             {
                 _dayTimeCurrentIndex = 0;
                 for (; _dayTimeCurrentIndex < _dayTimeSequenceLoop.Length; _dayTimeCurrentIndex++)
                 {
                     tempDuration = _dayTimeSequenceLoop[_dayTimeCurrentIndex].Duration;
-                    if (tempDuration > initialStart)
-                        goto SkipDurationChecker;
+                    if (tempDuration > initialStart) goto SkipDurationChecker;
                     initialStart -= tempDuration;
                 }
 
@@ -149,8 +136,13 @@ namespace JT.FGP
                 _dayCount++;
             }
 
-            // Skip duration check if already valid.
-            SkipDurationChecker:
+        // Skip duration check if already valid.
+        SkipDurationChecker:
+
+            // Set initial temp seconds today.
+            _tempOnSecondToday = tempDuration;
+            for (int i = 0; i < _dayTimeCurrentIndex; i++)
+                _tempOnSecondToday += _cacheDurations[i];
 
             // Set timer start immediately.
             _timer.Start();
@@ -158,17 +150,27 @@ namespace JT.FGP
 
         private void Update()
         {
-            // Ticking timer.
-            _timer.Tick(Time.deltaTime);
+            // Always call event before start everything.
+            _onTickDayPercentage.Invoke(_tempOnSecondToday / _secondsInOneDayCache);
 
-            // Transitioning day time values.
+            // Ticking timer.
+            float delta = Time.deltaTime;
+            _timer.Tick(delta);
+#if UNITY_EDITOR
+            _tempOnSecondToday = _tempOnSecond;
+            for (int i = 0; i < _dayTimeCurrentIndex; i++)
+                _tempOnSecondToday += _cacheDurations[i];
+#else
+            _tempOnSecondToday += delta;
+#endif
+                // Transitioning day time values.
             _tempDTD = _dayTimeSequenceLoop[_dayTimeCurrentIndex];
             _tempOnSecond = _timer.OnSecond;
             _mainLight.intensity = _tempDTD.LightIntensity.Evaluate(_tempOnSecond);
 
             // Lerping light color.
             Color currentColor = _dayTimeSequenceLoop[_dayTimeCurrentIndex].LightColor;
-            float halfDuration = _tempDTD.Duration / 2f;
+            float halfDuration = _cacheDurations[_dayTimeCurrentIndex] / 2f;
             if (_tempOnSecond < halfDuration)
             {
                 // Define previous index and previous color.
@@ -188,11 +190,12 @@ namespace JT.FGP
                 Color nextColor = _dayTimeSequenceLoop[nextIndex].LightColor;
 
                 // Calculate lerp color.
-                _mainLight.color = Color.Lerp(currentColor, nextColor, _tempOnSecond / halfDuration / 2f);
+                _mainLight.color = Color.Lerp(currentColor, nextColor,
+                    (_tempOnSecond - halfDuration) / _cacheDurations[_dayTimeCurrentIndex]);
             }
 
             // Check next sequence index of day time, if not the ignore the rest.
-            if (_tempOnSecond < _tempDTD.Duration)
+            if (_tempOnSecond < _cacheDurations[_dayTimeCurrentIndex])
                 return;
 
             // To the next sequence, and reset timer back to zero.
@@ -206,9 +209,23 @@ namespace JT.FGP
             // Next day.
             _dayTimeCurrentIndex = 0;
             _dayCount++;
+            _tempOnSecondToday = 0f;
         }
-
-        #endregion
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            // Cache new data everytime changed in editor.
+            int seqCount = _dayTimeSequenceLoop.Length;
+            _cacheDurations = new float[seqCount];
+            _secondsInOneDayCache = 0f;
+            for (int i = 0; i < seqCount; i++)
+            {
+                _cacheDurations[i] = _dayTimeSequenceLoop[i].Duration;
+                _secondsInOneDayCache += _cacheDurations[i];
+            }
+        }
+#endif
+#endregion
 
         #region IDayCounter
 
@@ -218,43 +235,6 @@ namespace JT.FGP
         public int DayCount => _dayCount;
 
         public void ResetDayCount() => _dayCount = 0;
-
-        #endregion
-
-        #region Main
-
-        private void ListenRegisterLightCallback(Object lightObj)
-        {
-            // Check validation.
-            if (lightObj is not Light2D) return;
-
-            // Register light, manually check for better performance with valid registration.
-            Light2DSwitchFunc light = (Light2DSwitchFunc)lightObj;
-            if (InGameLightingType.Unknown == (light.LightType & InGameLightingType.Unknown))
-                _lights[InGameLightingType.Unknown].Add(light);
-            if (InGameLightingType.Global == (light.LightType & InGameLightingType.Global))
-                _lights[InGameLightingType.Global].Add(light);
-            if (InGameLightingType.Primary == (light.LightType & InGameLightingType.Primary))
-                _lights[InGameLightingType.Primary].Add(light);
-            if (InGameLightingType.Secondary == (light.LightType & InGameLightingType.Secondary))
-                _lights[InGameLightingType.Secondary].Add(light);
-            if (InGameLightingType.Tertiary == (light.LightType & InGameLightingType.Tertiary))
-                _lights[InGameLightingType.Tertiary].Add(light);
-            if (InGameLightingType.Quartenary == (light.LightType & InGameLightingType.Quartenary))
-                _lights[InGameLightingType.Quartenary].Add(light);
-            if (InGameLightingType.Quinary == (light.LightType & InGameLightingType.Quinary))
-                _lights[InGameLightingType.Quinary].Add(light);
-            if (InGameLightingType.Senary == (light.LightType & InGameLightingType.Senary))
-                _lights[InGameLightingType.Senary].Add(light);
-            if (InGameLightingType.Septenary == (light.LightType & InGameLightingType.Septenary))
-                _lights[InGameLightingType.Septenary].Add(light);
-            if (InGameLightingType.Octonary == (light.LightType & InGameLightingType.Octonary))
-                _lights[InGameLightingType.Octonary].Add(light);
-            if (InGameLightingType.Nonary == (light.LightType & InGameLightingType.Nonary))
-                _lights[InGameLightingType.Nonary].Add(light);
-            if (InGameLightingType.Denary == (light.LightType & InGameLightingType.Denary))
-                _lights[InGameLightingType.Denary].Add(light);
-        }
 
         #endregion
     }

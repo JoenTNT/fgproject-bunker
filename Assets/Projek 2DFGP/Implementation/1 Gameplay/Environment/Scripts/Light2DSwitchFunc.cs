@@ -16,20 +16,59 @@ namespace JT.FGP
 
         /// <summary>
         /// Handle fading process using job system.
+        /// TODO: Implement job system.
         /// </summary>
-        public struct ExecutionJob : IJobParallelFor
+        public struct ExecutionJob : IJob
         {
-            // TODO: Animation curve data parsing problem.
-            // This only takes 2 keyframe, which is start and end of animation curve.
-            public readonly NativeArray<Keyframe> _firstKeyframe; 
-            public readonly NativeArray<Keyframe> _secondKeyframe;
-            public NativeArray<float> currentIntensityValue;
-            public NativeArray<bool> isTurningOn; // Turning off if false.
+            // Modification variable data.
+            public readonly NativeArray<Keyframe> keyframes;
+            public float currentIntensityValue;
+            public float currentSeconds;
             public float deltaTime;
+            public bool isTurningOn; // Turning off if false.
 
-            public void Execute(int index)
+            public void Execute()
             {
+                int fromIndex = 0, toIndex = 0;
+                bool found = false;
+                for (int i = 0; i < keyframes.Length - 1; i++)
+                {
+                    fromIndex = i;
+                    toIndex = i + 1;
+                    if (keyframes[i].time >= currentSeconds && keyframes[i + 1].time < currentSeconds)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                
+                // Cancel execution if not found.
+                if (!found) return;
 
+                // Get time distance between 2 keyframe
+                Keyframe fromKey = keyframes[fromIndex];
+                Keyframe toKey = keyframes[toIndex];
+                float deltaTimeRange = fromKey.time - toKey.time;
+                float outT, inT;
+
+                // Check if the animation keyframe mode is weighten or tangent.
+                if (fromKey.weightedMode == WeightedMode.Out)
+                    outT = fromKey.outWeight * deltaTimeRange;
+                else
+                    outT = fromKey.outTangent * deltaTimeRange;
+                if (toKey.weightedMode == WeightedMode.In)
+                    inT = toKey.inWeight * deltaTimeRange;
+                else
+                    inT = toKey.inTangent * deltaTimeRange;
+
+                // Calculate curve value.
+                float t2 = currentSeconds * currentSeconds;
+                float t3 = t2 * currentSeconds;
+                float a = 2f * t3 - 3f * t2 + 1f;
+                float b = t3 - 2 * t2 + currentSeconds;
+                float c = t3 - t2;
+                float d = -2 * t3 + 3 * t2;
+                currentIntensityValue = a * fromKey.value + b * outT + c * inT + d * toKey.value;
             }
         }
 
@@ -136,7 +175,8 @@ namespace JT.FGP
         private GameEventUnityObject _sendToContainerCallback = null;
 
         // Runtime variable data.
-        private float _currentIntensity = 0f;
+        private float _duration = 0f;
+        private float _currentSeconds = 0f;
         private bool _isTurnedOn = false;
         private bool _isTransitioning = false;
 
@@ -194,9 +234,10 @@ namespace JT.FGP
         private void Update()
         {
             // Check running process, if not then ignore process.
-            if (!_isTransitioning) return;
+            if (!IsTransitioning) return;
 
-            // TODO: Switch transition process.
+            // Handle transition on runtime.
+            HandleTransition();
         }
 #if UNITY_EDITOR
         private void OnValidate()
@@ -220,7 +261,13 @@ namespace JT.FGP
 
         #region IRunnableCommand
 
-        public void StartRun() => _isTransitioning = true;
+        public void StartRun()
+        {
+            var keys = _lightMeta.FadingCurve.keys;
+            _duration = keys[keys.Length - 1].time;
+            _currentSeconds = _lightMeta.ReverseCurve ? _duration : 0f;
+            _isTransitioning = true;
+        }
 
         public void StopRun() => _isTransitioning = false;
 
@@ -238,6 +285,32 @@ namespace JT.FGP
             Keyframe firstKey = _lightMeta.FadingCurve.keys[0];
             Keyframe lastKey = _lightMeta.FadingCurve.keys[_lightMeta.FadingCurve.keys.Length - 1];
             _targetLight.intensity = _lightMeta.TurnOffOnStart ? firstKey.value : lastKey.value;
+            _isTurnedOn = !_lightMeta.TurnOffOnStart;
+        }
+
+        private void HandleTransition()
+        {
+            // TODO: Fix Turn On Off and Reverse Curve ambiguity.
+            //bool isReverseCurve = !_isTurnedOn && _lightMeta.ReverseCurve;
+            bool isReverseCurve = !_isTurnedOn;
+
+            // Tick seconds.
+            _currentSeconds += isReverseCurve ? -Time.deltaTime : Time.deltaTime;
+
+            // Check animation ended.
+            if (_currentSeconds > _duration && !isReverseCurve)
+            {
+                _currentSeconds = _duration;
+                _isTransitioning = false;
+            }
+            else if (_currentSeconds < 0f && isReverseCurve)
+            {
+                _currentSeconds = 0f;
+                _isTransitioning = false;
+            }
+
+            // Evaluate animation curve value for light intensity.
+            _targetLight.intensity = _lightMeta.FadingCurve.Evaluate(_currentSeconds);
         }
 
         /// <summary>

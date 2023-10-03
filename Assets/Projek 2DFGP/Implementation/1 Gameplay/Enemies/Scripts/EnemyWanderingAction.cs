@@ -21,11 +21,9 @@ namespace JT.FGP
         private BakedParamVector2 _idleSecondsRangeParam = null;
         private BakedParamVector2 _wanderingPivotPositionParam = null;
         private BakedParamFloat _maxWanderingRadiusParam = null;
-        private Topview2DMovementFunc _movementFunc = null;
-        private Topview2DLookAtFunc _lookAtFunc = null;
+        private BakedParamVector2 _moveTargetPosParam = null;
 
         // Runtime variable data.
-        private Vector2 _targetMovePosition = Vector2.zero;
         private float _tempIdleSeconds = 0f;
 
         #endregion
@@ -43,8 +41,7 @@ namespace JT.FGP
             _idleSecondsRangeParam = (BakedParamVector2)@params[EC.IDLE_SECONDS_RANGE_KEY];
             _wanderingPivotPositionParam = (BakedParamVector2)@params[EC.WANDERING_PIVOT_POSITION_KEY];
             _maxWanderingRadiusParam = (BakedParamFloat)@params[EC.MAX_WANDERING_RADIUS_KEY];
-            _movementFunc = (Topview2DMovementFunc)@params[EC.MOVEMENT_FUNCTION_KEY];
-            _lookAtFunc = (Topview2DLookAtFunc)@params[EC.LOOK_AT_FUNCTION_KEY];
+            _moveTargetPosParam = (BakedParamVector2)@params[EC.MOVE_TARGET_POSITION];
         }
 
         public override BT_State CalcStateCondition()
@@ -56,29 +53,27 @@ namespace JT.FGP
         public override void OnBeforeAction()
         {
             // Set wandering pivot initial.
-            _targetMovePosition = _wanderingPivotPositionParam.Value = ObjectRef.transform.position;
-            _movementFunc.Direction = Vector2.zero;
+            _moveTargetPosParam.Value = _wanderingPivotPositionParam.Value = ObjectRef.transform.position;
 
             // Always reset idle time on start.
             ResetIdle();
+#if UNITY_EDITOR
+            //Debug.Log($"[DEBUG] Agent is Idling! Waiting for {_tempIdleSeconds}");
+#endif
         }
 
         public override void OnTickAction()
         {
-            // Handle walking to target.
-            HandleWalking();
-
             // Handle idle.
             if (HandleTickIdle()) return;
 
             // Get target walk position.
-            _targetMovePosition = GetRandWanderTargetPosition();
-
-            // Reset Idle time.
-            ResetIdle();
+            _moveTargetPosParam.Value = GetRandWanderTargetPosition();
 #if UNITY_EDITOR
-            Debug.Log($"[DEBUG] Walk to position {_targetMovePosition}, now wait for more {_tempIdleSeconds}");
+            //Debug.Log($"[DEBUG] Walk to position {_moveTargetPosParam.Value};");
 #endif
+            // End action process.
+            State = BT_State.Success;
         }
 
         #endregion
@@ -93,12 +88,6 @@ namespace JT.FGP
         {
             _tempIdleSeconds -= Time.deltaTime;
             return _tempIdleSeconds > 0f;
-        }
-
-        private void HandleWalking()
-        {
-            // Do move function.
-            _movementFunc.Move();
         }
 
         private void ResetIdle()

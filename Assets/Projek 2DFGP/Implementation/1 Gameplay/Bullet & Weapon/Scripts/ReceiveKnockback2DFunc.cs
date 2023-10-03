@@ -9,14 +9,14 @@ namespace JT.FGP
     {
         #region Variables
 
-        [Header("Requirements")]
-        [SerializeField]
-        private Transform _affectTransform = null;
+        //[Header("Requirements")]
+        //[SerializeField]
+        //private Transform _affectTransform = null;
 
-        [Header("Optional")]
-        [Tooltip("Prioritize Rig")]
-        [SerializeField]
-        private Rigidbody2D _affectRigidbody = null;
+        //[Header("Optional")]
+        //[Tooltip("Prioritize Rig")]
+        //[SerializeField]
+        //private Rigidbody2D _affectRigidbody = null;
 
         #endregion
     }

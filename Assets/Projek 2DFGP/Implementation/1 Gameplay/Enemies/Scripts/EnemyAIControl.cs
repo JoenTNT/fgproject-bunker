@@ -1,7 +1,11 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace JT.FGP
 {
+    // Shorten includes.
+    using EC = EnemyConstants;
+
     /// <summary>
     /// Enemy AI control.
     /// </summary>
@@ -10,6 +14,9 @@ namespace JT.FGP
         #region Variables
 
         // Requirements
+        [SerializeField]
+        private NavMeshAgent _agent = null;
+
         [SerializeField]
         private Topview2DMovementFunc _movementFunc = null;
 
@@ -41,8 +48,9 @@ namespace JT.FGP
 
             // Bake dashboard.
             _mainBakedDashboard = mainDashboard.Bake();
-            _mainBakedDashboard.AssignValue<Component>(EnemyConstants.MOVEMENT_FUNCTION_KEY, _movementFunc);
-            _mainBakedDashboard.AssignValue<Component>(EnemyConstants.LOOK_AT_FUNCTION_KEY, _lookAtFunc);
+            _mainBakedDashboard.AssignValue<Component>(EC.MOVEMENT_FUNCTION_KEY, _movementFunc);
+            _mainBakedDashboard.AssignValue<Component>(EC.LOOK_AT_FUNCTION_KEY, _lookAtFunc);
+            _mainBakedDashboard.AssignValue<Component>(EC.NAVMESH_AGENT_KEY, _agent);
 
             // Always initialize base after dashboard data has been baked.
             base.OnInit();
