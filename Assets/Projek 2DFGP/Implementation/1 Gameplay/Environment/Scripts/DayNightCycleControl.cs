@@ -28,9 +28,6 @@ namespace JT.FGP
             [SerializeField]
             private Color _lightColor;
 
-            [SerializeField]
-            private bool _cacheFixDuration = true;
-
             #endregion
 
             #region Properties
