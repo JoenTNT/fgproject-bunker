@@ -23,6 +23,9 @@ namespace JT.FGP
         [SerializeField]
         private Topview2DLookAtFunc _lookAtFunc = null;
 
+        [SerializeField]
+        private InsideAreaObjectCollector2D _objectCollector2D = null;
+
         // Runtime variable data.
         private BakedDashboard _mainBakedDashboard = null;
 
@@ -33,8 +36,8 @@ namespace JT.FGP
         private void OnValidate()
         {
             // Always add dashboard.
-            if (!TryGetComponent(out Dashboard dashboard))
-                dashboard = gameObject.AddComponent<Dashboard>();
+            if (!TryGetComponent(out Dashboard _))
+                gameObject.AddComponent<Dashboard>();
         }
 
         #endregion
@@ -51,6 +54,7 @@ namespace JT.FGP
             _mainBakedDashboard.AssignValue<Component>(EC.MOVEMENT_FUNCTION_KEY, _movementFunc);
             _mainBakedDashboard.AssignValue<Component>(EC.LOOK_AT_FUNCTION_KEY, _lookAtFunc);
             _mainBakedDashboard.AssignValue<Component>(EC.NAVMESH_AGENT_KEY, _agent);
+            _mainBakedDashboard.AssignValue<Component>(EC.INSIDE_FOV_AREA_KEY, _objectCollector2D);
 
             // Always initialize base after dashboard data has been baked.
             base.OnInit();

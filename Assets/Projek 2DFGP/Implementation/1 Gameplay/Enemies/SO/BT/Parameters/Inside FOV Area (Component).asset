@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d5cdeaa7fecfb94188344f5bac2f5af, type: 3}
-  m_Name: Walk Speed (Float)
+  m_Script: {fileID: 11500000, guid: 370b5f342f3329d4cb77c4404d746410, type: 3}
+  m_Name: Inside FOV Area (Component)
   m_EditorClassIdentifier: 
   _paramKey: 
-  _paramValue: 2.25
+  _paramValue: {fileID: 0}

@@ -10,10 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b7a06c13ffce71745842084386921987, type: 3}
-  m_Name: Enemy Wandering State Sequence
+  m_Name: Enemy Attacking Sequence
   m_EditorClassIdentifier: 
   _onEmptySequenceState: 1
-  _sequences:
-  - {fileID: 11400000, guid: 3070556ec25b09140bd2ad115bbba54c, type: 2}
-  - {fileID: 11400000, guid: b21483d60f250354fbea529bf26a170f, type: 2}
-  - {fileID: 11400000, guid: 8314af1287e8286498d745b1f792d0b5, type: 2}
+  _sequences: []

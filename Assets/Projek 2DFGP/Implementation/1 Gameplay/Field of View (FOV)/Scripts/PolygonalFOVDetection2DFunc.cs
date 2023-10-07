@@ -12,9 +12,11 @@ namespace JT.FGP
         //[SerializeField]
         //private SpriteRenderer _renderer = null;
 
+        [Header("Requirements")]
         [SerializeField]
         private PolygonCollider2D _polygonCollider = null;
 
+        [Header("Properties")]
         [SerializeField]
         private LayerMask _wallLayer = ~0;
 
@@ -34,7 +36,7 @@ namespace JT.FGP
         //private bool _renderFOVSprite = true;
 
         [SerializeField]
-        private bool _reshapeCollider = true;
+        private bool _reshapeAtRuntime = true;
 
         // Runtime variable data.
         //private Sprite _fovSprite = null;
@@ -43,7 +45,6 @@ namespace JT.FGP
 
         private RaycastHit2D[] _fovHits = new RaycastHit2D[1];
         private Vector2[] _tempPoints = null;
-        private Vector2[] _tempOffsetedPoints = null;
         private ushort[] _fovTriangles = null;
         private int _fovHitCount = 0;
 
@@ -52,40 +53,25 @@ namespace JT.FGP
         #region Properties
 
         /// <summary>
+        /// Layer that blocks casting FOV.
+        /// Only works when reshape at runtime is activated.
+        /// </summary>
+        public LayerMask WallLayer => _wallLayer;
+
+        /// <summary>
         /// FOV wide angle.
         /// </summary>
-        public float WideAngle
-        {
-            get => _wideAngle;
-            set
-            {
-                // TODO: Reshape by angle
-            }
-        }
+        public float WideAngle => _wideAngle;
 
         /// <summary>
         /// FOV far reach distance.
         /// </summary>
-        public float Distance
-        {
-            get => _distance;
-            set
-            {
-                // TODO: Change FOV distance
-            }
-        }
+        public float Distance => _distance;
 
         /// <summary>
         /// Set how many FOV triangle to render it.
         /// </summary>
-        public int TriangleCount
-        {
-            get => _triangleCount;
-            set
-            {
-                // TODO: Reinitalize FOV Resolution
-            }
-        }
+        public int TriangleCount => _triangleCount;
 
         #endregion
 
@@ -93,10 +79,16 @@ namespace JT.FGP
 
         private void Start() => Init();
 
-        private void Update() => Reshape();
+        private void Update()
+        {
+            // Check if polygon need to be reshaped.
+            if (_reshapeAtRuntime) Reshape();
+        }
 #if UNITY_EDITOR
         private void OnDrawGizmosSelected()
         {
+            if (!_reshapeAtRuntime && Application.isPlaying) return;
+
             int raycastCount = _triangleCount + 1;
             Vector2 currentWorldPos = new Vector2(transform.position.x, transform.position.y);
             float currentAngle = _wideAngle / 2f + transform.eulerAngles.z;
@@ -118,46 +110,44 @@ namespace JT.FGP
         {
             int raycastCount = _triangleCount + 1;
             _tempPoints = new Vector2[raycastCount + 2];
-            _tempOffsetedPoints = new Vector2[raycastCount + 2];
             _fovTriangles = new ushort[raycastCount * 3];
+
+            // Reshape once after init.
+            Reshape();
         }
 
         private void Reshape()
         {
             int raycastCount = _triangleCount + 1;
-            Vector2 vertexOffset = new Vector2(0f, _distance / 2f);
-            Vector2 currentWorldPos = new Vector2(transform.position.x, transform.position.y);
-            Vector2 currentLocalPos = new Vector2(transform.localPosition.x, transform.localPosition.y);
-            float currentAngle = _wideAngle / 2f + transform.eulerAngles.z;
+            Vector2 worldPos = transform.position;
+            Vector2 localPos = transform.localPosition;
+            float localAngle = _wideAngle / 2f;
+            float worldAngle = localAngle + transform.eulerAngles.z;
             float angleBetweenRaycasts = _wideAngle / _triangleCount;
+            float degToRad = Mathf.Deg2Rad;
 
+            // Start and End Point are the same.
             _tempPoints[0] = _tempPoints[raycastCount + 1] = Vector2.zero;
-            _tempOffsetedPoints[0] = _tempOffsetedPoints[raycastCount + 1] = _tempPoints[0] + vertexOffset;
 
             for (int i = 0; i < raycastCount; i++)
             {
                 // Create FOV cone shape
-                Vector2 direction = new Vector2(Mathf.Cos(currentAngle * Mathf.Deg2Rad),
-                    Mathf.Sin(currentAngle * Mathf.Deg2Rad));
-                _fovHitCount = Physics2D.RaycastNonAlloc(currentWorldPos, direction,
-                    _fovHits, _distance, _wallLayer);
-                _tempPoints[i + 1] = _fovHitCount > 0 ? _fovHits[0].point - currentWorldPos
-                    : currentLocalPos + direction * _distance;
-                _tempOffsetedPoints[i + 1] = vertexOffset + _tempPoints[i + 1];
+                Vector2 localDir = new Vector2(Mathf.Cos(localAngle * degToRad), Mathf.Sin(localAngle * degToRad));
+                Vector2 worldDir = new Vector2(Mathf.Cos(worldAngle * degToRad), Mathf.Sin(worldAngle * degToRad));
+                _fovHitCount = Physics2D.RaycastNonAlloc(worldPos, worldDir, _fovHits, _distance, _wallLayer);
+                _tempPoints[i + 1] = localPos + localDir * (_fovHitCount > 0 ? _fovHits[0].distance : _distance);
 
                 // Triangle for renderer.
                 int triangleIndex = i * 3;
                 _fovTriangles[triangleIndex] = 0;
                 _fovTriangles[triangleIndex + 1] = (ushort)(i + 2);
                 _fovTriangles[triangleIndex + 2] = (ushort)(i + 1);
-                currentAngle -= angleBetweenRaycasts;
+                localAngle -= angleBetweenRaycasts;
+                worldAngle -= angleBetweenRaycasts;
             }
 
-            if (_reshapeCollider)
-            {
-                _polygonCollider.transform.localEulerAngles = -transform.eulerAngles;
-                _polygonCollider.points = _tempPoints;
-            }
+            // Reshape polygonal collider.
+            _polygonCollider.points = _tempPoints;
 
             //if (!_renderFOVSprite) return;
 

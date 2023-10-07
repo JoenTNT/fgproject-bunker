@@ -9,8 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d5cdeaa7fecfb94188344f5bac2f5af, type: 3}
-  m_Name: Walk Speed (Float)
+  m_Script: {fileID: 11500000, guid: b805a2ec9c7cbf7458d134bb47cf334f, type: 3}
+  m_Name: Enemy Chase Action
   m_EditorClassIdentifier: 
-  _paramKey: 
-  _paramValue: 2.25

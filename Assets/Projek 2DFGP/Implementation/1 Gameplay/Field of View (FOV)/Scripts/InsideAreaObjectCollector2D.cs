@@ -49,12 +49,13 @@ namespace JT.FGP
         [SerializeField]
         private string _targetTag = string.Empty;
 
+        [Header("Debug")]
         [SerializeField]
-        [ReadOnly, Space]
-        private HashSet<GameObject> _inAreaObjects = new();
+        private List<GameObject> _inAreaObjects = new();
 
         // Temporary variable data
         private GameObject _tempNearestTarget = null;
+        private float _tempDistance = 0f;
         private bool _tempCheck = false;
 
         #endregion
@@ -76,11 +77,11 @@ namespace JT.FGP
 
             // Check layer target
             if ((_limitTarget & LimitTarget.Layer) == LimitTarget.Layer)
-                _tempCheck = _targetLayer == (_targetLayer | (1 << collision.gameObject.layer));
+                _tempCheck &= _targetLayer == (_targetLayer | (1 << collision.gameObject.layer));
 
             // Check tag target
             if ((_limitTarget & LimitTarget.Tag) == LimitTarget.Tag)
-                _tempCheck = collision.gameObject.CompareTag(_targetTag);
+                _tempCheck &= collision.gameObject.CompareTag(_targetTag);
 
             if (!_tempCheck) return;
 
@@ -118,31 +119,53 @@ namespace JT.FGP
         /// <returns>Nearest object from vector position</returns>
         public GameObject GetNearestObject(Vector2 fromPosition)
         {
-            float nearestDistance = float.MaxValue;
+            // Check empty container.
+            if (_inAreaObjects.Count == 0) return null;
+
+            _tempNearestTarget = null;
+            float nearestDist = float.MaxValue;
             foreach (var tempObject in _inAreaObjects)
             {
-                float distance = Vector3.Distance(fromPosition, tempObject.transform.position);
-                if (_tempNearestTarget != null && nearestDistance <= distance) continue;
+                _tempDistance = Vector3.Distance(fromPosition, tempObject.transform.position);
+                if (_tempNearestTarget != null && nearestDist <= _tempDistance) continue;
 
                 _tempNearestTarget = tempObject;
-                nearestDistance = distance;
+                nearestDist = _tempDistance;
             }
-
-            if (_inAreaObjects.Count == 0)
-                _tempNearestTarget = null;
 
             return _tempNearestTarget;
         }
 
         /// <summary>
-        /// Search for the nearest object.
+        /// Search for the nearest object using custom validator instead.
         /// </summary>
         /// <param name="fromPosition">Position point to target object</param>
-        /// <param name="validationFunc">Nearest object validator</param>
+        /// <param name="validationFunc">Game Object validator</param>
         /// <returns>Nearest object from vector position</returns>
         public GameObject GetNearestObject(Vector2 fromPosition, System.Func<GameObject, bool> validationFunc)
         {
-            return null;
+            // Check empty container.
+            if (_inAreaObjects.Count == 0) return null;
+
+            _tempNearestTarget = null;
+            float nearestDist = float.MaxValue;
+            bool foundAny = false;
+            foreach (var tempObject in _inAreaObjects)
+            {
+                if (!validationFunc(tempObject)) continue;
+
+                foundAny = true;
+                _tempDistance = Vector3.Distance(fromPosition, tempObject.transform.position);
+                if (_tempNearestTarget != null && nearestDist <= _tempDistance) continue;
+
+                _tempNearestTarget = tempObject;
+                nearestDist = _tempDistance;
+            }
+
+            // After validation, none of them are valid, so then return null.
+            if (!foundAny) return null;
+
+            return _tempNearestTarget;
         }
 
         #endregion

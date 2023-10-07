@@ -20,7 +20,9 @@ namespace JT
     {
         #region Variables
 
-        [Header("Requirements")]
+        [SerializeField]
+        private BT_State _onEmptySequenceState = BT_State.None;
+
         [SerializeField]
         private BT_Execute[] _sequences = null;
 
@@ -38,6 +40,13 @@ namespace JT
 
         public override void Execute()
         {
+            // Check empty sequence, then ignore fallback.
+            if (_sequences == null || _sequences.Length == 0)
+            {
+                State = _onEmptySequenceState;
+                return;
+            }
+
             // Set initial state.
             State = BT_State.Running;
             _loopRun = true;

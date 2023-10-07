@@ -1,5 +1,123 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4809396039342803206
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4162715583399687211}
+  - component: {fileID: 8497912583355936962}
+  - component: {fileID: 7271720435630363037}
+  - component: {fileID: 3574050327812832762}
+  m_Layer: 6
+  m_Name: FOV
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4162715583399687211
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4809396039342803206}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6544230547698644045}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!60 &8497912583355936962
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4809396039342803206}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - []
+  m_UseDelaunayMesh: 0
+--- !u!114 &7271720435630363037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4809396039342803206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d0d2babf5610b44cbc1aaf7a12ad385, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _polygonCollider: {fileID: 8497912583355936962}
+  _wallLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _wideAngle: 37.5
+  _distance: 8.55
+  _triangleCount: 6
+  _reshapeAtRuntime: 0
+--- !u!114 &3574050327812832762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4809396039342803206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00e045a9f61c7cb42ad6bc29af6e2784, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _limitTarget: -1
+  _targetLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  _targetTag: Player
+  _inAreaObjects: []
 --- !u!1 &6544230547698644044
 GameObject:
   m_ObjectHideFlags: 0
@@ -9,11 +127,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6544230547698644045}
+  - component: {fileID: 1601094352712888608}
+  - component: {fileID: 7968785170843267031}
   - component: {fileID: 6544230547698644047}
-  - component: {fileID: 8707759988858542866}
   - component: {fileID: 5875170840594628291}
   - component: {fileID: 8030200805665004606}
-  - component: {fileID: 7968785170843267031}
   - component: {fileID: 4575112517574278157}
   - component: {fileID: 3927163847999676229}
   m_Layer: 6
@@ -38,8 +156,58 @@ Transform:
   m_Children:
   - {fileID: 6544230548120049780}
   - {fileID: 6544230548695484921}
+  - {fileID: 4162715583399687211}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!50 &1601094352712888608
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6544230547698644044}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 1
+  m_Mass: 0.28274336
+  m_LinearDrag: 0
+  m_AngularDrag: 0
+  m_GravityScale: 1
+  m_Material: {fileID: 6200000, guid: 85567314105f8b344ae10ccb9b61aca8, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 1
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 7
+--- !u!195 &7968785170843267031
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6544230547698644044}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 5.5
+  m_Acceleration: 100
+  avoidancePriority: 50
+  m_AngularSpeed: 720
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 1
 --- !u!114 &6544230547698644047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53,22 +221,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mode: 1
-  _id: 40576
---- !u!114 &8707759988858542866
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6544230547698644044}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 590ede4826013ff468e6581cc0f4f9a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _data:
-    _entityID: {fileID: 6544230547698644047}
-    _hpStats: {fileID: 6544230548695484923}
+  _id: 97790
 --- !u!114 &5875170840594628291
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81,10 +234,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc1a7f55e2e2ea9499975be9f64c464a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rootExecute: {fileID: 11400000, guid: fc046b3d47d6f8c43a4b04b0df4731b3, type: 2}
+  _rootExecute: {fileID: 11400000, guid: 110d77700553a8c49b22ee3d80b49eec, type: 2}
   _agent: {fileID: 7968785170843267031}
   _movementFunc: {fileID: 4575112517574278157}
   _lookAtFunc: {fileID: 3927163847999676229}
+  _objectCollector2D: {fileID: 3574050327812832762}
 --- !u!114 &8030200805665004606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,9 +267,19 @@ MonoBehaviour:
     _parameter: {fileID: 11400000, guid: db7cbcd72bd6afd4f84f52ce8f2fa13e, type: 2}
     _foldoutParameter: 1
     _isValid: 1
+  - _paramType: JT.ParamComponent, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    _paramName: Inside FOV Area
+    _parameter: {fileID: 11400000, guid: 4f1b26ea9486bf04ab46e92d372d6f70, type: 2}
+    _foldoutParameter: 1
+    _isValid: 1
   - _paramType: JT.ParamTransform, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     _paramName: Chase Target
     _parameter: {fileID: 11400000, guid: 4cd90cd81195a3e499e615d6d0a03348, type: 2}
+    _foldoutParameter: 1
+    _isValid: 1
+  - _paramType: JT.ParamLayerMask, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    _paramName: Blocker Layer
+    _parameter: {fileID: 11400000, guid: f31d11a64d7de9a4ab61c76454fcc15f, type: 2}
     _foldoutParameter: 1
     _isValid: 1
   - _paramType: JT.ParamVector2, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -133,9 +297,19 @@ MonoBehaviour:
     _parameter: {fileID: 11400000, guid: 0475e412ec9203f44b903ff1d0afff5f, type: 2}
     _foldoutParameter: 1
     _isValid: 1
+  - _paramType: JT.ParamVector2, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    _paramName: Last Target Position
+    _parameter: {fileID: 11400000, guid: 413d90e64a0b7884592517fd9868f61f, type: 2}
+    _foldoutParameter: 1
+    _isValid: 1
   - _paramType: JT.ParamFloat, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     _paramName: Max Wandering Radius
     _parameter: {fileID: 11400000, guid: 4fa10663743c11340b3b768deee0732c, type: 2}
+    _foldoutParameter: 1
+    _isValid: 1
+  - _paramType: JT.ParamFloat, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    _paramName: Target Fading Out in Seconds
+    _parameter: {fileID: 11400000, guid: 7f025d4baf8a22445951af4a582a12f6, type: 2}
     _foldoutParameter: 1
     _isValid: 1
   - _paramType: JT.ParamFloat, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -146,6 +320,11 @@ MonoBehaviour:
   - _paramType: JT.ParamFloat, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     _paramName: Walk Speed
     _parameter: {fileID: 11400000, guid: 26aa05ce0b504cf4c8a66dd9dacdbec1, type: 2}
+    _foldoutParameter: 1
+    _isValid: 1
+  - _paramType: JT.ParamFloat, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    _paramName: Chase Speed
+    _parameter: {fileID: 11400000, guid: 83a844351a3153b459d4d1c513b542ca, type: 2}
     _foldoutParameter: 1
     _isValid: 1
   - _paramType: JT.ParamBool, JT_DPC, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -160,28 +339,6 @@ MonoBehaviour:
     _isValid: 1
   _targetObject: {fileID: 6544230547698644044}
   _destroyObjectOnBake: 0
---- !u!195 &7968785170843267031
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6544230547698644044}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 5.5
-  m_Acceleration: 100
-  avoidancePriority: 50
-  m_AngularSpeed: 720
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 1
 --- !u!114 &4575112517574278157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -221,6 +378,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6544230548120049780}
   - component: {fileID: 6544230548120049781}
+  - component: {fileID: 8415707922247019072}
   m_Layer: 6
   m_Name: Sprite
   m_TagString: Untagged
@@ -236,13 +394,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6544230548120049779}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6544230547698644045}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!212 &6544230548120049781
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -284,7 +442,7 @@ SpriteRenderer:
   m_SortingLayerID: 1578581839
   m_SortingLayer: 3
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: a244c9d43e91a5c47b5302aacc3b99bd, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0513377e88b6ed74f96d06f904149bf3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -295,6 +453,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &8415707922247019072
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6544230548120049779}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8aa97318b47d8744e84fa65f9bcd6e3c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6544230548695484920
 GameObject:
   m_ObjectHideFlags: 0
@@ -361,9 +540,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.125, y: 0}
   serializedVersion: 2
-  m_Radius: 0.575
+  m_Radius: 0.3
 --- !u!114 &6544230548695484923
 MonoBehaviour:
   m_ObjectHideFlags: 0

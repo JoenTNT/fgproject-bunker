@@ -15,7 +15,11 @@ namespace JT.FGP
         public const string MAX_WANDERING_RADIUS_KEY = "Max Wandering Radius";
         public const string WALK_SPEED_KEY = "Walk Speed";
         public const string NAVMESH_AGENT_KEY = "Nav Mesh Agent";
-        public const string MOVE_TARGET_POSITION = "Move Target Position";
+        public const string MOVE_TARGET_POSITION_KEY = "Move Target Position";
+        public const string INSIDE_FOV_AREA_KEY = "Inside FOV Area";
+        public const string BLOCKER_LAYER_KEY = "Blocker Layer";
+        public const string TARGET_FADING_OUT_IN_SECONDS_KEY = "Target Fading Out in Seconds";
+        public const string CHASE_SPEED_KEY = "Chase Speed";
 
         #endregion
     }

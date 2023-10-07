@@ -22,8 +22,12 @@ namespace JT.FGP
         private BakedParamVector2 _wanderingPivotPositionParam = null;
         private BakedParamFloat _maxWanderingRadiusParam = null;
         private BakedParamVector2 _moveTargetPosParam = null;
+        private InsideAreaObjectCollector2D _targetCollector = null;
+        private BakedParamLayerMask _blockerLayer = null;
 
         // Runtime variable data.
+        private GameObject _tempDetectedObj = null;
+        private RaycastHit2D[] _hits = new RaycastHit2D[1];
         private float _tempIdleSeconds = 0f;
 
         #endregion
@@ -41,14 +45,12 @@ namespace JT.FGP
             _idleSecondsRangeParam = (BakedParamVector2)@params[EC.IDLE_SECONDS_RANGE_KEY];
             _wanderingPivotPositionParam = (BakedParamVector2)@params[EC.WANDERING_PIVOT_POSITION_KEY];
             _maxWanderingRadiusParam = (BakedParamFloat)@params[EC.MAX_WANDERING_RADIUS_KEY];
-            _moveTargetPosParam = (BakedParamVector2)@params[EC.MOVE_TARGET_POSITION];
+            _moveTargetPosParam = (BakedParamVector2)@params[EC.MOVE_TARGET_POSITION_KEY];
+            _targetCollector = (InsideAreaObjectCollector2D)@params[EC.INSIDE_FOV_AREA_KEY];
+            _blockerLayer = (BakedParamLayerMask)@params[EC.BLOCKER_LAYER_KEY];
         }
 
-        public override BT_State CalcStateCondition()
-        {
-            // Check if current target chase.
-            return _targetParam.Value == null ? BT_State.Running : BT_State.Failed;
-        }
+        public override BT_State CalcStateCondition() => BT_State.Running;
 
         public override void OnBeforeAction()
         {
@@ -64,6 +66,21 @@ namespace JT.FGP
 
         public override void OnTickAction()
         {
+            // Check interuption because enemy found target.
+            if (_targetCollector.HasObject)
+            {
+                Vector2 thisObjPos = ObjectRef.transform.position;
+                _tempDetectedObj = _targetCollector.GetNearestObject(thisObjPos, IsTargetNotBlocked);
+
+                if (_tempDetectedObj != null)
+                {
+                    _targetParam.Value = _tempDetectedObj.transform;
+                    State = BT_State.Failed;
+                    Debug.Log($"[DEBUG] Target Detected: {_tempDetectedObj}");
+                    return;
+                }
+            }
+
             // Handle idle.
             if (HandleTickIdle()) return;
 
@@ -106,6 +123,20 @@ namespace JT.FGP
         private float GetRandIdleSeconds()
         {
             return Random.Range(_idleSecondsRangeParam.Value.x, _idleSecondsRangeParam.Value.y);
+        }
+
+        private bool IsTargetNotBlocked(GameObject detectedObject)
+        {
+            Vector2 thisObjPos = ObjectRef.transform.position;
+            Vector2 targetObjPos = detectedObject.transform.position;
+            Vector2 dir = targetObjPos - thisObjPos;
+            float distance = Vector2.Distance(thisObjPos, targetObjPos);
+            int blockedCount = Physics2D.RaycastNonAlloc(thisObjPos, dir.normalized, _hits, distance,
+                _blockerLayer.Value);
+#if UNITY_EDITOR
+            Debug.DrawLine(thisObjPos, targetObjPos, blockedCount > 0 ? Color.red : Color.green);
+#endif
+            return blockedCount <= 0;
         }
 
         #endregion
