@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8497912583355936962}
   - component: {fileID: 7271720435630363037}
   - component: {fileID: 3574050327812832762}
-  m_Layer: 6
+  m_Layer: 12
   m_Name: FOV
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,6 +100,7 @@ MonoBehaviour:
   _distance: 8.55
   _triangleCount: 6
   _reshapeAtRuntime: 0
+  _debug: 0
 --- !u!114 &3574050327812832762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,7 +137,7 @@ GameObject:
   - component: {fileID: 3927163847999676229}
   m_Layer: 6
   m_Name: Dummy Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -221,7 +222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mode: 1
-  _id: 97790
+  _id: 69922
 --- !u!114 &5875170840594628291
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -488,7 +489,7 @@ GameObject:
   - component: {fileID: 2698647363488701116}
   m_Layer: 6
   m_Name: Collider
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

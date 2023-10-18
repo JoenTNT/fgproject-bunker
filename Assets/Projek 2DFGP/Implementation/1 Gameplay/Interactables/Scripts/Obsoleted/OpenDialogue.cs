@@ -6,6 +6,7 @@ namespace JT.FGP
     /// <summary>
     /// For physical entity to open dialogue interaction.
     /// </summary>
+    [System.Obsolete]
     public class OpenDialogue : InteractableObject
     {
         #region Variable

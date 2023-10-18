@@ -37,7 +37,11 @@ namespace JT.FGP
 
         [SerializeField]
         private bool _reshapeAtRuntime = true;
-
+#if UNITY_EDITOR
+        [Header("Debug")]
+        [SerializeField]
+        private bool _debug = false;
+#endif
         // Runtime variable data.
         //private Sprite _fovSprite = null;
         //private Rect _fovSpriteRect = Rect.zero;
@@ -84,24 +88,7 @@ namespace JT.FGP
             // Check if polygon need to be reshaped.
             if (_reshapeAtRuntime) Reshape();
         }
-#if UNITY_EDITOR
-        private void OnDrawGizmosSelected()
-        {
-            if (!_reshapeAtRuntime && Application.isPlaying) return;
 
-            int raycastCount = _triangleCount + 1;
-            Vector2 currentWorldPos = new Vector2(transform.position.x, transform.position.y);
-            float currentAngle = _wideAngle / 2f + transform.eulerAngles.z;
-            float angleBetweenRaycasts = _wideAngle / _triangleCount;
-            for (int i = 0; i < raycastCount; i++)
-            {
-                Vector2 direction = new Vector2(Mathf.Cos(currentAngle * Mathf.Deg2Rad),
-                    Mathf.Sin(currentAngle * Mathf.Deg2Rad));
-                Debug.DrawRay(currentWorldPos, direction * _distance, Color.yellow);
-                currentAngle -= angleBetweenRaycasts;
-            }
-        }
-#endif
         #endregion
 
         #region Main
@@ -118,6 +105,8 @@ namespace JT.FGP
 
         private void Reshape()
         {
+            if (_triangleCount + 3 != _tempPoints.Length) Init();
+
             int raycastCount = _triangleCount + 1;
             Vector2 worldPos = transform.position;
             Vector2 localPos = transform.localPosition;
@@ -136,7 +125,13 @@ namespace JT.FGP
                 Vector2 worldDir = new Vector2(Mathf.Cos(worldAngle * degToRad), Mathf.Sin(worldAngle * degToRad));
                 _fovHitCount = Physics2D.RaycastNonAlloc(worldPos, worldDir, _fovHits, _distance, _wallLayer);
                 _tempPoints[i + 1] = localPos + localDir * (_fovHitCount > 0 ? _fovHits[0].distance : _distance);
-
+#if UNITY_EDITOR
+                // Check debug mode.
+                if (_debug)
+                {
+                    Debug.DrawLine(worldPos, worldPos + _tempPoints[i + 1], Color.yellow);
+                }
+#endif
                 // Triangle for renderer.
                 int triangleIndex = i * 3;
                 _fovTriangles[triangleIndex] = 0;

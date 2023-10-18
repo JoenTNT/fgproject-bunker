@@ -6,6 +6,7 @@ namespace JT.FGP
     /// <summary>
     /// Entity gets the item.
     /// </summary>
+    [System.Obsolete]
     public class ItemReceiver : InteractableObject
     {
         #region Variable
@@ -16,6 +17,13 @@ namespace JT.FGP
 
         [SerializeField]
         private int _amount = 0;
+
+        [SerializeField]
+        private bool _hideOnCollected = false;
+
+        [Header("Optional")]
+        [SerializeField]
+        private GameObject _hideItemObj = null;
 
         [Header("Game Events")]
         [SerializeField]
@@ -30,8 +38,13 @@ namespace JT.FGP
         public override void OnProcess(string entityID)
         {
 #if UNITY_EDITOR
-            Debug.Log($"Collected: {_itemName} - {_amount}");
+            Debug.Log($"[DEBUG] Collected: {_itemName} - {_amount}");
 #endif
+            if (_hideOnCollected && _hideItemObj != null)
+                _hideItemObj.SetActive(false);
+            else if (_hideOnCollected && _hideItemObj == null)
+                gameObject.SetActive(false);
+
             _getItemCallback.Invoke(entityID, _itemName, _amount);
             Finish();
         }

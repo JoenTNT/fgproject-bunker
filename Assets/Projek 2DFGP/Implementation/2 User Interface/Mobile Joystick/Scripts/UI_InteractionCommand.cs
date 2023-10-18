@@ -14,10 +14,7 @@ namespace JT.FGP
 
         [Header("Game Events")]
         [SerializeField]
-        private GameEventStringInt _openInteractionCommandCallback = null;
-
-        [SerializeField]
-        private GameEventStringInt _onNotifyInteractionHint = null;
+        private GameEventTwoStringInt _onNotifyInteractionHint = null;
 
         #endregion
 
@@ -26,13 +23,13 @@ namespace JT.FGP
         private void Awake()
         {
             // Subscribe events
-            _openInteractionCommandCallback.AddListener(ListenOpenInteractionCommandCallback);
+            _onNotifyInteractionHint.AddListener(ListenOnNotifyInteractionHint, this);
         }
 
         private void OnDestroy()
         {
             // Unsubscribe events
-            _openInteractionCommandCallback.RemoveListener(ListenOpenInteractionCommandCallback);
+            _onNotifyInteractionHint.RemoveListener(ListenOnNotifyInteractionHint, this);
         }
 
         private void Start()
@@ -40,20 +37,18 @@ namespace JT.FGP
             // Initially disabled
             _data.UIGroup.alpha = _data.DisabledAlpha;
             _data.SetInteractionIcon(-1);
-            _onNotifyInteractionHint.Invoke(_data.TargetID, -1);
         }
 
         #endregion
 
         #region Main
 
-        private void ListenOpenInteractionCommandCallback(string byEntityID, int commandIndex)
+        private void ListenOnNotifyInteractionHint(string whoInteract, string interactWith, int commandIndex)
         {
-            if (_data.TargetID != byEntityID) return;
+            if (_data.TargetID != whoInteract) return;
 
             bool found = _data.SetInteractionIcon(commandIndex);
             _data.UIGroup.alpha = found ? 1f : _data.DisabledAlpha;
-            _onNotifyInteractionHint.Invoke(byEntityID, commandIndex);
         }
 
         #endregion
@@ -106,6 +101,16 @@ namespace JT.FGP
 
         #endregion
 
+        #region ITargetID
+
+        public string TargetID
+        {
+            get => _targetID;
+            set => _targetID = value;
+        }
+
+        #endregion
+
         #region Main
 
         public bool SetInteractionIcon(int index)
@@ -119,16 +124,6 @@ namespace JT.FGP
             _interactionIcon.sprite = _iconSprites[index];
             _interactionIcon.gameObject.SetActive(true);
             return true;
-        }
-
-        #endregion
-
-        #region ITargetID
-
-        public string TargetID
-        {
-            get => _targetID;
-            set => _targetID = value;
         }
 
         #endregion

@@ -34,7 +34,12 @@ namespace JT.FGP
 
         private void Start()
         {
-            // TODO: Enable in Mobile and Destroy in Other Platform.
+            // Enabler only works in mobile platform.
+#if UNITY_ANDROID || UNITY_IOS
+            // TODO: Always enable in Mobile platform.
+#elif UNITY_STANDALONE && !UNITY_EDITOR // This will Destroy the mobile controller
+            // TODO: Always Destroy in Other Platform, except Editor.
+#endif
         }
 
         #endregion

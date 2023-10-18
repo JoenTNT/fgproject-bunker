@@ -50,9 +50,9 @@ namespace JT.FGP
 
         #region Variables
 
-        [Header("Requirements")]
-        [SerializeField]
-        private PolygonCollider2D _polygonCollider = null;
+        //[Header("Requirements")]
+        //[SerializeField]
+        //private PolygonCollider2D _polygonCollider = null;
 
         [Header("Properties")]
         [SerializeField]

@@ -8,7 +8,7 @@ namespace JT.FGP
     //[CreateAssetMenu(
     //    fileName = "New Item Info",
     //    menuName = "FGP/Item/Item Info")]
-    public abstract class ItemInfoSO : ScriptableObject
+    public abstract class StartingItemSO : ScriptableObject
     {
         #region Variables
 

@@ -33,9 +33,17 @@ namespace JT.FGP
         [SerializeField]
         private GameEventTransform _setFollowTargetCallback = null;
 
+        [SerializeField]
+        private GameEventString _onActionCommandBegin = null;
+
+        [SerializeField]
+        private GameEventString _onActionCommandEnded = null;
+
         // Runtime variable data.
-        private float _tempBeforeROM = 0f;
-        private bool _isLookingAround = false;
+        private PlayerEntity _entityTarget = null;
+        private PlayerEntityData _entityData = null;
+        private GameObject _nearestTarget = null;
+        private bool _isUsingWeapon = false;
 
         #endregion
 
@@ -43,12 +51,17 @@ namespace JT.FGP
 
         private void Awake()
         {
+            // Get player entity component immediately.
+            TryGetComponent(out _entityTarget);
+
             // Subscribe events
             _onMoveInput.AddListener(ListenOnMoveInput);
             _onLookPositionInput.AddListener(ListenOnLookPositionInput);
             _onLookDirectionInput.AddListener(ListenOnLookDirectionInput);
             _onInteractCommand.AddListener(ListenOnInteractCommand);
             _onReleaseLookAround.AddListener(ListenOnReleaseLookAround);
+            _onActionCommandBegin.AddListener(ListenOnActionCommandBegin);
+            _onActionCommandEnded.AddListener(ListenOnActionCommandEnded);
         }
 
         private void OnDestroy()
@@ -59,37 +72,33 @@ namespace JT.FGP
             _onLookDirectionInput.RemoveListener(ListenOnLookDirectionInput);
             _onInteractCommand.RemoveListener(ListenOnInteractCommand);
             _onReleaseLookAround.RemoveListener(ListenOnReleaseLookAround);
+            _onActionCommandBegin.RemoveListener(ListenOnActionCommandBegin);
+            _onActionCommandEnded.RemoveListener(ListenOnActionCommandEnded);
         }
 
         private void Start()
         {
             // TEMPORARY: Calibrate camera to main character
-            _setFollowTargetCallback.Invoke(_data.FocusPoint);
+            _setFollowTargetCallback.Invoke(_data.CameraFocusPoint);
         }
 
         private void Update()
         {
-#if UNITY_EDITOR
-            //Debug.Log($"On Update: {_moveDir}");
-#endif
             // Handle movement
             _data.MoveFunc.Move();
 
-            // Delaye rotate on move.
-            if (_tempBeforeROM > 0f)
+            // Using weapon to auto aim.
+            if (_isUsingWeapon && _entityData.AreaOfWeaponSight.HasObject)
             {
-                // Countdown time to zero.
-                _tempBeforeROM -= Time.deltaTime;
-
-                // Check time is up, if true then deactivate look control handler.
-                if (_tempBeforeROM <= 0f)
-                    _isLookingAround = false;
+                _nearestTarget = _entityData.AreaOfWeaponSight.GetNearestObject(transform.position);
+                _data.LookFunc.LookAtPosition(_nearestTarget.transform.position);
+                return;
             }
 
             // TEMPORARY: Ignore Look Rotation at Zero Move Direction
             // TODO: Fix to Remove this Issue.
             // Check if currently not looking around action.
-            if (!_isLookingAround && _data.MoveFunc.Direction != Vector2.zero)
+            if (_data.MoveFunc.Direction != Vector2.zero)
                 _data.LookFunc.LookAtDirection(_data.MoveFunc.Direction);
         }
 
@@ -102,7 +111,7 @@ namespace JT.FGP
 #if UNITY_EDITOR
             //Debug.Log($"{_data.ID} != {id} is {_data.ID != id}");
 #endif
-            if (_data.ID != id) return;
+            if (_entityData.ID != id) return;
 
             _data.MoveFunc.Direction = moveDir;
 #if UNITY_EDITOR
@@ -114,7 +123,7 @@ namespace JT.FGP
         private void ListenOnLookPositionInput(string id, Vector2 lookPos)
         {
             // Validate ID.
-            if (_data.ID != id) return;
+            if (_entityData.ID != id) return;
 
             _data.LookFunc.LookAtPosition(lookPos);
         }
@@ -123,100 +132,51 @@ namespace JT.FGP
         private void ListenOnLookDirectionInput(string id, Vector2 lookDir)
         {
             // Validate ID.
-            if (_data.ID != id) return;
+            if (_entityData.ID != id) return;
 
             // Set looking around status.
-            _isLookingAround = true;
-            _tempBeforeROM = _data.SecondBeforeRotateOnMove;
-
             _data.LookFunc.LookAtDirection(lookDir);
         }
 
         private void ListenOnInteractCommand(string id)
         {
             // Validate ID.
-            if (_data.ID != id) return;
+            if (_entityData.ID != id) return;
 
-            _data.Entity.Interact();
+            _entityTarget.Interact();
         }
 
         private void ListenOnReleaseLookAround(string id)
         {
             // Validate ID.
-            if (_data.ID != id) return;
-
-            _isLookingAround = false;
-            _tempBeforeROM = 0f;
+            if (_entityData.ID != id) return;
 
             // Special Case, set move to look direction for runtime update.
             _data.MoveFunc.Direction = Vector2.zero;
             _data.LookFunc.LookAtDirection(_data.LookFunc.LookDirection);
         }
 
-        #endregion
-    }
+        private void ListenOnActionCommandBegin(string id)
+        {
+            // Check if this entity is not the target ID, then abort process.
+            if (_entityData.ID != id) return;
 
-    /// <summary>
-    /// Handle data for player control.
-    /// </summary>
-    [System.Serializable]
-    internal class PlayerControlData
-    {
-        #region Variable
+            // Set weapon state to start aim.
+            _entityData.Weapon?.StartAim();
+            _isUsingWeapon = true;
+        }
 
-        [Header("Requirements")]
-        [SerializeField]
-        private EntityID _entityID = null;
+        private void ListenOnActionCommandEnded(string id)
+        {
+            // Check if this entity is not the target ID, then abort process.
+            if (_entityData.ID != id) return;
 
-        [SerializeField]
-        private PlayerEntity _playerEntity = null;
+            // Set weapon state to release.
+            _entityData.Weapon?.Release();
+            _isUsingWeapon = false;
+        }
 
-        [SerializeField]
-        private Topview2DMovementFunc _moveFunc = null;
-
-        [SerializeField]
-        private Topview2DLookAtFunc _lookFunc = null;
-
-        [SerializeField]
-        private Transform _focusPoint = null;
-
-        [Header("Properties")]
-        [SerializeField]
-        private float secondsBeforeRotateOnMove = 3f;
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Entity ID.
-        /// </summary>
-        public string ID => _entityID.ID;
-
-        /// <summary>
-        /// Runtime entity component.
-        /// </summary>
-        public PlayerEntity Entity => _playerEntity;
-
-        /// <summary>
-        /// Move function.
-        /// </summary>
-        public IMovement2D MoveFunc => _moveFunc;
-
-        /// <summary>
-        /// Look function.
-        /// </summary>
-        public Topview2DLookAtFunc LookFunc => _lookFunc;
-
-        /// <summary>
-        /// Shot focus the camera at this point.
-        /// </summary>
-        public Transform FocusPoint => _focusPoint;
-
-        /// <summary>
-        /// Seconds delay to handle rotation using movement direction.
-        /// </summary>
-        public float SecondBeforeRotateOnMove => secondsBeforeRotateOnMove;
+        internal void InjectEntityData(PlayerEntityData entityData) => _entityData = entityData;
 
         #endregion
     }
