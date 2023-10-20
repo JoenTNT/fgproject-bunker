@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using JT.GameEvents;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace JT.FGP
@@ -7,8 +7,9 @@ namespace JT.FGP
     /// <summary>
     /// The main interaction mark which player can interact with.
     /// </summary>
+    [System.Obsolete]
     [RequireComponent(typeof(Collider2D))]
-    public sealed class InteractionMark : MonoBehaviour, IInteractable<string>, ILocker
+    public sealed class ObsoletedInteractionMark : MonoBehaviour, IInteractable<string>, ILocker
     {
         #region Variable
 

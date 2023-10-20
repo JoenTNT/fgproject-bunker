@@ -6,6 +6,7 @@ namespace JT.FGP
     /// <summary>
     /// Interaction group control.
     /// </summary>
+    [System.Obsolete]
     public class InteractionProcedure : MonoBehaviour, IInteractable<string>, ILocker, IInteractionHandler
     {
         #region Variable

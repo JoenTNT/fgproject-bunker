@@ -9,14 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c73bb38091a9a94d9532a4e262611f5, type: 3}
-  m_Name: Open Interaction Command Callback (FGP Mobile Joystick, String Int) 1
+  m_Script: {fileID: 11500000, guid: 8e8874f6ad85c604b8b2bb928ef62c0a, type: 3}
+  m_Name: Auto Aim Shoot Begin Callback (FGP Mobile Controller, String)
   m_EditorClassIdentifier: 
   _invokeLogging: 0
   _limitLoggingCount: 1
   _logs: []
   _subscribedEvents: []
   _defaultParam1: 
-  _defaultParam2: 0
   _param1Placeholder: 
-  _param2Placeholder: 0

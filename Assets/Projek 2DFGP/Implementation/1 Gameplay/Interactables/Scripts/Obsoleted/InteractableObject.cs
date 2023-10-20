@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 namespace JT.FGP
@@ -6,6 +5,7 @@ namespace JT.FGP
     /// <summary>
     /// Entity can interact with.
     /// </summary>
+    [System.Obsolete]
     public abstract class InteractableObject : MonoBehaviour, IInteractable<string>,
         IWaitUntilFinishHandler<string>, IProcessHandler<string>
     {
@@ -16,9 +16,8 @@ namespace JT.FGP
         private bool _interruptable = false;
 
         // Temporary variable data
-        private IEnumerator _currentRunningProcess = null;
+        private string _tempEntityID = string.Empty;
         private bool _isProcessing = false;
-        private bool _isFinished = false;
 
         #endregion
 
@@ -31,22 +30,34 @@ namespace JT.FGP
 
         #endregion
 
+        #region Mono
+
+        private void Update()
+        {
+            // Check current processing.
+            if (!_isProcessing) return;
+
+            OnProcess(_tempEntityID);
+        }
+
+        #endregion
+
         #region IInteractable
 
-        public bool Interact(string entityID)
+        public virtual bool Interact(string entityID)
         {
 #if UNITY_EDITOR
-            Debug.Log($"Interact With Object: {this}");
+            Debug.Log($"[DEBUG] Interact With Object: {this}");
 #endif
-            if (_currentRunningProcess != null)
-            {
-                if (!_interruptable) return false;
-                StopCoroutine(_currentRunningProcess);
-            }
+            // Ignore when currently processing and not interruptable.
+            if (_isProcessing && !_interruptable) return false;
+            else if (_isProcessing && _interruptable) // If it's interruptable.
+                Finish();
 
+            _tempEntityID = entityID;
             _isProcessing = true;
-            _currentRunningProcess = AwaitProcess(entityID);
-            StartCoroutine(_currentRunningProcess);
+
+            OnStartProcess(_tempEntityID);
             return true;
         }
 
@@ -54,7 +65,7 @@ namespace JT.FGP
 
         #region IWaitUntilFinishHandler
 
-        public bool IsFinished => _isFinished;
+        public bool IsFinished => !_isProcessing;
 
         public event System.Action<string> OnFinish;
 
@@ -87,24 +98,10 @@ namespace JT.FGP
         {
             if (!_isProcessing) return;
 
+            OnFinish?.Invoke(_tempEntityID);
+            OnEndProcess(_tempEntityID);
+            _tempEntityID = null;
             _isProcessing = false;
-            _isFinished = true;
-        }
-
-        private IEnumerator AwaitProcess(string entityID)
-        {
-            OnStartProcess(entityID);
-
-            while (_isProcessing)
-            {
-                OnProcess(entityID);
-                yield return null;
-            }
-
-            OnEndProcess(entityID);
-
-            _currentRunningProcess = null;
-            OnFinish?.Invoke(entityID);
         }
 
         #endregion

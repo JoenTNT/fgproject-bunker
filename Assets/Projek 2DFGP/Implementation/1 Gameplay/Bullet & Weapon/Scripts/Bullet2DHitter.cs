@@ -34,6 +34,10 @@ namespace JT.FGP
         [SerializeField]
         private LayerMask _targetHit = ~0;
 
+        [Tooltip("This will ignore the bullet to hit the target with tag.")]
+        [SerializeField]
+        private string[] _ignoreTags = new string[0];
+
         // TODO: When hitting this layer target, then destroy bullet immediately.
         //[SerializeField]
         //private LayerMask _selfDestroyTargetHit = ~0;
@@ -159,18 +163,32 @@ namespace JT.FGP
             if (_hitCount <= 0) return;
 
             // Check all hits.
+            GameObject obj;
             for (int i = 0; i < _hitCount; i++)
             {
+                // Get game object.
+                obj = _hitCast[i].collider.gameObject;
+
+                // Ignore target with tags.
+                bool isIgnored = false;
+                for (int j = 0; j < _ignoreTags.Length; j++)
+                {
+                    if (obj.CompareTag(_ignoreTags[j]))
+                    {
+                        isIgnored = true;
+                        break;
+                    }
+                }
+                if (isIgnored) continue;
+#if UNITY_EDITOR
+                Debug.Log($"Entity that got Hit is {obj}", obj);
+#endif
                 // TODO: How to hit the wall.
                 // Check if entity or obstacle has HP stats when hit.
-                if (_hitCast[i].collider.TryGetComponent(out _tempHP))
+                if (obj.TryGetComponent(out _tempHP))
                 {
-#if UNITY_EDITOR
-                    //Debug.Log($"Entity that got Hit is {_hitCast[i].collider.transform.parent.name}");
-#endif
-                    // Check if bullet hit the player self, then ignore it.
-                    if (_tempHP.EntityID == _controller.OwnerID)
-                        continue;
+                    // Ignore self hit.
+                    if (_tempHP.EntityID == _controller.OwnerID) continue;
 
                     // Give attack damage at other entity.
                     _tempHP.TakeDamage(hitDir, _attackStats.AttackPointDamage, _controller.OwnerID);

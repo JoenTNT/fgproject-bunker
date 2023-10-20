@@ -305,11 +305,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _data:
     _entityID: {fileID: 921480180229159078}
+    _areaOfWeaponSight: {fileID: 0}
     _areaOfInteraction: {fileID: 0}
-  _openInteractionCommandCallback: {fileID: 11400000, guid: 6b57be073a649e44db97deb1d6ef6782, type: 2}
-  _onActionCommandInstantCallback: {fileID: 11400000, guid: b3fa0c7fad7db5c479c1c02a0b0ee0a4, type: 2}
-  _onActionCommandBegin: {fileID: 11400000, guid: 3246d278a242dea46891017a1d85fddf, type: 2}
-  _onActionCommandEnded: {fileID: 11400000, guid: 46cb0128bd5f73743ae76713a2dc82d4, type: 2}
+  _notifyInteractionHintCallback: {fileID: 11400000, guid: 6b7eac96799c5484eb4a83408b5b96d6, type: 2}
   _equipWeaponCallback: {fileID: 11400000, guid: 0ee2063273ff48840a21f4598323a44f, type: 2}
 --- !u!114 &921480180229159077
 MonoBehaviour:
@@ -324,18 +322,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    _entityID: {fileID: 921480180229159078}
-    _playerEntity: {fileID: 679273361851195926}
+    _cameraFocusPoint: {fileID: 1724469133862935259}
     _moveFunc: {fileID: 921480180229159079}
     _lookFunc: {fileID: 1133706591754004808}
-    _focusPoint: {fileID: 1724469133862935259}
-    secondsBeforeRotateOnMove: 3
+    _afterShootFreezeSecond: 3
   _onMoveInput: {fileID: 11400000, guid: ff01d6ddcc4f8654e95993543dcdc0ba, type: 2}
   _onLookPositionInput: {fileID: 11400000, guid: 091ded19bb6b9ee45a113e3fe158498a, type: 2}
   _onLookDirectionInput: {fileID: 11400000, guid: ca76377e15483e94783fa2a919dc365a, type: 2}
   _onReleaseLookAround: {fileID: 11400000, guid: 52bc6e1cb87f51e4081783ec5ca93b45, type: 2}
   _onInteractCommand: {fileID: 11400000, guid: 2f3b84c88ce0f9c469a7ac26ef7e64c9, type: 2}
   _setFollowTargetCallback: {fileID: 11400000, guid: 30d822f9df3910a43b5ecbadbad4a748, type: 2}
+  _onActionCommandBegin: {fileID: 11400000, guid: b51429e3f4f9e4b46b6b52ef480cb7a0, type: 2}
+  _onActionCommandEnded: {fileID: 11400000, guid: c7a172e5569319646ab2b7f1832534b5, type: 2}
 --- !u!114 &921480180229159079
 MonoBehaviour:
   m_ObjectHideFlags: 0
