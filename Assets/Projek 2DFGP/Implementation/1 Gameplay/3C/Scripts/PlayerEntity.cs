@@ -22,6 +22,9 @@ namespace JT.FGP
         [SerializeField]
         private GameEventTwoStringUnityObject _equipWeaponCallback = null;
 
+        [SerializeField]
+        private GameEventStringUnityObject _onAddRuntimePlayerInfo = null;
+
         // Runtime variable data
         private GameObject _nearestDetectedInteractable = null;
         private InteractableComponent _nearestInteractable = null;
@@ -44,6 +47,15 @@ namespace JT.FGP
         {
             // Unsubscribe events
             _equipWeaponCallback.RemoveListener(ListeonEquipWeaponCallback);
+        }
+
+        private void Start()
+        {
+            // Initialize all data on start.
+            _data.Initialize();
+
+            // Send runtime stats to Canvas.
+            _onAddRuntimePlayerInfo.Invoke(_data.ID, _data.RuntimeStatsRef);
         }
 
         private void Update()

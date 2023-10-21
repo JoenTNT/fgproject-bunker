@@ -20,6 +20,7 @@ namespace JT.FGP
         public const string BLOCKER_LAYER_KEY = "Blocker Layer";
         public const string TARGET_FADING_OUT_IN_SECONDS_KEY = "Target Fading Out in Seconds";
         public const string CHASE_SPEED_KEY = "Chase Speed";
+        public const string HITPOINT_STATS_KEY = "Hitpoint Stats";
 
         #endregion
     }

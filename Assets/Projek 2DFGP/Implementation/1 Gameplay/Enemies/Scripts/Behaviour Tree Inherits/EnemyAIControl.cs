@@ -1,3 +1,4 @@
+using JT.GameEvents;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -13,9 +14,12 @@ namespace JT.FGP
     {
         #region Variables
 
-        // Requirements
+        [Header("Requirements")]
         [SerializeField]
         private NavMeshAgent _agent = null;
+
+        [SerializeField]
+        private HitpointStats _hitpointStats = null;
 
         [SerializeField]
         private Topview2DMovementFunc _movementFunc = null;
@@ -26,10 +30,15 @@ namespace JT.FGP
         [SerializeField]
         private InsideAreaObjectCollector2D _objectCollector2D = null;
 
+        [Header("Optional")]
+        [SerializeField]
+        private AbsoluteFollowObject2DFunc _followObject2DFunc = null;
+
         // Runtime variable data.
         private BakedDashboard _mainBakedDashboard = null;
 
         #endregion
+
 #if UNITY_EDITOR
         #region Mono
 
@@ -55,6 +64,7 @@ namespace JT.FGP
             _mainBakedDashboard.AssignValue<Component>(EC.LOOK_AT_FUNCTION_KEY, _lookAtFunc);
             _mainBakedDashboard.AssignValue<Component>(EC.NAVMESH_AGENT_KEY, _agent);
             _mainBakedDashboard.AssignValue<Component>(EC.INSIDE_FOV_AREA_KEY, _objectCollector2D);
+            _mainBakedDashboard.AssignValue<Component>(EC.HITPOINT_STATS_KEY, _hitpointStats);
 
             // Always initialize base after dashboard data has been baked.
             base.OnInit();

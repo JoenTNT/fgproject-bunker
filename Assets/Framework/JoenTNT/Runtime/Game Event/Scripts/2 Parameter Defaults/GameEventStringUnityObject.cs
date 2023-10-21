@@ -3,7 +3,7 @@ using UnityEngine;
 namespace JT.GameEvents
 {
     /// <summary>
-    /// Handling game event with 2 parameters(string, GameObject).
+    /// Handling game event with 2 parameters(string, UnityObject).
     /// </summary>
     [CreateAssetMenu(
         fileName = "New String UnityObject Event",

@@ -9,7 +9,7 @@ namespace JT.FGP
         /// <summary>
         /// Max hitpoint for this entity.
         /// </summary>
-        T MaxHP { get; }
+        T MaxHP { get; set; }
 
         /// <summary>
         /// Current hitpoint this entity has.

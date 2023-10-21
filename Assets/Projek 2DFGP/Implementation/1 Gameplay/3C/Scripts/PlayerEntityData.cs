@@ -6,13 +6,19 @@ namespace JT.FGP
     /// Handle data for player entity.
     /// </summary>
     [System.Serializable]
-    internal class PlayerEntityData
+    internal class PlayerEntityData : IRequiredInitialize
     {
         #region Variable
 
         [Header("Requirements")]
         [SerializeField]
         private EntityID _entityID = null;
+
+        [SerializeField]
+        private HitpointStats _physicalStats = null;
+
+        [SerializeField]
+        private UI_RuntimePlayerStats _uiProfilePrefab = null;
 
         [SerializeField]
         private InsideAreaObjectCollector2D _areaOfWeaponSight = null;
@@ -22,6 +28,8 @@ namespace JT.FGP
 
         // Runtime variable data.
         private IWeaponActionState _weaponOnHand = null;
+        private UI_RuntimePlayerStats _runtimeStatsRef = null;
+        private bool _isInitialized = false;
 
         #endregion
 
@@ -43,6 +51,11 @@ namespace JT.FGP
         public InsideAreaObjectCollector2D AreaOfInteraction => _areaOfInteraction;
 
         /// <summary>
+        /// Access UI runtime stats reference from UI Canvas.
+        /// </summary>
+        public UI_RuntimePlayerStats RuntimeStatsRef => _runtimeStatsRef;
+
+        /// <summary>
         /// Weapon on player's hand.
         /// This can be null because player may not equip any weapon.
         /// </summary>
@@ -60,6 +73,25 @@ namespace JT.FGP
                     value.OwnerOfState = _entityID.ID;
                 _weaponOnHand = value;
             }
+        }
+
+        #endregion
+
+        #region IRequiredInitialize
+
+        public bool IsInitialized => _isInitialized;
+
+        public void Initialize()
+        {
+            // Check initialized status.
+            if (_isInitialized) return;
+
+            // Initialize everything.
+            _runtimeStatsRef = Object.Instantiate(_uiProfilePrefab);
+            _physicalStats.InjectBarRef(_runtimeStatsRef.HealthBar);
+
+            // Set status cleared.
+            _isInitialized = true;
         }
 
         #endregion

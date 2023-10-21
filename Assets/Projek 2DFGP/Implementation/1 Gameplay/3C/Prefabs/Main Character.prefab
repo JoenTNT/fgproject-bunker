@@ -83,8 +83,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _entityID: {fileID: 921480180229159078}
   _killCommand: {fileID: 7758366819564344028}
-  _useSplatter: Blood
-  _maxHP: 100
+  _useSplatter: 
+  _maxHP: 120
   _hp: 0
   _isDamageable: 1
   _onEntityGotDamageBy: {fileID: 11400000, guid: 1b0a431ba3702454a87f100d89da5a8c, type: 2}
@@ -305,10 +305,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _data:
     _entityID: {fileID: 921480180229159078}
+    _physicalStats: {fileID: 7739024221319301028}
+    _uiProfilePrefab: {fileID: 2256259211245661893, guid: 860739ac6ca433e4b966151a2ff1177b, type: 3}
     _areaOfWeaponSight: {fileID: 0}
     _areaOfInteraction: {fileID: 0}
   _notifyInteractionHintCallback: {fileID: 11400000, guid: 6b7eac96799c5484eb4a83408b5b96d6, type: 2}
   _equipWeaponCallback: {fileID: 11400000, guid: 0ee2063273ff48840a21f4598323a44f, type: 2}
+  _onAddRuntimePlayerInfo: {fileID: 11400000, guid: a5ca5dd711f192a42a7787d047601239, type: 2}
 --- !u!114 &921480180229159077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -325,7 +328,6 @@ MonoBehaviour:
     _cameraFocusPoint: {fileID: 1724469133862935259}
     _moveFunc: {fileID: 921480180229159079}
     _lookFunc: {fileID: 1133706591754004808}
-    _afterShootFreezeSecond: 3
   _onMoveInput: {fileID: 11400000, guid: ff01d6ddcc4f8654e95993543dcdc0ba, type: 2}
   _onLookPositionInput: {fileID: 11400000, guid: 091ded19bb6b9ee45a113e3fe158498a, type: 2}
   _onLookDirectionInput: {fileID: 11400000, guid: ca76377e15483e94783fa2a919dc365a, type: 2}
