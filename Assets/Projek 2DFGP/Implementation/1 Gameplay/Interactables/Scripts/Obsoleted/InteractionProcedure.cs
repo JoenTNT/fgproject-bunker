@@ -7,7 +7,8 @@ namespace JT.FGP
     /// Interaction group control.
     /// </summary>
     [System.Obsolete]
-    public class InteractionProcedure : MonoBehaviour, IInteractable<string>, ILocker, IInteractionHandler
+    public class InteractionProcedure : MonoBehaviour, IInteractable<string>, ILocker,
+        IInteractionHandler
     {
         #region Variable
 
@@ -76,6 +77,8 @@ namespace JT.FGP
         #endregion
 
         #region IInteractable
+
+        public bool IsInteractable => throw new System.NotImplementedException();
 
         public bool Interact(string entityID)
         {

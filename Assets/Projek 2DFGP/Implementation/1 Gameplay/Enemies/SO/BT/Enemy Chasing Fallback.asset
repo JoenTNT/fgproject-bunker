@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3207d60e07110a4f8df8737ad8e4f89, type: 3}
   m_Name: Enemy Chasing Fallback
   m_EditorClassIdentifier: 
+  _debug: 0
   _onEmptySequenceState: 2
   _sequences:
+  - {fileID: 11400000, guid: 3070556ec25b09140bd2ad115bbba54c, type: 2}
   - {fileID: 11400000, guid: b9f9ff72537180d40b45c3b31bdda785, type: 2}

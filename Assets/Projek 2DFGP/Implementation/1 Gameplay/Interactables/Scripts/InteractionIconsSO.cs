@@ -57,6 +57,15 @@ namespace JT.FGP
 
         #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// How many registered icons.
+        /// </summary>
+        public int Count => _interactionIcons.Length;
+
+        #endregion
+
         #region Main
 
         private void Init()

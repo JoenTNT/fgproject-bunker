@@ -16,7 +16,11 @@ namespace JT
     public abstract class BT_Execute : ScriptableObject, IBTState, IBTInitHandler
     {
         #region Variables
-
+#if UNITY_EDITOR
+        [Header("Debugger", order = 100)]
+        [SerializeField]
+        private bool _debug = false;
+#endif
         // Runtime variable data.
         private GameObject _objectRef = null;
         private BT_State _currentState = BT_State.None;
@@ -34,7 +38,12 @@ namespace JT
         /// Owner of behaviour tree.
         /// </summary>
         protected GameObject ObjectRef => _objectRef;
-
+#if UNITY_EDITOR
+        /// <summary>
+        /// Is debug mode activated?
+        /// </summary>
+        protected bool DebugMode => _debug;
+#endif
         #endregion
 
         #region Main

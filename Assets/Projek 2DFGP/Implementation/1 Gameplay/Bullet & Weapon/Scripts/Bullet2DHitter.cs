@@ -117,7 +117,12 @@ namespace JT.FGP
 
         #region Main
 
-        public void OnDetectHit(Vector2 originPoint, Vector2 hitDir, float castLength)
+        /// <summary>
+        /// Handle detect any hit in front while bullet is moving by velocity.
+        /// </summary>
+        /// <param name="originPoint">Origin bullet position before moving to next point</param>
+        /// <param name="tickVelocity">Velocity of bullet</param>
+        public void OnDetectHit(Vector2 originPoint, Vector2 tickVelocity)
         {
             // Disable after the amount of overlap hit.
             if (IsDone)
@@ -140,8 +145,9 @@ namespace JT.FGP
             if (!_controller.SpriteEnabled) _controller.SpriteEnabled = true;
 
             // Find end point.
-            Vector2 endPoint = originPoint + (hitDir * castLength);
+            Vector2 endPoint = originPoint + tickVelocity;
 #if UNITY_EDITOR
+            //Debug.DrawLine(originPoint, endPoint, Color.yellow, 2.0f);
             //Debug.Log($"Origin: {originPoint}; End Point: {endPoint}; Cast Length: {castLength}; Direction: {hitDir}");
             //float r = Random.Range(100, 256);
             //Random.InitState(System.DateTime.Now.Millisecond);
@@ -156,7 +162,7 @@ namespace JT.FGP
 #endif
             // Start casting.
             float distance = (endPoint - originPoint).magnitude;
-            _hitCount = Physics2D.CircleCastNonAlloc(originPoint, _collisionRadius, hitDir.normalized,
+            _hitCount = Physics2D.CircleCastNonAlloc(originPoint, _collisionRadius, tickVelocity,
                 _hitCast, distance, _targetHit);
 
             // Check hit count, if not hit then abort the process.
@@ -181,7 +187,7 @@ namespace JT.FGP
                 }
                 if (isIgnored) continue;
 #if UNITY_EDITOR
-                Debug.Log($"Entity that got Hit is {obj}", obj);
+                //Debug.Log($"Entity that got Hit is {obj}", obj);
 #endif
                 // TODO: How to hit the wall.
                 // Check if entity or obstacle has HP stats when hit.
@@ -191,7 +197,7 @@ namespace JT.FGP
                     if (_tempHP.EntityID == _controller.OwnerID) continue;
 
                     // Give attack damage at other entity.
-                    _tempHP.TakeDamage(hitDir, _attackStats.AttackPointDamage, _controller.OwnerID);
+                    _tempHP.TakeDamage(tickVelocity, _attackStats.AttackPointDamage, _controller.OwnerID);
 #if FMOD
                     // Run sound if exists.
                     // TODO: Change sound parameter when hit something else.

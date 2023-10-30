@@ -1,4 +1,5 @@
 using JT.GameEvents;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,10 +22,10 @@ namespace JT.FGP
 
         [Header("Optional")]
         [SerializeField]
-        private UI_WeaponGunInfo _weaponGunInfo = null;
+        private UI_AmmoInfo _ammoInfo = null;
 
         [SerializeField]
-        private UI_WeaponReloadTimerInfo _reloadTimer = null;
+        private UI_ReloadTimeInfo _reloadTimeInfo = null;
 
         [SerializeField]
         private Image _iconPlaceholder = null;
@@ -37,13 +38,7 @@ namespace JT.FGP
         private GameEventTwoString _onEquipWeaponCommand = null;
 
         [SerializeField]
-        private GameEventStringTwoInt _onAmmoDataChange = null;
-
-        [SerializeField]
         private GameEventTwoStringUnityObject _equipWeaponCallback = null;
-
-        [SerializeField]
-        private GameEventStringFloat _onReloadingDataChange = null;
 
         // Runtime variable data.
         private GenericWeapon _weaponRef = null;
@@ -65,18 +60,14 @@ namespace JT.FGP
         {
             // Subscribe events.
             _onChangeWeaponCommand.AddListener(ListenOnChangeWeaponCommand);
-            _onAmmoDataChange.AddListener(ListenOnAmmoDataChange);
             _equipWeaponCallback.AddListener(ListenEquipWeaponCallback);
-            _onReloadingDataChange.AddListener(ListenOnReloadingDataChange);
         }
 
         private void OnDestroy()
         {
             // Unsubscribe events.
             _onChangeWeaponCommand.RemoveListener(ListenOnChangeWeaponCommand);
-            _onAmmoDataChange.RemoveListener(ListenOnAmmoDataChange);
             _equipWeaponCallback.RemoveListener(ListenEquipWeaponCallback);
-            _onReloadingDataChange.RemoveListener(ListenOnReloadingDataChange);
         }
 
         #endregion
@@ -85,64 +76,41 @@ namespace JT.FGP
 
         private void ListenOnChangeWeaponCommand(string targetID)
         {
-#if UNITY_EDITOR
-            Debug.Log($"[DEBUG] {targetID} => {_elementID.ID}");
-#endif
             // Forward to the physical weapon equipment.
             _onEquipWeaponCommand.Invoke(targetID, _elementID.ID);
-        }
-
-        private void ListenOnAmmoDataChange(string elementID, int ammo, int ammoInBag)
-        {
-            // Check element ID matches, if not then abort process.
-            if (_elementID.ID != elementID) return;
-
-            // Set information.
-            _weaponGunInfo.SetInfo(ammo, ammoInBag);
         }
 
         private void ListenEquipWeaponCallback(string ownerID, string elementID, Object weapon)
         {
             // Check validation.
             if (elementID != _elementID.ID) return;
-            if (weapon is not GenericWeapon && weapon != null) return;
+            if (weapon != null && weapon is not GenericWeapon) return;
 
             // Set target element for weapon.
             _weaponRef = (GenericWeapon)weapon;
-            _weaponRef?.SetTargetElementID(_elementID.ID);
+            _weaponRef?.SetTargetInfoID(_elementID.ID);
+
+            // Inject informations.
+            if (weapon is IWeaponGunInfo)
+            {
+                IWeaponGunInfo gunInfo = (IWeaponGunInfo)weapon;
+                ((IInjectDependency<UI_AmmoInfo>)gunInfo.AmmoInfo)?.Inject(_ammoInfo);
+                ((IInjectDependency<UI_ReloadTimeInfo>)gunInfo.ReloadInfo)?.Inject(_reloadTimeInfo);
+            }
 
             // Set icon if exists.
             if (_iconPlaceholder != null)
             {
                 // Set sprite icon.
-                _iconPlaceholder.sprite = _weaponRef == null ? null
-                    : _assetPack.GetIcon(_weaponRef.WeaponKeyword);
+                Sprite s = _weaponRef == null ? null : _assetPack.GetIcon(_weaponRef.WeaponKeyword);
+                _iconPlaceholder.sprite = s;
 
                 // Set active icon object.
-                _iconPlaceholder.gameObject.SetActive(_iconPlaceholder.sprite != null);
+                _iconPlaceholder.gameObject.SetActive(s != null);
             }
 
             // Open weapon informations.
-            _weaponGunInfo.enabled = _weaponRef is WeaponGun;
-            if (_weaponGunInfo.enabled)
-            {
-                // Set information immediately.
-                var tempGunInfo = (WeaponGun)_weaponRef;
-                _weaponGunInfo.SetInfo(tempGunInfo.AmmoLeftover, tempGunInfo.AmmoLeftoverInBag);
-            }
-
-            // TEMP: Always disable everytime changing weapon.
-            if (_reloadTimer != null)
-                _reloadTimer.gameObject.SetActive(false);
-        }
-
-        private void ListenOnReloadingDataChange(string elementID, float reloadTimer)
-        {
-            // Check element ID matches, if not then abort process.
-            if (_elementID.ID != elementID) return;
-
-            // Change display timer.
-            _reloadTimer?.SetDisplayTimer(reloadTimer);
+            _ammoInfo.enabled = _weaponRef is WeaponGun;
         }
 
         #endregion

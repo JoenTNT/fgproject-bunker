@@ -12,3 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b805a2ec9c7cbf7458d134bb47cf334f, type: 3}
   m_Name: Enemy Chase Action
   m_EditorClassIdentifier: 
+  _debug: 0
+  _onReachTarget: 2
+  _onCompleteLostTarget: 1

@@ -26,13 +26,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 708726911951730124}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.25, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3861571010885001295}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &7945222773427862681
 BoxCollider2D:
@@ -44,6 +44,25 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -110,13 +129,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1044058418489988257}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0.45, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3861571010885001295}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!212 &1722380154523194511
 SpriteRenderer:
@@ -179,8 +198,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3861571010885001295}
-  - component: {fileID: 8113151955581461043}
   - component: {fileID: 1365788568307762840}
+  - component: {fileID: 8113151955581461043}
   m_Layer: 2
   m_Name: Baseball Bat
   m_TagString: Untagged
@@ -195,6 +214,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8915962732989789314}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -203,8 +223,21 @@ Transform:
   - {fileID: 292849870041159647}
   - {fileID: 1568316723349357623}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1365788568307762840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8915962732989789314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11d019568ebffd644901af07d32e3115, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ammoInfo: {fileID: 0}
+  _reloadTimeInfo: {fileID: 0}
 --- !u!114 &8113151955581461043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -217,7 +250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c75c5c18858901143a5b8c110b043fcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _weaponState: {fileID: 1365788568307762840}
+  _weaponOwnerAdapter: {fileID: 1365788568307762840}
   _weaponStats: {fileID: 0}
   _targetElementID: 
   _weaponKeyword: Baseball Bat
@@ -235,15 +268,3 @@ MonoBehaviour:
   _fullChargeInSecond: 0.5
   _isInteruptable: 0
   _placeholderHint: {fileID: 0}
---- !u!114 &1365788568307762840
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8915962732989789314}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11d019568ebffd644901af07d32e3115, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

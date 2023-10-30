@@ -24,13 +24,13 @@ namespace JT.FGP
 
         [Header("Game Events")]
         [SerializeField]
-        private GameEventTwoString _requestDamageCloudPoolCallback = null;
-
-        [SerializeField]
-        private GameEventStringUnityObject _assignDamageCloudPoolCallback = null;
-
-        [SerializeField]
         private GameEventVector2Float _onEntityHitOnTheSpot = null;
+
+        //[SerializeField]
+        //private GameEventTwoString _requestDamageCloudPoolCallback = null;
+
+        //[SerializeField]
+        //private GameEventStringUnityObject _assignDamageCloudPoolCallback = null;
 
         // Runtime variable data.
         private UI_ThrowHitDamageCloudValue _tempCloud = null;
@@ -43,36 +43,39 @@ namespace JT.FGP
         private void Awake()
         {
             // Subscribe events
-            _assignDamageCloudPoolCallback.AddListener(ListenAssignDamageCloudPoolCallback);
+            //_assignDamageCloudPoolCallback.AddListener(ListenAssignDamageCloudPoolCallback);
             _onEntityHitOnTheSpot.AddListener(ListenOnEntityHitOnTheSpot);
         }
 
         private void OnDestroy()
         {
             // Subscribe events
-            _assignDamageCloudPoolCallback.RemoveListener(ListenAssignDamageCloudPoolCallback);
+            //_assignDamageCloudPoolCallback.RemoveListener(ListenAssignDamageCloudPoolCallback);
             _onEntityHitOnTheSpot.RemoveListener(ListenOnEntityHitOnTheSpot);
         }
 
         private void Start()
         {
-            // Request for pool of objects.
-            _requestDamageCloudPoolCallback.Invoke(_id.ID, _damageCloudPoolKey);
+            // Assign pool.
+            _damageCloudPool = GameObjectPoolManager.Instance.GetPool(_damageCloudPoolKey);
+
+            //// Request for pool of objects.
+            //_requestDamageCloudPoolCallback.Invoke(_id.ID, _damageCloudPoolKey);
         }
 
         #endregion
 
         #region Main
 
-        private void ListenAssignDamageCloudPoolCallback(string entityID, Object pool)
-        {
-            // Check validation.
-            if (_id.ID != entityID) return;
-            if (pool is not GameObjectPool) return;
+        //private void ListenAssignDamageCloudPoolCallback(string entityID, Object pool)
+        //{
+        //    // Check validation.
+        //    if (_id.ID != entityID) return;
+        //    if (pool is not GameObjectPool) return;
 
-            // Assign pool.
-            _damageCloudPool = (GameObjectPool)pool;
-        }
+        //    // Assign pool.
+        //    _damageCloudPool = (GameObjectPool)pool;
+        //}
 
         private void ListenOnEntityHitOnTheSpot(Vector2 spotPosition, float damageHit)
         {

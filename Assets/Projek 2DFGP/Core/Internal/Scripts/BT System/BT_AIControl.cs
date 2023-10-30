@@ -21,7 +21,11 @@ namespace JT
         [Header("Base System")]
         [SerializeField]
         private BT_Execute _rootExecute = null;
-
+#if UNITY_EDITOR
+        [Header("Debugger", order = 100)]
+        [SerializeField]
+        private bool _debug = false;
+#endif
         // Runtime variable data.
         private BT_Execute _currentExecution = null;
         private IBTProcessHolder _processHolder = null;
@@ -65,6 +69,10 @@ namespace JT
 
         private void Update()
         {
+#if UNITY_EDITOR
+            if (_debug)
+                Debug.Log($"[DEBUG] Executing {_currentExecution}", this);
+#endif
             // If process holder not exists.
             if (_processHolder == null) goto RunSingleAction;
 
@@ -78,7 +86,11 @@ namespace JT
                 if (_rootExecute.IsAction)
                     _currentExecution = _rootExecute;
                 else if (_rootExecute is IBTTrunkNode)
-                    _currentExecution = ((IBTTrunkNode)_rootExecute).GetCurrentLeafProcess();
+                {
+                    IBTTrunkNode trunk = (IBTTrunkNode)_rootExecute;
+                    if (trunk.NodeIndex == -1) _rootExecute.Execute(); // Re-execute invalid index.
+                    _currentExecution = trunk.GetCurrentLeafProcess();
+                }
 
                 // Convert to action.
                 if (_currentExecution is IBTRuntimeAction)

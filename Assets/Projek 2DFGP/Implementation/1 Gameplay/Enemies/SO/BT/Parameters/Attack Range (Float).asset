@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Attack Range (Float)
   m_EditorClassIdentifier: 
   _paramKey: 
-  _paramValue: 1.05
+  _paramValue: 3.65

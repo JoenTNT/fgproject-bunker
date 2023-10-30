@@ -44,6 +44,8 @@ namespace JT.FGP
 
         #region IInteractable
 
+        public bool IsInteractable => throw new System.NotImplementedException();
+
         public virtual bool Interact(string entityID)
         {
 #if UNITY_EDITOR

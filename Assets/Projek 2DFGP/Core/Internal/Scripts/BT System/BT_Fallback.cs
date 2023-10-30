@@ -29,8 +29,7 @@ namespace JT
 
         // Runtime variable data.
         private BT_Execute _tempExecute = null;
-        private int _currentIndex = 0;
-        private bool _loopRun = false;
+        private int _currentIndex = -1;
         private bool _holdRun = false;
 
         #endregion
@@ -50,43 +49,52 @@ namespace JT
 
             // Set initial state.
             State = BT_State.Running;
-            _loopRun = true;
 
+            // Always add one when begin, check exceeding index, reset back to start index.
+            _currentIndex++;
+            if (_currentIndex >= _sequences.Length) _currentIndex = 0;
+
+            // Loop through all executions.
             while (_currentIndex < _sequences.Length)
             {
                 // Execute sequence.
                 _tempExecute = _sequences[_currentIndex];
                 _tempExecute.Execute();
 
-                // Check if one of them success, finish the process with success result.
                 switch (_tempExecute.State)
                 {
+                    // At least one successful process state fulfill the fallback.
                     case BT_State.Success:
                         State = BT_State.Success;
-                        _loopRun = false;
-                        break;
+                        _holdRun = false;
+                        goto CheckBroker;
 
+                    // Check if running onto action, then pause the process.
                     case BT_State.Running when _tempExecute.IsAction:
                     case BT_State.Running when _tempExecute is IBTProcessHolder && ((IBTProcessHolder)_tempExecute).IsExecutionHold:
-                        _loopRun = false;
                         _holdRun = true;
-                        break;
-
-                    case BT_State.Failed when _currentIndex == _sequences.Length - 1:
-                        State = BT_State.Failed;
-                        _loopRun = false;
-                        break;
+                        goto CheckBroker;
                 }
-
-                // Check loop run.
-                if (!_loopRun) break;
 
                 // Next process.
                 _currentIndex++;
             }
 
+            // Check index is final, then reset sequence as failed.
+            if (_currentIndex >= _sequences.Length)
+            {
+                State = BT_State.Failed;
+                _holdRun = false;
+            }
+
             // Reset back to zero if only the execution is not being hold.
-            if (!_holdRun) _currentIndex = 0;
+        CheckBroker:
+            if (!_holdRun) _currentIndex = -1;
+#if UNITY_EDITOR
+            if (DebugMode)
+                Debug.Log($"[DEBUG] Fallback Result, State: {State}; Latest Execution " +
+                    $"{_tempExecute} ({this})", ObjectRef);
+#endif
         }
 
         public override BT_Execute GetCopy(GameObject objRef)

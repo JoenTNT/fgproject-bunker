@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Chase Speed (Float)
   m_EditorClassIdentifier: 
   _paramKey: 
-  _paramValue: 2.75
+  _paramValue: 1.45

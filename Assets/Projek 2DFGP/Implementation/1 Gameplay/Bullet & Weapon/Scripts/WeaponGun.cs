@@ -6,7 +6,7 @@ namespace JT.FGP
     /// <summary>
     /// Weapon that can shoot bullets.
     /// </summary>
-    public sealed class WeaponGun : GenericWeapon, IReloadCommand
+    public sealed class WeaponGun : GenericWeapon, IReloadCommand, IWeaponGunInfo
     {
         #region structs
 
@@ -44,37 +44,24 @@ namespace JT.FGP
 
         [Header("Weapon Requirements")]
         [SerializeField]
-        private Shooter2DFunc _shooterFunc = null;
-
-        [SerializeField]
         private WeaponGunData _data = new();
 
-        [Header("Properties")]
         [SerializeField]
-        private string _bulletType = string.Empty;
-
-        [SerializeField]
-        private Meta _meta = new Meta { shotsPerAmmo = 1, firstShootDelay = 0f, roundsPerSeconds = 20f, };
-
-        [Header("Optional")]
-        [SerializeField]
-        private GameObjectPool _bulletPool = null;
+        private Meta _meta = new Meta {
+            shotsPerAmmo = 1, 
+            firstShootDelay = 0f,
+            roundsPerSeconds = 20f,
+        };
 
         [Header("Game Events")]
         [SerializeField]
-        private GameEventTwoString _requestBulletPoolCallback = null;
-
-        [SerializeField]
-        private GameEventStringUnityObject _assignBulletPoolCallback = null;
-
-        [SerializeField]
-        private GameEventStringTwoInt _onAmmoDataChange = null;
-
-        [SerializeField]
-        private GameEventStringFloat _onReloadingDataChange = null;
-
-        [SerializeField]
         private GameEventString _onReloadCommand = null;
+
+        //[SerializeField]
+        //private GameEventTwoString _requestBulletPoolCallback = null;
+
+        //[SerializeField]
+        //private GameEventStringUnityObject _assignBulletPoolCallback = null;
 
         // Runtime variable data.
         private GameObject _bulletObj = null;
@@ -84,85 +71,62 @@ namespace JT.FGP
 
         #endregion
 
-        #region Properties
-
-        /// <summary>
-        /// Amount of current ammo in bag.
-        /// </summary>
-        public int AmmoLeftoverInBag => _data.AmmoInBag;
-
-        /// <summary>
-        /// Amount of current ammo in weapon.
-        /// </summary>
-        public int AmmoLeftover => _data.Ammo;
-
-        #endregion
-
         #region Mono
 
         private void Awake()
         {
+            // Create runtime data.
+            _data.Initialize();
+
             // Set initialize values for ammo information.
             if (_meta.InitAmmoOnStart)
             {
-                // Initialize ammo value.
-                _data.Ammo = _data.MaxAmmo;
-                _data.AmmoInBag = _data.MaxAmmoInBag;
+                _data.AmmoInfo.ResetAmmoBag();
+                _data.AmmoInfo.ResetAmmo();
             }
 
             // Subscribe events
-            _assignBulletPoolCallback.AddListener(ListenAssignBulletPoolCallback);
-            _onReloadCommand.AddListener(ListenOnReloadCommand);
+            //_assignBulletPoolCallback.AddListener(ListenAssignBulletPoolCallback, this);
+            _onReloadCommand.AddListener(ListenOnReloadCommand, this);
         }
 
         private void OnDestroy()
         {
             // Unsubscribe events
-            _assignBulletPoolCallback.RemoveListener(ListenAssignBulletPoolCallback);
-            _onReloadCommand.RemoveListener(ListenOnReloadCommand);
+            //_assignBulletPoolCallback.RemoveListener(ListenAssignBulletPoolCallback, this);
+            _onReloadCommand.RemoveListener(ListenOnReloadCommand, this);
         }
 
         private void Start()
         {
-            // Request a bullet type on start.
-            _requestBulletPoolCallback.Invoke(WeaponState.OwnerOfState, _bulletType);
+            // Assign bullet pool.
+            _data.BulletPool = GameObjectPoolManager.Instance.GetPool(_data.BulletType);
 
-            // Run after 2 frame of the game.
-            System.Collections.IEnumerator WaitAnotherEndFrames()
-            {
-                // End of frame.
-                yield return new WaitForEndOfFrame();
-
-                // Send information changes to UI.
-                _onAmmoDataChange.Invoke(TargetElementID, _data.Ammo, _data.AmmoInBag);
-
-                // Send reloading timer data.
-                _onReloadingDataChange.Invoke(TargetElementID, _data.ReloadTimeLeft);
-            }
-            StartCoroutine(WaitAnotherEndFrames());
+            //// Request a bullet type on start.
+            //_requestBulletPoolCallback.Invoke(WeaponOwnerAdapter.Owner, _data.BulletType, this);
         }
 
         private void OnEnable()
         {
             // Check if weapon immediately need to be reloaded.
-            if (_data.IsReloading && _data.MaxAmmo != -1)
+            if (_data.ReloadInfo.IsReloading && _data.AmmoInfo.MaxAmmo != -1)
             {
                 // Check if there is still ammo leftovers, then dont reload it immediately.
-                if (_data.Ammo > 0)
+                if (_data.AmmoInfo.Ammo > 0)
                 {
-                    _data.ReloadTimeLeft = 0f;
+                    CancelReload();
                     return;
                 }
 
                 // Reset reload timer.
-                _data.ResetTimer();
+                _data.ReloadInfo.ResetReloadTime();
             }
         }
 
         private void Update()
         {
             // Check shooting begin.
-            if (WeaponState.IsInAction && !_isShooting)
+            if (WeaponOwnerAdapter.IsInAction && !_isShooting)
             {
                 _isShooting = true;
                 _secondsBeforeShoot = _meta.firstShootDelay;
@@ -174,27 +138,24 @@ namespace JT.FGP
             }
 
             // Check shooting end.
-            else if (!WeaponState.IsInAction && _isShooting)
+            else if (!WeaponOwnerAdapter.IsInAction && _isShooting)
             {
                 _isShooting = false;
 
                 // Run audio if exists.
-                if (_data.AudioRuntime != null && !_data.IsReloading)
+                if (_data.AudioRuntime != null && !_data.ReloadInfo.IsReloading)
                     _data.AudioRuntime.OnPostRuntime();
                 return;
             }
 
             // Check if reloading and not infinite ammo.
-            if (_data.IsReloading && _data.MaxAmmo != -1)
+            if (_data.ReloadInfo.IsReloading && _data.AmmoInfo.MaxAmmo != -1)
             {
                 // Tick reload timer.
-                _data.ReloadTimeLeft -= Time.deltaTime;
+                _data.ReloadInfo.OnReloading();
 
                 // Check reloading is finish.
-                if (!_data.IsReloading) Reload();
-
-                // Send reloading timer data.
-                _onReloadingDataChange.Invoke(TargetElementID, _data.ReloadTimeLeft);
+                if (!_data.ReloadInfo.IsReloading) Reload();
 
                 // Do not run the shooting method while reloading.
                 return;
@@ -213,15 +174,15 @@ namespace JT.FGP
                 for (int i = 0; i < _meta.shotsPerAmmo; i++)
                 {
                     // Get bullet object from pool.
-                    _bulletObj = _bulletPool.GetObject();
+                    _bulletObj = _data.BulletPool.GetObject();
 
                     // Cancel shoot if there are invalid information.
                     if (_bulletObj == null) return;
                     if (!_bulletObj.TryGetComponent(out _bullet)) return;
 
                     // Shoot command.
-                    _bullet.OwnerID = WeaponState.OwnerOfState;
-                    _shooterFunc.Shoot(_bullet);
+                    _bullet.OwnerID = WeaponOwnerAdapter.Owner;
+                    _data.ShooterFunc.Shoot(_bullet);
                 }
 
                 // Run audio if exists.
@@ -229,21 +190,20 @@ namespace JT.FGP
                     _data.AudioRuntime.OnRuntimeLoop();
 
                 // Send information changes to UI.
-                _data.Ammo--;
-                _onAmmoDataChange.Invoke(TargetElementID, _data.Ammo, _data.AmmoInBag);
+                _data.AmmoInfo.UseAmmoInBarrel(1);
 
                 // Reset shoot timer.
                 _secondsBeforeShoot = 1f / _meta.roundsPerSeconds;
             }
 
             // Check ammo is not yet empty, then dont reload yet.
-            if (_data.Ammo > 0) return;
+            if (_data.AmmoInfo.Ammo > 0) return;
 
             // Check ammo bag is empty, then do not reload.
-            if (_data.AmmoInBag <= 0) return;
+            if (_data.AmmoInfo.AmmoInBag <= 0) return;
 
             // Reset reload timer.
-            _data.ResetTimer();
+            _data.ReloadInfo.ResetReloadTime();
 
             // Run audio if exists.
             if (_data.AudioRuntime != null)
@@ -254,76 +214,48 @@ namespace JT.FGP
 
         #region IReloadCommand
 
-        public void Reload()
-        {
-            // Immediately fill in the ammo.
-            int tempReloadAmount = _data.MaxAmmo - _data.Ammo;
-
-            // Check non-infinite ammo in bag.
-            if (_data.MaxAmmoInBag != -1)
-            {
-                _data.AmmoInBag -= tempReloadAmount;
-
-                // Out of ammo in bag.
-                if (_data.AmmoInBag < 0)
-                {
-                    // Get all leftovers.
-                    tempReloadAmount += _data.AmmoInBag;
-
-                    // Make sure the bag is empty, not minus.
-                    _data.AmmoInBag = 0;
-                }
-            }
-
-            // Add to new ammo.
-            _data.Ammo += tempReloadAmount;
-
-            // Update UI Ammo.
-            _onAmmoDataChange.Invoke(TargetElementID, _data.Ammo, _data.AmmoInBag);
-        }
+        public void Reload() => _data.AmmoInfo.TransferAmmo();
 
         public void SkipReload()
         {
-            // Skip reload now.
-            _data.ReloadTimeLeft = 0f;
-
-            // Send reloading timer data.
-            _onReloadingDataChange.Invoke(TargetElementID, _data.ReloadTimeLeft);
+            // Skip reload immediately.
+            _data.ReloadInfo.SkipReload();
 
             // Instant Reload.
             Reload();
         }
 
-        public void CancelReload()
-        {
-            // Skip reload now.
-            _data.ReloadTimeLeft = 0f;
+        public void CancelReload() => _data.ReloadInfo.SkipReload();
 
-            // Send reloading timer data.
-            _onReloadingDataChange.Invoke(TargetElementID, _data.ReloadTimeLeft);
-        }
+        #endregion
+
+        #region IWeaponGunInfo
+
+        public IAmmo AmmoInfo => _data.AmmoInfo;
+
+        public IReload ReloadInfo => _data.ReloadInfo;
 
         #endregion
 
         #region Main
 
-        private void ListenAssignBulletPoolCallback(string entityID, Object bulletPool)
-        {
-            // Validate information.
-            if (entityID != WeaponState.OwnerOfState) return;
-            if (bulletPool is not GameObjectPool) return;
+        //private void ListenAssignBulletPoolCallback(string entityID, Object bulletPool)
+        //{
+        //    // Validate information.
+        //    if (entityID != WeaponOwnerAdapter.Owner) return;
+        //    if (bulletPool is not GameObjectPool) return;
 
-            // Assign bullet pool.
-            _bulletPool = (GameObjectPool)bulletPool;
-        }
+        //    // Assign bullet pool.
+        //    _data.BulletPool = (GameObjectPool)bulletPool;
+        //}
 
         private void ListenOnReloadCommand(string entityID)
         {
             // Validate information.
-            if (entityID != WeaponState.OwnerOfState) return;
+            if (entityID != WeaponOwnerAdapter.Owner) return;
 
             // Start reloading.
-            _data.ResetTimer();
+            _data.ReloadInfo.ResetReloadTime();
         }
 
         #endregion

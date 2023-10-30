@@ -6,6 +6,11 @@ namespace JT
     public interface IInteractable
     {
         /// <summary>
+        /// Does entity interactable.
+        /// </summary>
+        bool IsInteractable { get; }
+
+        /// <summary>
         /// Interact with the entity.
         /// </summary>
         /// <returns>True if successfully proceed interaction</returns>
@@ -18,6 +23,11 @@ namespace JT
     /// <typeparam name="T">The other entity that interact with this entity</typeparam>
     public interface IInteractable<T>
     {
+        /// <summary>
+        /// Does entity interactable.
+        /// </summary>
+        bool IsInteractable { get; }
+
         /// <summary>
         /// Interact with the entity.
         /// </summary>

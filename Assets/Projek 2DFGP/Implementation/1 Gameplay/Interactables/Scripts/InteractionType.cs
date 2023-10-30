@@ -9,5 +9,7 @@ namespace JT.FGP
         Interact = 0,
         PickUpItem = 1,
         Talk = 2,
+        OpenDoor = 3,
+        CloseDoor = 4,
     }
 }

@@ -1,4 +1,3 @@
-using JT.GameEvents;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -16,16 +15,19 @@ namespace JT.FGP
 
         [Header("Requirements")]
         [SerializeField]
+        private EntityID _ownerID = null;
+
+        [SerializeField]
         private NavMeshAgent _agent = null;
 
         [SerializeField]
         private HitpointStats _hitpointStats = null;
 
         [SerializeField]
-        private Topview2DMovementFunc _movementFunc = null;
+        private AbstractMovement2DFunc _movementFunc = null;
 
         [SerializeField]
-        private Topview2DLookAtFunc _lookAtFunc = null;
+        private DampingRotation2DFunc _lookAtFunc = null;
 
         [SerializeField]
         private InsideAreaObjectCollector2D _objectCollector2D = null;
@@ -34,8 +36,11 @@ namespace JT.FGP
         [SerializeField]
         private AbsoluteFollowObject2DFunc _followObject2DFunc = null;
 
+        [SerializeField]
+        private Shooter2DFunc _shooterFunc = null;
+
         // Runtime variable data.
-        private BakedDashboard _mainBakedDashboard = null;
+        private BakedDashboard _bakedDashboard = null;
 
         #endregion
 
@@ -59,12 +64,14 @@ namespace JT.FGP
             if (!TryGetComponent(out Dashboard mainDashboard)) return;
 
             // Bake dashboard.
-            _mainBakedDashboard = mainDashboard.Bake();
-            _mainBakedDashboard.AssignValue<Component>(EC.MOVEMENT_FUNCTION_KEY, _movementFunc);
-            _mainBakedDashboard.AssignValue<Component>(EC.LOOK_AT_FUNCTION_KEY, _lookAtFunc);
-            _mainBakedDashboard.AssignValue<Component>(EC.NAVMESH_AGENT_KEY, _agent);
-            _mainBakedDashboard.AssignValue<Component>(EC.INSIDE_FOV_AREA_KEY, _objectCollector2D);
-            _mainBakedDashboard.AssignValue<Component>(EC.HITPOINT_STATS_KEY, _hitpointStats);
+            _bakedDashboard = mainDashboard.Bake();
+            _bakedDashboard.AssignValue<Component>(EC.MOVEMENT_FUNCTION_KEY, _movementFunc);
+            _bakedDashboard.AssignValue<Component>(EC.ROTATION_FUNCTION_KEY, _lookAtFunc);
+            _bakedDashboard.AssignValue<Component>(EC.NAVMESH_AGENT_KEY, _agent);
+            _bakedDashboard.AssignValue<Component>(EC.INSIDE_FOV_AREA_KEY, _objectCollector2D);
+            _bakedDashboard.AssignValue<Component>(EC.HITPOINT_STATS_KEY, _hitpointStats);
+            _bakedDashboard.AssignValue<Component>(EC.SHOOTER_FUNCTION_KEY, _shooterFunc);
+            _bakedDashboard.AssignValue<Component>(EC.OWNER_ID_KEY, _ownerID);
 
             // Always initialize base after dashboard data has been baked.
             base.OnInit();

@@ -26,8 +26,10 @@ namespace JT.FGP
         private GameEventStringUnityObject _onAddRuntimePlayerInfo = null;
 
         // Runtime variable data
+        private System.Func<GameObject, bool> _isInteractableFunc = null;
         private GameObject _nearestDetectedInteractable = null;
         private InteractableComponent _nearestInteractable = null;
+        private InteractableComponent _tempInteractable = null;
 
         #endregion
 
@@ -38,6 +40,9 @@ namespace JT.FGP
             // Inject data to controller.
             if (TryGetComponent(out PlayerControl controller))
                 controller.InjectEntityData(_data);
+
+            // Set initial data.
+            _isInteractableFunc = IsInteractableFunc;
 
             // Subscribe events
             _equipWeaponCallback.AddListener(ListeonEquipWeaponCallback);
@@ -58,39 +63,35 @@ namespace JT.FGP
             _onAddRuntimePlayerInfo.Invoke(_data.ID, _data.RuntimeStatsRef);
         }
 
-        private void Update()
-        {
-            // Handle interaction control
-            _nearestDetectedInteractable = _data.AreaOfInteraction.GetNearestObject(transform.position);
-
-            if (_nearestDetectedInteractable != null)
-            {
-                if (_nearestInteractable?.gameObject == _nearestDetectedInteractable) return;
-                if (!_nearestDetectedInteractable.TryGetComponent(out _nearestInteractable)) return;
-
-                _notifyInteractionHintCallback.Invoke(_data.ID, _nearestInteractable.UniqueID,
-                    (int)_nearestInteractable.Type);
-            }
-            else
-            {
-                if (_nearestInteractable == null) return;
-
-                _notifyInteractionHintCallback.Invoke(_data.ID, null, (int)InteractionType.None);
-                _nearestInteractable = null;
-            }
-        }
+        private void Update() => HandleSearchNearestInteractable();
 
         #endregion
 
         #region IInteractable
 
+        public bool IsInteractable => !_data.IsInteracting;
+
         public bool Interact()
         {
             if (_nearestInteractable == null) return false;
 #if UNITY_EDITOR
-            Debug.Log($"[DEBUG] Interact with {_nearestInteractable}");
+            //Debug.Log($"[DEBUG] Interact with {_nearestInteractable}");
 #endif
-            return _nearestInteractable.Interact(_data.ID);
+            _nearestInteractable.EntityObjectTarget = gameObject;
+            bool result = _nearestInteractable.Interact(_data.ID);
+            if (!_nearestInteractable.IsInteractable)
+            {
+                // Remove the current and change with new one.
+                _nearestDetectedInteractable = null;
+                HandleSearchNearestInteractable();
+            }
+            else
+            {
+                // Update information of interactable case.
+                _notifyInteractionHintCallback.Invoke(_data.ID, _nearestInteractable.UniqueID,
+                    (int)_nearestInteractable.Type);
+            }
+            return result;
         }
 
         #endregion
@@ -112,7 +113,36 @@ namespace JT.FGP
             }
 
             // Proceed dependency injection.
-            _data.Weapon = ((GenericWeapon)weapon).WeaponState;
+            _data.Weapon = ((GenericWeapon)weapon).WeaponOwnerAdapter;
+        }
+
+        private void HandleSearchNearestInteractable()
+        {
+            // Handle interaction control
+            _nearestDetectedInteractable = _data.AreaOfInteraction.GetNearestObject(
+                transform.position, _isInteractableFunc);
+            if (_nearestDetectedInteractable != null)
+            {
+                if (_nearestInteractable?.gameObject == _nearestDetectedInteractable) return;
+                if (!_nearestDetectedInteractable.TryGetComponent(out _nearestInteractable)) return;
+
+                _notifyInteractionHintCallback.Invoke(_data.ID, _nearestInteractable.UniqueID,
+                    (int)_nearestInteractable.Type);
+            }
+            else
+            {
+                if (_nearestInteractable == null) return;
+
+                _notifyInteractionHintCallback.Invoke(_data.ID, null, (int)InteractionType.None);
+                _nearestInteractable = null;
+            }
+        }
+
+        private bool IsInteractableFunc(GameObject interactableObj)
+        {
+            if (interactableObj.TryGetComponent(out _tempInteractable))
+                return _tempInteractable.IsInteractable;
+            return true;
         }
 
         #endregion

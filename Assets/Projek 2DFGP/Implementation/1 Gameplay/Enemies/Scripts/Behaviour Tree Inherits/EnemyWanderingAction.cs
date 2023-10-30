@@ -50,8 +50,6 @@ namespace JT.FGP
             _blockerLayer = (BakedParamLayerMask)@params[EC.BLOCKER_LAYER_KEY];
         }
 
-        public override BT_State CalcStateCondition() => BT_State.Running;
-
         public override void OnBeforeAction()
         {
             // Set wandering pivot initial.
@@ -59,9 +57,6 @@ namespace JT.FGP
 
             // Always reset idle time on start.
             ResetIdle();
-#if UNITY_EDITOR
-            //Debug.Log($"[DEBUG] Agent is Idling! Waiting for {_tempIdleSeconds}");
-#endif
         }
 
         public override void OnTickAction()
@@ -76,7 +71,6 @@ namespace JT.FGP
                 {
                     _targetParam.Value = _tempDetectedObj.transform;
                     State = BT_State.Failed;
-                    Debug.Log($"[DEBUG] Target Detected: {_tempDetectedObj}");
                     return;
                 }
             }
@@ -86,9 +80,7 @@ namespace JT.FGP
 
             // Get target walk position.
             _moveTargetPosParam.Value = GetRandWanderTargetPosition();
-#if UNITY_EDITOR
-            //Debug.Log($"[DEBUG] Walk to position {_moveTargetPosParam.Value};");
-#endif
+
             // End action process.
             State = BT_State.Success;
         }
@@ -134,7 +126,7 @@ namespace JT.FGP
             int blockedCount = Physics2D.RaycastNonAlloc(thisObjPos, dir.normalized, _hits, distance,
                 _blockerLayer.Value);
 #if UNITY_EDITOR
-            Debug.DrawLine(thisObjPos, targetObjPos, blockedCount > 0 ? Color.red : Color.green);
+            //Debug.DrawLine(thisObjPos, targetObjPos, blockedCount > 0 ? Color.red : Color.green);
 #endif
             return blockedCount <= 0;
         }

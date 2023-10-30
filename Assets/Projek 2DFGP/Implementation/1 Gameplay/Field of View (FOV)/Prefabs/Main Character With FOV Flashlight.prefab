@@ -441,7 +441,7 @@ GameObject:
   - component: {fileID: 7048903029011361012}
   - component: {fileID: 1253916486222741618}
   - component: {fileID: 1437619681831544721}
-  m_Layer: 6
+  m_Layer: 12
   m_Name: Sight Area
   m_TagString: Player
   m_Icon: {fileID: 0}

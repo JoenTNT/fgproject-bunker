@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 9084416917738952394}
   - component: {fileID: 2759825892526404278}
   - component: {fileID: 7768108855225368031}
-  - component: {fileID: 3887847081579369344}
   m_Layer: 2
   m_Name: Bullet Barrel
   m_TagString: Untagged
@@ -26,13 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9084416917738952395}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.365, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9084416918877065009}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2759825892526404278
 MonoBehaviour:
@@ -83,35 +82,6 @@ MonoBehaviour:
   OverrideAttenuation: 0
   OverrideMinDistance: 1
   OverrideMaxDistance: 20
---- !u!114 &3887847081579369344
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9084416917738952395}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 186315a9efbe0874a8afaa6c8ce7ecb8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _emitter: {fileID: 7768108855225368031}
-  _parameterName: Rifle Shots
-  _preDefaultValue: 1
-  _loopDefaultValue: 1
-  _postDefaultValue: 2
-  _initOnAwake: 1
-  _onRunPreSound:
-    m_PersistentCalls:
-      m_Calls: []
-  _onRunSoundLoop:
-    m_PersistentCalls:
-      m_Calls: []
-  _onRunPostSound:
-    m_PersistentCalls:
-      m_Calls: []
-  _debugControl: 0
-  _pressKeyToRun: 323
 --- !u!1 &9084416918877065010
 GameObject:
   m_ObjectHideFlags: 0
@@ -121,8 +91,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9084416918877065009}
-  - component: {fileID: 9084416918877065015}
   - component: {fileID: 9084416918877065008}
+  - component: {fileID: 9084416918877065015}
   m_Layer: 2
   m_Name: SMG
   m_TagString: Untagged
@@ -137,6 +107,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9084416918877065010}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -144,42 +115,7 @@ Transform:
   m_Children:
   - {fileID: 9084416917738952394}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9084416918877065015
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9084416918877065010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b624f103d67e664fb4df0d6c3d54b36, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _weaponState: {fileID: 9084416918877065008}
-  _weaponStats: {fileID: 0}
-  _targetElementID: 
-  _weaponKeyword: SMG
-  _shooterFunc: {fileID: 2759825892526404278}
-  _data:
-    _maxAmmoInBag: 300
-    _maxAmmo: 50
-    _reloadTime: 3
-    _audio: {fileID: 3887847081579369344}
-  _bulletType: Normal Bullet
-  _meta:
-    shotsPerAmmo: 1
-    firstShootDelay: 0
-    roundsPerSeconds: 20
-    _initAmmoOnStart: 1
-  _bulletPool: {fileID: 0}
-  _requestBulletPoolCallback: {fileID: 11400000, guid: 6a2474b1485ec544d84bed40ddd75e76, type: 2}
-  _assignBulletPoolCallback: {fileID: 11400000, guid: b6fe54b5018b0ef4fa4914fbeda9314f, type: 2}
-  _onAmmoDataChange: {fileID: 11400000, guid: 935193918103bfb44ad76e936f6b3ee7, type: 2}
-  _onReloadingDataChange: {fileID: 11400000, guid: 30ce56cd095d9de4ea0943807457e8d2, type: 2}
-  _onReloadCommand: {fileID: 11400000, guid: 526fc6479b2fa8f4bb81bbae35f291b5, type: 2}
 --- !u!114 &9084416918877065008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -192,3 +128,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11d019568ebffd644901af07d32e3115, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &9084416918877065015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9084416918877065010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b624f103d67e664fb4df0d6c3d54b36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _weaponOwnerAdapter: {fileID: 9084416918877065008}
+  _targetInfoID: 
+  _weaponKeyword: SMG
+  _data:
+    _shooterFunc: {fileID: 2759825892526404278}
+    _bulletType: Normal Bullet
+    _ammoInfoPreset: {fileID: 11400000, guid: ca8cd70e484f9d245a6696fd0f0db207, type: 2}
+    _reloadTimeInfo: {fileID: 11400000, guid: 1895a2d4512bbd945bbf2ae1fd410217, type: 2}
+    _audio: {fileID: 0}
+    _bulletPool: {fileID: 0}
+  _meta:
+    shotsPerAmmo: 1
+    firstShootDelay: 0
+    roundsPerSeconds: 15
+    _initAmmoOnStart: 1
+  _requestBulletPoolCallback: {fileID: 11400000, guid: 6a2474b1485ec544d84bed40ddd75e76, type: 2}
+  _assignBulletPoolCallback: {fileID: 11400000, guid: b6fe54b5018b0ef4fa4914fbeda9314f, type: 2}
+  _onReloadCommand: {fileID: 11400000, guid: 526fc6479b2fa8f4bb81bbae35f291b5, type: 2}

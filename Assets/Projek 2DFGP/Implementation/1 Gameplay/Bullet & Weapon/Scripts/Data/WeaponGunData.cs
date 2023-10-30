@@ -6,28 +6,35 @@ namespace JT.FGP
     /// Handle data for weapon gun.
     /// </summary>
     [System.Serializable]
-    public sealed class WeaponGunData : IAmmo, IReload
+    public sealed class WeaponGunData : IWeaponGunInfo, IRequiredInitialize
     {
         #region Variables
 
+        [Header("Requirements")]
+        [SerializeField]
+        private Shooter2DFunc _shooterFunc = null;
+
         [Header("Properties")]
-        [SerializeField, Min(-1)]
-        private int _maxAmmoInBag = -1; // Minus one means infinite.
-
-        [SerializeField, Min(-1)]
-        private int _maxAmmo = -1; // Minus one means infinite.
-
-        [SerializeField, Min(0f)]
-        private float _reloadTime = 3f;
+        [SerializeField]
+        private string _bulletType = string.Empty;
 
         [Header("Optional")]
         [SerializeField]
+        private AmmoInfoPreset _ammoInfoPreset = null;
+
+        [SerializeField]
+        private ReloadTimeInfoPreset _reloadTimeInfo = null;
+
+        [SerializeField]
         private Audio_RuntimeLogic _audio = null;
 
+        [SerializeField]
+        private GameObjectPool _bulletPool = null;
+
         // Runtime variable data.
-        private int _ammoInBag = 0;
-        private int _ammoLeft = 0;
-        private float _reloadTimeLeft = 0f;
+        private RuntimeAmmoInfo _runtimeAmmoInfo = null;
+        private RuntimeReloadInfo _runtimeReloadInfo = null;
+        private bool _isInit = false;
 
         #endregion
 
@@ -39,60 +46,47 @@ namespace JT.FGP
         public IRuntimeHandler AudioRuntime => _audio;
 
         /// <summary>
-        /// Amount of runtime current ammo in bag.
+        /// Function to shoot an ammo.
         /// </summary>
-        public int AmmoInBag
+        public IShootCommand<Bullet2DControl> ShooterFunc => _shooterFunc;
+
+        /// <summary>
+        /// Bullet pool reference.
+        /// </summary>
+        public GameObjectPool BulletPool
         {
-            get => _ammoInBag;
-            set => _ammoInBag = value;
+            get => _bulletPool;
+            internal set => _bulletPool = value;
         }
 
         /// <summary>
-        /// Current reloading time in seconds.
+        /// The weapon is using the bullet type.
         /// </summary>
-        public float ReloadTimeLeft
-        {
-            get => _reloadTimeLeft;
-            set => _reloadTimeLeft = value;
-        }
+        public string BulletType => _bulletType;
 
         #endregion
 
-        #region IAmmo
+        #region IWeaponGunInfo
 
-        public int MaxAmmoInBag => _maxAmmoInBag;
+        public IAmmo AmmoInfo => _runtimeAmmoInfo;
 
-        public int MaxAmmo => _maxAmmo;
-
-        public int Ammo
-        {
-            get => _ammoLeft;
-            set => _ammoLeft = value;
-        }
+        public IReload ReloadInfo => _runtimeReloadInfo;
 
         #endregion
 
-        #region IReload
+        #region IRequiredInitialize
 
-        public float SecondsReload
+        public bool IsInitialized => _isInit;
+
+        public void Initialize()
         {
-            get => _reloadTime;
-            set => _reloadTime = value;
-        }
+            // Ignore if already initialized.
+            if (_isInit) return;
 
-        public bool IsReloading => _reloadTimeLeft > 0f;
-
-        #endregion
-
-        #region Main
-
-        /// <summary>
-        /// Reset timer for reload.
-        /// </summary>
-        internal void ResetTimer()
-        {
-            // Reset reload time.
-            _reloadTimeLeft = _reloadTime;
+            // Create all runtime objects.
+            _runtimeAmmoInfo = _ammoInfoPreset?.CreateRuntimeObject();
+            _runtimeReloadInfo = _reloadTimeInfo?.CreateRuntimeObject();
+            _isInit = true;
         }
 
         #endregion

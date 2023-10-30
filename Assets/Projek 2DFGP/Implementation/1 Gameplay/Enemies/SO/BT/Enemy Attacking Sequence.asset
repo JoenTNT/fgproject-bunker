@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: Enemy Attacking Sequence
   m_EditorClassIdentifier: 
   _onEmptySequenceState: 1
-  _sequences: []
+  _sequences:
+  - {fileID: 11400000, guid: d79ca01d84d85ec42bedae8c3d8eab1f, type: 2}
+  - {fileID: 11400000, guid: fa106ddf6a1316d44a651ede77e05190, type: 2}

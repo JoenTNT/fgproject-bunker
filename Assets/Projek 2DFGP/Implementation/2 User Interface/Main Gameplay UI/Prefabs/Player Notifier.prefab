@@ -189,4 +189,7 @@ MonoBehaviour:
   - Interact with
   - Collect
   - Talk to
+  - 'Open the '
+  - 'Close the '
+  _disableOnStart: 1
   _onNotifyInteractionHint: {fileID: 11400000, guid: 6b7eac96799c5484eb4a83408b5b96d6, type: 2}

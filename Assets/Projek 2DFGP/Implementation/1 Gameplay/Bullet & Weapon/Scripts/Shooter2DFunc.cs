@@ -40,15 +40,15 @@ namespace JT.FGP
         {
             // Initialize values.
             Vector2 right = transform.right;
+            Vector2 cPos = transform.position;
             float max = _accuracyAngle / 2f, min = -max;
+            Color color = Color.cyan;
 
             // Draw max angle shot.
-            Debug.DrawRay(transform.position, DirectionChangeByDegree(right, max) * _maxLengthDrawRay,
-                Color.cyan);
+            Debug.DrawRay(cPos, DirectionChangeByDegree(right, max) * _maxLengthDrawRay, color);
 
             // Draw min angle shot.
-            Debug.DrawRay(transform.position, DirectionChangeByDegree(right, min) * _maxLengthDrawRay,
-                Color.cyan);
+            Debug.DrawRay(cPos, DirectionChangeByDegree(right, min) * _maxLengthDrawRay, color);
         }
 #endif
         #endregion

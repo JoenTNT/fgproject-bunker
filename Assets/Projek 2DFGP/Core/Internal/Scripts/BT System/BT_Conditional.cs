@@ -26,7 +26,7 @@ namespace JT
 
         #endregion
 
-        #region IBTValidateCondition
+        #region IBTConditional
 
         public abstract BT_State CalcStateCondition();
 

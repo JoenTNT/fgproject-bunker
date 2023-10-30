@@ -19,3 +19,7 @@ MonoBehaviour:
     _icon: {fileID: 21300000, guid: 228f9c130fe173641a2918edb5835b53, type: 3}
   - _type: 2
     _icon: {fileID: 21300000, guid: 3530ece2afb20964fbe45447dcded4c5, type: 3}
+  - _type: 3
+    _icon: {fileID: 21300000, guid: f35a18c377845894dbd4bbc9085cb2ed, type: 3}
+  - _type: 4
+    _icon: {fileID: 21300000, guid: 1806f0bd702c491489f06cbe829a2706, type: 3}

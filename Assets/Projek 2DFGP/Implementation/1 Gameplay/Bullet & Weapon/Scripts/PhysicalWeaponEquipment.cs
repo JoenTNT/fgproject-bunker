@@ -37,31 +37,23 @@ namespace JT.FGP
         private void Awake()
         {
             // Subscribe events.
-            _onEquipWeaponCommand.AddListener(ListenOnEquipWeaponCommand);
+            _onEquipWeaponCommand.AddListener(ListenOnEquipWeaponCommand, this);
         }
 
         private void OnDestroy()
         {
             // Unsubscribe events.
-            _onEquipWeaponCommand.RemoveListener(ListenOnEquipWeaponCommand);
+            _onEquipWeaponCommand.RemoveListener(ListenOnEquipWeaponCommand, this);
         }
 
         private void Start()
         {
-            // TEMP: Initialize physical weapon on start while there is no starter pack.
-            System.Collections.IEnumerator WaitAnotherFrame()
+            // Invoke initial info for each weapon.
+            for (int i = 0; i < _weaponHolds.Length; i++)
             {
-                // Wait for one frame.
-                yield return null;
-
-                // Invoke initial info for each weapon.
-                for (int i = 0; i < _weaponHolds.Length; i++)
-                {
-                    _equipWeaponCallback.Invoke(_ownerID.ID, $"{WEAPON_ID_INDEX}{i}", _weaponHolds[i]);
-                    if (i != 0) _weaponHolds[i]?.gameObject.SetActive(false);
-                }
+                _equipWeaponCallback.Invoke(_ownerID.ID, $"{WEAPON_ID_INDEX}{i}", _weaponHolds[i], this);
+                if (i != 0) _weaponHolds[i]?.gameObject.SetActive(false);
             }
-            StartCoroutine(WaitAnotherFrame());
         }
 
         #endregion

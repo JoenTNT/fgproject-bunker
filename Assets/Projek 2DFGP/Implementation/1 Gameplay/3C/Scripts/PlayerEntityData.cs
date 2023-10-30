@@ -29,6 +29,7 @@ namespace JT.FGP
         // Runtime variable data.
         private IWeaponActionState _weaponOnHand = null;
         private UI_RuntimePlayerStats _runtimeStatsRef = null;
+        private bool _isInteracting = false;
         private bool _isInitialized = false;
 
         #endregion
@@ -66,13 +67,22 @@ namespace JT.FGP
             {
                 // Unset old one.
                 if (_weaponOnHand != null)
-                    _weaponOnHand.OwnerOfState = string.Empty;
+                    _weaponOnHand.Owner = string.Empty;
 
                 // Set weapon ownership if not null.
                 if (value != null)
-                    value.OwnerOfState = _entityID.ID;
+                    value.Owner = _entityID.ID;
                 _weaponOnHand = value;
             }
+        }
+
+        /// <summary>
+        /// Player status if currently interacting with something and cannot be controlled.
+        /// </summary>
+        public bool IsInteracting
+        {
+            get => _isInteracting;
+            set => _isInteracting = value;
         }
 
         #endregion

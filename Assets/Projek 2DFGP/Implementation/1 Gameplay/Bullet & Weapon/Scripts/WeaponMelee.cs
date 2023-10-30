@@ -105,13 +105,13 @@ namespace JT.FGP
         private void Awake()
         {
             // Subscribe events.
-            WeaponState.OnInstantUse += ListenOnInstantUse;
+            WeaponOwnerAdapter.OnInstantUse += ListenOnInstantUse;
         }
 
         private void OnDestroy()
         {
             // Unsubscribe events.
-            WeaponState.OnInstantUse -= ListenOnInstantUse;
+            WeaponOwnerAdapter.OnInstantUse -= ListenOnInstantUse;
         }
 
         private void Start()
@@ -130,7 +130,7 @@ namespace JT.FGP
         private void Update()
         {
             // Check anticipation begin.
-            if (WeaponState.IsInAction && !_isAnticipate)
+            if (WeaponOwnerAdapter.IsInAction && !_isAnticipate)
             {
                 // Open placeholder.
                 if (_placeholderHint != null)
@@ -144,7 +144,7 @@ namespace JT.FGP
             }
 
             // Check release action.
-            else if (!WeaponState.IsInAction && _isAnticipate)
+            else if (!WeaponOwnerAdapter.IsInAction && _isAnticipate)
             {
                 // Stop anticipating and do an action.
                 _isAnticipate = false;
@@ -205,8 +205,8 @@ namespace JT.FGP
             if (_swingRoutine != null && !_isInteruptable) return;
 
             // Always set owner of weapon if not yet assigned.
-            if (string.IsNullOrEmpty(_weaponHitBox.OwnerID) || _weaponHitBox.OwnerID != WeaponState.OwnerOfState)
-                _weaponHitBox.OwnerID = WeaponState.OwnerOfState;
+            if (string.IsNullOrEmpty(_weaponHitBox.OwnerID) || _weaponHitBox.OwnerID != WeaponOwnerAdapter.Owner)
+                _weaponHitBox.OwnerID = WeaponOwnerAdapter.Owner;
 
             // Create new routine or start over swing.
             _swingRoutine = SwingRoutine();

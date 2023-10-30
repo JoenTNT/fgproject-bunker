@@ -18,6 +18,7 @@ namespace JT.FGP
         private Bullet2DControlData _data = new Bullet2DControlData();
 
         // Runtime variable data.
+        private AbstractMovement2DFunc _moveFunc = null;
         private DestroyTimer _destroyTimer = null;
         private string _shooterID = string.Empty;
         private bool _isShoot = false;
@@ -39,18 +40,20 @@ namespace JT.FGP
 
         #region Mono
 
-        private void FixedUpdate()
+        private void Update()
         {
             // Check if bullet has been shoot.
             if (!_isShoot) return;
 
             // Detect any target hit.
-            _data.Hitter.OnDetectHit(transform.position, _data.MoveFunc.Direction,
-                _data.MoveFunc.Speed * Time.deltaTime);
+            _data.Hitter.OnDetectHit(transform.position, _data.MoveFunc.Velocity * Time.deltaTime);
+        }
 
+        private void LateUpdate()
+        {
             // Move a bullet until all target hit.
             if (!_data.Hitter.IsDone)
-                _data.MoveFunc.Move();
+                _data.MoveFunc.OnMove();
         }
 
         private void OnDisable() => _isShoot = false;
@@ -77,17 +80,21 @@ namespace JT.FGP
         public void Shoot(Vector2 direction, float speed)
         {
             // Set bullet movement information.
-            _data.MoveFunc.Speed = speed;
-            _data.MoveFunc.Direction = direction;
+            _moveFunc = _data.MoveFunc;
+            _moveFunc.SpeedMultiplier = speed;
+            if (_moveFunc is IDirectionBaseMovement2D)
+                ((IDirectionBaseMovement2D)_moveFunc).SetMoveDirection(direction.normalized);
             _isShoot = true;
 
             // Bullet facing forward of the aim direction.
-            _data.LookFunc.LookAtDirection(direction);
+            _data.RotateFunc.SetInstantLookDirection(direction);
 #if FMOD
             // Play sound if exists.
             if (_data.SoundEmitter != null && !_data.DontPlaySoundOnShot)
                 _data.SoundEmitter.Play();
 #endif
+            // Detect hit on first shot.
+            _data.Hitter.OnDetectHit(transform.position, _data.MoveFunc.Velocity * Time.deltaTime);
         }
 
         #endregion
@@ -116,10 +123,10 @@ namespace JT.FGP
 
         [Header("Requirements")]
         [SerializeField]
-        private Topview2DMovementFunc _moveFunc = null;
+        private AbstractMovement2DFunc _moveFunc = null;
 
         [SerializeField]
-        private Topview2DLookAtFunc _lookFunc = null;
+        private InstantRotation2DFunc _rotateFunc = null;
 
         [SerializeField]
         private Bullet2DHitter _hitter = null;
@@ -142,12 +149,12 @@ namespace JT.FGP
         /// <summary>
         /// Function to move the bullet.
         /// </summary>
-        public Topview2DMovementFunc MoveFunc => _moveFunc;
+        public AbstractMovement2DFunc MoveFunc => _moveFunc;
 
         /// <summary>
         /// Function to rotate bullet by shoot direction.
         /// </summary>
-        public Topview2DLookAtFunc LookFunc => _lookFunc;
+        public InstantRotation2DFunc RotateFunc => _rotateFunc;
 
         /// <summary>
         /// Hitter handler.
