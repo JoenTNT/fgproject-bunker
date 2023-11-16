@@ -20,9 +20,6 @@ namespace JT.FGP
         private GameEventTwoStringInt _notifyInteractionHintCallback = null;
 
         [SerializeField]
-        private GameEventTwoStringUnityObject _equipWeaponCallback = null;
-
-        [SerializeField]
         private GameEventStringUnityObject _onAddRuntimePlayerInfo = null;
 
         // Runtime variable data
@@ -43,15 +40,6 @@ namespace JT.FGP
 
             // Set initial data.
             _isInteractableFunc = IsInteractableFunc;
-
-            // Subscribe events
-            _equipWeaponCallback.AddListener(ListeonEquipWeaponCallback);
-        }
-
-        private void OnDestroy()
-        {
-            // Unsubscribe events
-            _equipWeaponCallback.RemoveListener(ListeonEquipWeaponCallback);
         }
 
         private void Start()
@@ -88,7 +76,7 @@ namespace JT.FGP
             else
             {
                 // Update information of interactable case.
-                _notifyInteractionHintCallback.Invoke(_data.ID, _nearestInteractable.UniqueID,
+                _notifyInteractionHintCallback.Invoke(_data.ID, _nearestInteractable.ID,
                     (int)_nearestInteractable.Type);
             }
             return result;
@@ -97,24 +85,6 @@ namespace JT.FGP
         #endregion
 
         #region Main
-
-        private void ListeonEquipWeaponCallback(string id, string elementID, Object weapon)
-        {
-            // Check if this entity is not the target ID, then abort process.
-            if (_data.ID != id) return;
-            if (elementID != $"{PhysicalWeaponEquipment.WEAPON_ID_INDEX}0") return;
-
-            // Check the weapon object.
-            if (weapon is not GenericWeapon)
-            {
-                // Remove weapon if equipped.
-                _data.Weapon = null;
-                return;
-            }
-
-            // Proceed dependency injection.
-            _data.Weapon = ((GenericWeapon)weapon).WeaponOwnerAdapter;
-        }
 
         private void HandleSearchNearestInteractable()
         {
@@ -126,7 +96,7 @@ namespace JT.FGP
                 if (_nearestInteractable?.gameObject == _nearestDetectedInteractable) return;
                 if (!_nearestDetectedInteractable.TryGetComponent(out _nearestInteractable)) return;
 
-                _notifyInteractionHintCallback.Invoke(_data.ID, _nearestInteractable.UniqueID,
+                _notifyInteractionHintCallback.Invoke(_data.ID, _nearestInteractable.ID,
                     (int)_nearestInteractable.Type);
             }
             else

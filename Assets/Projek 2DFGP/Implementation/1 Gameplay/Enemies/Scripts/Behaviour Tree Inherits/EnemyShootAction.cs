@@ -28,7 +28,7 @@ namespace JT.FGP
         // Runtime variable data.
         private GameObjectPool _ammoPool = null;
         private GameObject _bulletObj = null;
-        private Bullet2DControl _bullet = null;
+        private PhysicalAmmo2DControl _bullet = null;
         private string _usingBulletType = string.Empty;
         private float _tempSecond = 0f;
         private bool _isShootDone = false;
@@ -59,7 +59,7 @@ namespace JT.FGP
             if (_ammoPool == null || _usingBulletType != _shootAmmoTypeParam.Value)
             {
                 _usingBulletType = _shootAmmoTypeParam.Value;
-                _ammoPool = GameObjectPoolManager.Instance.GetPool(_usingBulletType);
+                _ammoPool = GameObjectPoolManager.Instance.GetGameObjPool(_usingBulletType);
             }
 
             // Instant rotate to target.
@@ -84,7 +84,7 @@ namespace JT.FGP
                 _bulletObj = _ammoPool.GetObject();
                 if (_bulletObj.TryGetComponent(out _bullet))
                 {
-                    _bullet.OwnerID = _ownerID.ID;
+                    _bullet.EntityID = _ownerID.ID;
                     _shooterFunc.Shoot(_bullet);
                 }
 

@@ -1,5 +1,56 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3958355170503247291
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3119008064649931151}
+  - component: {fileID: 44719574261497090}
+  m_Layer: 0
+  m_Name: Collectable Item Pool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3119008064649931151
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3958355170503247291}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4605748850569040740}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &44719574261497090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3958355170503247291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d4a103d0916ed847b8f73b7024702de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefab: {fileID: 2033814521826135954, guid: 7a15ba92a69dc9a4d82e126119893a07, type: 3}
+  _initialAmount: 50
+  _extendIfEmpty: 5
+  _extendable: 0
+  _interuptWhenEmpty: 1
+  _disableObjsOnStart: 1
+  _parentOfObject: {fileID: 0}
 --- !u!1 &4605748849462603121
 GameObject:
   m_ObjectHideFlags: 0
@@ -84,6 +135,8 @@ Transform:
   - {fileID: 4605748849462603120}
   - {fileID: 983239479776071749}
   - {fileID: 9101335178278438205}
+  - {fileID: 5662006481705403394}
+  - {fileID: 3119008064649931151}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4605748850569040747
@@ -105,6 +158,61 @@ MonoBehaviour:
     pool: {fileID: 2516349698900178235}
   - key: Goo Spit
     pool: {fileID: 6372830678518846185}
+  - key: Audio Source
+    pool: {fileID: 5382325193385908764}
+  - key: Collectable Item
+    pool: {fileID: 44719574261497090}
+--- !u!1 &7414547653782493847
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5662006481705403394}
+  - component: {fileID: 5382325193385908764}
+  m_Layer: 0
+  m_Name: Audio Sources Pool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5662006481705403394
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7414547653782493847}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4605748850569040740}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5382325193385908764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7414547653782493847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d4a103d0916ed847b8f73b7024702de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefab: {fileID: 5343258106027127349, guid: 6ec3e5a869df5ae46aa8a2d1f952855f, type: 3}
+  _initialAmount: 10
+  _extendIfEmpty: 5
+  _extendable: 0
+  _interuptWhenEmpty: 1
+  _disableObjsOnStart: 1
+  _parentOfObject: {fileID: 0}
 --- !u!1 &7711008812578268152
 GameObject:
   m_ObjectHideFlags: 0

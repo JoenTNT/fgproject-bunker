@@ -240,11 +240,13 @@ MonoBehaviour:
     _entityID: {fileID: 921480180229159078}
     _physicalStats: {fileID: 1699644383110311543}
     _uiProfilePrefab: {fileID: 2256259211245661893, guid: 860739ac6ca433e4b966151a2ff1177b, type: 3}
+    _physicalToolManager: {fileID: 0}
     _areaOfWeaponSight: {fileID: 0}
     _areaOfInteraction: {fileID: 0}
   _notifyInteractionHintCallback: {fileID: 11400000, guid: 6b7eac96799c5484eb4a83408b5b96d6, type: 2}
   _equipWeaponCallback: {fileID: 11400000, guid: 0ee2063273ff48840a21f4598323a44f, type: 2}
   _onAddRuntimePlayerInfo: {fileID: 11400000, guid: a5ca5dd711f192a42a7787d047601239, type: 2}
+  _onCollectItem: {fileID: 11400000, guid: ce876538ef1acbe468e92ea972c28729, type: 2}
 --- !u!114 &921480180229159077
 MonoBehaviour:
   m_ObjectHideFlags: 0

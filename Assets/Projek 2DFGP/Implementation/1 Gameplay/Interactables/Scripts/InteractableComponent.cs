@@ -10,9 +10,8 @@ namespace JT.FGP
     {
         #region Variable
 
-        [Header("Requirements")]
         [SerializeField]
-        private EntityID _uniqueID = null;
+        private string _id = null;
 
         // Runtime variable data.
         private GameObject _latestEntityObject = null;
@@ -28,9 +27,13 @@ namespace JT.FGP
         public abstract InteractionType Type { get; }
 
         /// <summary>
-        /// Root of interactable entity ID.
+        /// Root of interactable ID.
         /// </summary>
-        public string UniqueID => _uniqueID.ID;
+        public string ID
+        {
+            get => _id;
+            set => _id = value;
+        }
 
         #endregion
 

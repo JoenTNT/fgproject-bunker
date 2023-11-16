@@ -57,7 +57,7 @@ namespace JT.FGP
         private void Start()
         {
             // Assign pool.
-            _damageCloudPool = GameObjectPoolManager.Instance.GetPool(_damageCloudPoolKey);
+            _damageCloudPool = GameObjectPoolManager.Instance.GetGameObjPool(_damageCloudPoolKey);
 
             //// Request for pool of objects.
             //_requestDamageCloudPoolCallback.Invoke(_id.ID, _damageCloudPoolKey);

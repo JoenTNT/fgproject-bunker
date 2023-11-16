@@ -5,13 +5,17 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Projek 2DFGP/Implementation/2 User Interface/Main Menu/Scenes/Main
       Menu.unity
     guid: a073ef77eefd3964eb465a3ebabd3579
-  - enabled: 1
+  - enabled: 0
     path: Assets/Projek 2DFGP/Prototype/Scenes/Gameplay.unity
     guid: 384cc5d952e10c640ac4cbba3ceff28c
+  - enabled: 1
+    path: Assets/Projek 2DFGP/Implementation/2 User Interface/Mobile Joystick/Scenes/Testing
+      Controller.unity
+    guid: c7607d2e10fdd3046a5524fcb5c26625
   m_configObjects:
     com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: 04a8236ef36d29c48bdb6cb931e1dc7e, type: 2}
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: de799b2b4f5991a47abfe51bb22e324f, type: 2}

@@ -26,6 +26,11 @@ namespace JT.FGP
         int Ammo { get; }
 
         /// <summary>
+        /// To check if ammo bag is full.
+        /// </summary>
+        bool IsAmmoBagFull { get; }
+
+        /// <summary>
         /// Add ammo into bag.
         /// </summary>
         /// <param name="amount">Amount of added ammo</param>

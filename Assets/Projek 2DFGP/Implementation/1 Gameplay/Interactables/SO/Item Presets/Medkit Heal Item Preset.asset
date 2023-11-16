@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47bcf0526e1669044ad6efcbd7343810, type: 3}
+  m_Name: Medkit Heal Item Preset
+  m_EditorClassIdentifier: 
+  _icon: {fileID: 21300000, guid: c96eb0a3cb66f8c40bfc438a5aa4d09c, type: 3}
+  _name: Medical Kit
+  _description: 
+  _consumables: []
+  _isOneTimeOnly: 1

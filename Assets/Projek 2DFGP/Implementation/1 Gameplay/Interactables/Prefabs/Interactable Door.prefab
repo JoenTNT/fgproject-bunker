@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1295898883539167619}
   - component: {fileID: 1050442493176360910}
-  - component: {fileID: 7950512906019000638}
   - component: {fileID: 3227115244425441865}
   m_Layer: 7
   m_Name: Interactable Door
@@ -80,20 +79,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2, y: 0.125}
   m_EdgeRadius: 0
---- !u!114 &7950512906019000638
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1693488239465184389}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0424c19b504274d4ca156c86af82b89c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _mode: 2
-  _id: Door
 --- !u!114 &3227115244425441865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,10 +91,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8eeed887c2d2ecf4284a1f1a62b2a882, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _uniqueID: {fileID: 7950512906019000638}
+  _id: Door
   _pivotPoint: {fileID: 1295898883539167619}
   _tweenDuration: 0.35
   _openDegree: 100
+  _isClosable: 1
 --- !u!1 &7371393237651435621
 GameObject:
   m_ObjectHideFlags: 0
