@@ -11,13 +11,25 @@ namespace JT.FGP
         #region Variables
 
         [SerializeField]
-        private AudioClip _preShotClip;
+        private AudioClipCollectionSO _preShotClip;
 
         [SerializeField]
-        private AudioClip _onShotClip;
+        private AudioClipCollectionSO _onShotClip;
 
         [SerializeField]
-        private AudioClip _afterShotClip;
+        private AudioClipCollectionSO _afterShotClip;
+
+        [SerializeField, Min(-1f)]
+        private float _callPreAfterOn;
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Time run after shot before running the pre sound again.
+        /// </summary>
+        public float CallPreAfterOn => _callPreAfterOn;
 
         #endregion
 
@@ -26,19 +38,31 @@ namespace JT.FGP
         public void PlayBeforeShotClip(AudioSource source)
         {
             if (_preShotClip == null) return;
-            source?.PlayOneShot(_preShotClip);
+            if (_preShotClip.ClipCount == 0) return;
+
+            if (_preShotClip.ClipCount > 1)
+                source?.PlayOneShot(_preShotClip.GetClip(Random.Range(0, _preShotClip.ClipCount)));
+            else source?.PlayOneShot(_preShotClip.GetClip(0));
         }
 
         public void PlayOnShotClip(AudioSource source)
         {
             if (_onShotClip == null) return;
-            source?.PlayOneShot(_onShotClip);
+            if (_onShotClip.ClipCount == 0) return;
+
+            if (_onShotClip.ClipCount > 1)
+                source?.PlayOneShot(_onShotClip.GetClip(Random.Range(0, _onShotClip.ClipCount)));
+            else source?.PlayOneShot(_onShotClip.GetClip(0));
         }
 
         public void PlayAfterShotClip(AudioSource source)
         {
             if (_afterShotClip == null) return;
-            source?.PlayOneShot(_afterShotClip);
+            if (_afterShotClip.ClipCount == 0) return;
+
+            if (_afterShotClip.ClipCount > 1)
+                source?.PlayOneShot(_afterShotClip.GetClip(Random.Range(0, _afterShotClip.ClipCount)));
+            else source?.PlayOneShot(_afterShotClip.GetClip(0));
         }
 
         #endregion

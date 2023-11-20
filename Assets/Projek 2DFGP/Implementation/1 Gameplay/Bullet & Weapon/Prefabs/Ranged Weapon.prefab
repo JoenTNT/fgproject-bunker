@@ -70,7 +70,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 64
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -205,6 +205,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _weaponOwnerAdapter: {fileID: 9084416918877065008}
   _shooterFunc: {fileID: 2759825892526404278}
+  _runtimeAudioSetting: {fileID: 11400000, guid: fe80c501f77bacf46b975b99961f8f75, type: 2}
   _disableOnStart: 1
   _weaponItemPreset: {fileID: 0}
   _audioSource: {fileID: 3217093791065605605}

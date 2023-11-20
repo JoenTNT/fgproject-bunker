@@ -28,5 +28,5 @@ MonoBehaviour:
     _initialReloadSecond: 0
   _audio:
     _preShotClip: {fileID: 0}
-    _onShotClip: {fileID: 0}
-    _afterShotClip: {fileID: 0}
+    _onShotClip: {fileID: 11400000, guid: ef45b87da18512a468a3ee198c8778f7, type: 2}
+    _afterShotClip: {fileID: 11400000, guid: 78b3031604ba60c498523979538d325d, type: 2}

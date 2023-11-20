@@ -14,6 +14,9 @@ namespace JT.FGP
         [SerializeField]
         private Shooter2DFunc _shooterFunc = null;
 
+        [SerializeField]
+        private RuntimeAudioSettingSO _runtimeAudioSetting = null;
+
         [Header("Properties")]
         [SerializeField]
         private bool _disableOnStart = true;
@@ -29,6 +32,7 @@ namespace JT.FGP
         private GameObjectPool _ammoPool = null;
 
         // Runtime variable data.
+        private GameObjectPoolManager _poolManager = null;
         private GameObject _ammoObj = null;
         private PhysicalAmmo2DControl _ammo = null;
         private RuntimeAmmoInfo _ammoInfoRef = null;
@@ -36,15 +40,32 @@ namespace JT.FGP
         private RW_Audio _audio;
         private RW_Reloader _reloader;
         private float _secondsBeforeShoot = 0f;
+        private float _tempCallSoundToPre = 0f;
         private bool _isInit = false;
         private bool _isShooting = false;
+        private bool _callPreSound = false;
 
         #endregion
 
         #region Mono
 
+        private void Awake()
+        {
+            // Subscribe events.
+            _runtimeAudioSetting.OnDataUpdated += ListenOnDataUpdated;
+        }
+
+        private void OnDestroy()
+        {
+            // Unsubscribe events.
+            _runtimeAudioSetting.OnDataUpdated -= ListenOnDataUpdated;
+        }
+
         private void Start()
         {
+            // Assign pool manager.
+            _poolManager = GameObjectPoolManager.Instance;
+
             // Initialize on start.
             Initialize();
 
@@ -59,15 +80,17 @@ namespace JT.FGP
             {
                 _isShooting = true;
                 _secondsBeforeShoot = _mechanic.FirstShotDelay;
-
-                // Run audio if exists.
-                _audio.PlayBeforeShotClip(_audioSource);
+                _callPreSound = false;
                 return;
             }
             // Check shooting end.
             else if (!WeaponOwnerAdapter.IsInAction && _isShooting)
             {
                 _isShooting = false;
+                _tempCallSoundToPre = 0f;
+
+                // Run audio if exists.
+                _audio.PlayAfterShotClip(_audioSource);
                 return;
             }
 
@@ -75,7 +98,16 @@ namespace JT.FGP
             if (!_isShooting) return;
 
             // Tick shoot seconds.
-            _secondsBeforeShoot -= Time.deltaTime;
+            float delta = Time.deltaTime;
+            _secondsBeforeShoot -= delta;
+            _tempCallSoundToPre -= delta;
+
+            if (!_callPreSound && _tempCallSoundToPre < 0f)
+            {
+                // Run audio if exists.
+                _audio.PlayBeforeShotClip(_audioSource);
+                _callPreSound = true;
+            }
 
             // Check if shoot command must called.
             if (_secondsBeforeShoot > 0f) return;
@@ -101,6 +133,8 @@ namespace JT.FGP
 
             // Reset shoot timer.
             _secondsBeforeShoot = 1f / _mechanic.RoundPerSecond;
+            _tempCallSoundToPre = _audio.CallPreAfterOn;
+            _callPreSound = false;
         }
 
         #endregion
@@ -118,7 +152,7 @@ namespace JT.FGP
             if (_weaponItemPreset != null)
             {
                 // Then change used bullet type.
-                _ammoPool = GameObjectPoolManager.Instance.GetGameObjPool(_weaponItemPreset.AmmoType);
+                _ammoPool = _poolManager.GetGameObjPool(_weaponItemPreset.AmmoType);
 
                 // Access temporary data.
                 _mechanic = _weaponItemPreset.Mechanic;
@@ -137,6 +171,15 @@ namespace JT.FGP
         #endregion
 
         #region Main
+
+        private void ListenOnDataUpdated()
+        {
+            // Check for audio source.
+            if (_audioSource == null) return;
+
+            // Update SFX volume.
+            _audioSource.volume = _runtimeAudioSetting.SFXVolume;
+        }
 
         /// <summary>
         /// Change weapon behaviour, even thought it's the same objek to reduce memory.
