@@ -43,7 +43,8 @@ namespace JT.FGP
 
         #region Main
 
-        private void ListenOnNotifyInteractionHint(string whoInteract, string interactWith, int commandIndex)
+        private void ListenOnNotifyInteractionHint(string whoInteract, string interactWith,
+            int commandIndex)
         {
             if (_data.TargetID != whoInteract) return;
 
@@ -66,6 +67,9 @@ namespace JT.FGP
         private string _targetID = string.Empty;
 
         [SerializeField]
+        private InteractionIconsSO _icons = null;
+
+        [SerializeField]
         private UI_CommandControl _commandControl = null;
 
         [SerializeField]
@@ -73,9 +77,6 @@ namespace JT.FGP
 
         [SerializeField]
         private Image _interactionIcon = null;
-
-        [SerializeField]
-        private Sprite[] _iconSprites = new Sprite[0];
 
         [SerializeField]
         private float _disableAlpha = 0.35f;
@@ -115,13 +116,13 @@ namespace JT.FGP
 
         public bool SetInteractionIcon(int index)
         {
-            if (index < 0 || index >= _iconSprites.Length)
+            if (index < 0 || index >= _icons.Count)
             {
                 _interactionIcon.gameObject.SetActive(false);
                 return false;
             }
 
-            _interactionIcon.sprite = _iconSprites[index];
+            _interactionIcon.sprite = _icons.GetIcon((InteractionType)index);
             _interactionIcon.gameObject.SetActive(true);
             return true;
         }

@@ -18,15 +18,28 @@ namespace JT
     {
         #region Variables
 
-        [Header("Requirements")]
+        [Header("Base System")]
         [SerializeField]
         private BT_Execute _rootExecute = null;
-
+#if UNITY_EDITOR
+        [Header("Debugger", order = 100)]
+        [SerializeField]
+        private bool _debug = false;
+#endif
         // Runtime variable data.
         private BT_Execute _currentExecution = null;
         private IBTProcessHolder _processHolder = null;
         private IBTRuntimeAction _runtimeAction = null;
         private bool _isInit = false;
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Root of behaviour tree.
+        /// </summary>
+        protected BT_Execute Root => _rootExecute;
 
         #endregion
 
@@ -65,6 +78,10 @@ namespace JT
 
         private void Update()
         {
+#if UNITY_EDITOR
+            if (_debug)
+                Debug.Log($"[DEBUG] Executing {_currentExecution}", this);
+#endif
             // If process holder not exists.
             if (_processHolder == null) goto RunSingleAction;
 
@@ -78,7 +95,15 @@ namespace JT
                 if (_rootExecute.IsAction)
                     _currentExecution = _rootExecute;
                 else if (_rootExecute is IBTTrunkNode)
-                    _currentExecution = ((IBTTrunkNode)_rootExecute).GetCurrentLeafProcess();
+                {
+                    IBTTrunkNode trunkNode = (IBTTrunkNode)_rootExecute;
+                    if (trunkNode.NodeIndex < 0)
+                    {
+                        Update();
+                        return;
+                    }
+                    _currentExecution = trunkNode.GetCurrentLeafProcess();
+                }
 
                 // Convert to action.
                 if (_currentExecution is IBTRuntimeAction)
@@ -103,10 +128,14 @@ namespace JT
 
         RunSingleAction:
             // Check if there's runtime action running, if not the abort process.
-            if (_runtimeAction == null || _runtimeAction.IsDone) return;
+            if (_runtimeAction == null) return;
 
             // Run current action running.
             _runtimeAction.OnTickAction();
+
+            // Check action process is done, then release the holder.
+            if (_runtimeAction.IsDone && _processHolder != null)
+                _processHolder.ReleaseHolder();
         }
 
         private void OnDisable()
@@ -143,5 +172,15 @@ namespace JT
         public virtual void OnInit() => _rootExecute.OnInit();
 
         #endregion
+#if UNITY_EDITOR
+        #region Main
+
+        [ContextMenu("Run Initialize On Editor")]
+        private void OnRunInitEditor() => RunInitOnEditor();
+
+        protected virtual void RunInitOnEditor() { }
+
+        #endregion
+#endif
     }
 }

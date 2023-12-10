@@ -6,7 +6,7 @@ namespace JT.FGP
     /// Handle checking hit box when a weapon hit any target.
     /// </summary>
     [RequireComponent(typeof(Collider2D))]
-    public sealed class WeaponHitBox2DFunc : MonoBehaviour, IOwnerID<string>
+    public sealed class WeaponHitBox2DFunc : MonoBehaviour, IEntityID<string>
     {
         #region enum
 
@@ -53,7 +53,7 @@ namespace JT.FGP
         /// <summary>
         /// The hitter ID.
         /// </summary>
-        public string OwnerID
+        public string EntityID
         {
             get => _hitterID;
             set => _hitterID = value;

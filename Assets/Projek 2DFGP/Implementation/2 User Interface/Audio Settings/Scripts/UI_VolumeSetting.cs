@@ -20,7 +20,7 @@ namespace JT.FGP
 
         [Header("Properties")]
         [SerializeField]
-        private AudioSettingValueData _settingData = null;
+        private RuntimeAudioSettingSO _settingData = null;
 
         [SerializeField]
         private Slider _volumeSlider = null;
@@ -42,13 +42,13 @@ namespace JT.FGP
             _onAudioLoaded.AddListener(ListenOnAudioLoaded);
         }
 
-        private void OnEnable() => SyncSlider();
-
         private void OnDestroy()
         {
             // Unsubscribe events
             _onAudioLoaded.RemoveListener(ListenOnAudioLoaded);
         }
+
+        private void Start() => SyncSlider();
 
         #endregion
 
@@ -61,15 +61,15 @@ namespace JT.FGP
             switch (_audioType)
             {
                 case AudioType.Master:
-                    _volumeSlider.value = _settingData.masterVolume;
+                    _volumeSlider.value = _settingData.MasterVolume;
                     break;
 
                 case AudioType.BGM:
-                    _volumeSlider.value = _settingData.bgmVolume;
+                    _volumeSlider.value = _settingData.BGMVolume;
                     break;
 
                 case AudioType.SFX:
-                    _volumeSlider.value = _settingData.sfxVolume;
+                    _volumeSlider.value = _settingData.SFXVolume;
                     break;
             }
         }
@@ -79,15 +79,15 @@ namespace JT.FGP
             switch (_audioType)
             {
                 case AudioType.Master:
-                    _settingData.masterVolume = volume;
+                    _settingData.MasterVolume = volume;
                     break;
 
                 case AudioType.BGM:
-                    _settingData.bgmVolume = volume;
+                    _settingData.BGMVolume = volume;
                     break;
 
                 case AudioType.SFX:
-                    _settingData.sfxVolume = volume;
+                    _settingData.SFXVolume = volume;
                     break;
             }
         }

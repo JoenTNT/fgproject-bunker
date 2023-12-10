@@ -29,6 +29,7 @@ namespace JT.FGP
         private GameEventBool _lockControllerCallback = null;
 
         // Temp variable data
+        private Camera _mainCam = null;
         private Vector2 _moveDir = Vector2.zero;
         private Vector2 _lookAtPos = Vector2.zero;
         private bool _inputDisabled = false;
@@ -39,6 +40,9 @@ namespace JT.FGP
 
         private void Awake()
         {
+            // Set initial references.
+            _mainCam = Camera.main;
+
             // Subscribe events
             _lockControllerCallback.AddListener(ListenLockControllerCallback);
         }
@@ -75,15 +79,13 @@ namespace JT.FGP
             if (_inputDisabled) return;
 
             _lookAtPos = val.Get<Vector2>();
-            _onLookPositionInput.Invoke(_data.TargetID, Camera.main.ScreenToWorldPoint(_lookAtPos));
+            _onLookPositionInput.Invoke(_data.TargetID, _mainCam.ScreenToWorldPoint(_lookAtPos));
         }
 
         private void OnInteract(InputValue val)
         {
             if (_inputDisabled) return;
-#if UNITY_EDITOR
-            Debug.Log("Interact Input Send");
-#endif
+
             _onInteractCommand.Invoke(_data.TargetID);
         }
 

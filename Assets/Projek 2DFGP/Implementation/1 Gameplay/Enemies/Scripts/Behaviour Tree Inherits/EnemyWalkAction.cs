@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -21,8 +22,7 @@ namespace JT.FGP
         private BakedParamTransform _targetParam = null;
         private BakedParamFloat _walkSpeedParam = null;
         private BakedParamVector2 _moveTargetPosParam = null;
-        //private Topview2DMovementFunc _movementFunc = null;
-        private Topview2DLookAtFunc _lookAtFunc = null;
+        private DampingRotation2DFunc _rotateFunc = null;
         private NavMeshAgent _agent = null;
         private InsideAreaObjectCollector2D _targetCollector = null;
         private BakedParamLayerMask _blockerLayer = null;
@@ -35,8 +35,6 @@ namespace JT.FGP
 
         #region BT Action
 
-        public override BT_State CalcStateCondition() => BT_State.Running;
-
         public override void OnInit()
         {
             // Get target dashboard.
@@ -47,8 +45,7 @@ namespace JT.FGP
             _targetParam = (BakedParamTransform)@params[EC.CHASE_TARGET_KEY];
             _walkSpeedParam = (BakedParamFloat)@params[EC.WALK_SPEED_KEY];
             _moveTargetPosParam = (BakedParamVector2)@params[EC.MOVE_TARGET_POSITION_KEY];
-            //_movementFunc = (Topview2DMovementFunc)@params[EC.MOVEMENT_FUNCTION_KEY];
-            _lookAtFunc = (Topview2DLookAtFunc)@params[EC.LOOK_AT_FUNCTION_KEY];
+            _rotateFunc = (DampingRotation2DFunc)@params[EC.ROTATION_FUNCTION_KEY];
             _agent = (NavMeshAgent)@params[EC.NAVMESH_AGENT_KEY];
             _targetCollector = (InsideAreaObjectCollector2D)@params[EC.INSIDE_FOV_AREA_KEY];
             _blockerLayer = (BakedParamLayerMask)@params[EC.BLOCKER_LAYER_KEY];
@@ -63,13 +60,11 @@ namespace JT.FGP
             // Set initial speed.
             _agent.speed = _walkSpeedParam.Value;
             _agent.SetDestination(_moveTargetPosParam.Value);
+            _agent.stoppingDistance = 0f;
         }
 
         public override void OnTickAction()
         {
-            // Handle walking algorithm.
-            HandleWalking();
-
             // Check interuption because enemy found target.
             if (_targetCollector.HasObject)
             {
@@ -80,7 +75,6 @@ namespace JT.FGP
                 {
                     _targetParam.Value = _tempDetectedObj.transform;
                     State = BT_State.Failed;
-                    Debug.Log($"[DEBUG] Target Detected: {_tempDetectedObj}");
                     return;
                 }
             }
@@ -89,26 +83,29 @@ namespace JT.FGP
             if (!IsArrived())
             {
                 // Handle look function.
-                _lookAtFunc.LookAtDirection(_agent.desiredVelocity);
+                _rotateFunc.SetTargetLookDirection(_agent.desiredVelocity);
+                _rotateFunc.OnRotate();
                 return;
             }
-#if UNITY_EDITOR
-            //Debug.Log("[DEBUG] The Agent has Arrived!");
-#endif
+
             // End of process.
             State = BT_State.Success;
         }
-
+#if UNITY_EDITOR
+        public override Dictionary<string, string> GetVariableKeys()
+            => new Dictionary<string, string>() {
+                { EC.CHASE_TARGET_KEY, typeof(ParamTransform).AssemblyQualifiedName },
+                { EC.WALK_SPEED_KEY, typeof(ParamFloat).AssemblyQualifiedName },
+                { EC.MOVE_TARGET_POSITION_KEY, typeof(ParamVector2).AssemblyQualifiedName },
+                { EC.ROTATION_FUNCTION_KEY, typeof(ParamComponent).AssemblyQualifiedName },
+                { EC.NAVMESH_AGENT_KEY, typeof(ParamComponent).AssemblyQualifiedName },
+                { EC.INSIDE_FOV_AREA_KEY, typeof(ParamComponent).AssemblyQualifiedName },
+                { EC.BLOCKER_LAYER_KEY, typeof(ParamLayerMask).AssemblyQualifiedName },
+            };
+#endif
         #endregion
 
         #region Main
-
-        private void HandleWalking()
-        {
-            // Do move function.
-            // TEMPORARY: using nav mesh agent.
-            //Debug.Log($"[DEBUG] Agent Velocity At {(Vector2)_agent.velocity}");
-        }
 
         private bool IsArrived()
         {
@@ -126,7 +123,7 @@ namespace JT.FGP
             int blockedCount = Physics2D.RaycastNonAlloc(thisObjPos, dir.normalized, _hits, distance,
                 _blockerLayer.Value);
 #if UNITY_EDITOR
-            Debug.DrawLine(thisObjPos, targetObjPos, blockedCount > 0 ? Color.red : Color.green);
+            //Debug.DrawLine(thisObjPos, targetObjPos, blockedCount > 0 ? Color.red : Color.green);
 #endif
             return blockedCount <= 0;
         }

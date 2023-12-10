@@ -72,6 +72,8 @@ namespace JT.FGP
 
         #region IInteractable
 
+        public bool IsInteractable => throw new System.NotImplementedException();
+
         public bool Interact(string entityID)
         {
             if (_isMarkerLocked)

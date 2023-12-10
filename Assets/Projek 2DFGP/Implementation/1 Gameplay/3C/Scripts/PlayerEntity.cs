@@ -20,11 +20,22 @@ namespace JT.FGP
         private GameEventTwoStringInt _notifyInteractionHintCallback = null;
 
         [SerializeField]
-        private GameEventTwoStringUnityObject _equipWeaponCallback = null;
+        private GameEventStringUnityObject _onAddRuntimePlayerInfo = null;
 
         // Runtime variable data
+        private System.Func<GameObject, bool> _isInteractableFunc = null;
         private GameObject _nearestDetectedInteractable = null;
         private InteractableComponent _nearestInteractable = null;
+        private InteractableComponent _tempInteractable = null;
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Player entity ID.
+        /// </summary>
+        public string EntityID => _data.ID;
 
         #endregion
 
@@ -36,27 +47,65 @@ namespace JT.FGP
             if (TryGetComponent(out PlayerControl controller))
                 controller.InjectEntityData(_data);
 
-            // Subscribe events
-            _equipWeaponCallback.AddListener(ListeonEquipWeaponCallback);
+            // Set initial data.
+            _isInteractableFunc = IsInteractableFunc;
         }
 
-        private void OnDestroy()
+        private void Start()
         {
-            // Unsubscribe events
-            _equipWeaponCallback.RemoveListener(ListeonEquipWeaponCallback);
+            // Initialize all data on start.
+            _data.Initialize();
+
+            // Send runtime stats to Canvas.
+            _onAddRuntimePlayerInfo.Invoke(_data.ID, _data.RuntimeStatsRef);
         }
 
-        private void Update()
+        private void Update() => HandleSearchNearestInteractable();
+
+        #endregion
+
+        #region IInteractable
+
+        public bool IsInteractable => !_data.IsInteracting;
+
+        public bool Interact()
+        {
+            if (_nearestInteractable == null) return false;
+#if UNITY_EDITOR
+            //Debug.Log($"[DEBUG] Interact with {_nearestInteractable}");
+#endif
+            _nearestInteractable.EntityObjectTarget = gameObject;
+            bool result = _nearestInteractable.Interact(_data.ID);
+            if (!_nearestInteractable.IsInteractable)
+            {
+                // Remove the current and change with new one.
+                _nearestDetectedInteractable = null;
+                HandleSearchNearestInteractable();
+            }
+            else
+            {
+                // Update information of interactable case.
+                _notifyInteractionHintCallback.Invoke(_data.ID, _nearestInteractable.ID,
+                    (int)_nearestInteractable.Type);
+            }
+            return result;
+        }
+
+        #endregion
+
+        #region Main
+
+        private void HandleSearchNearestInteractable()
         {
             // Handle interaction control
-            _nearestDetectedInteractable = _data.AreaOfInteraction.GetNearestObject(transform.position);
-
+            _nearestDetectedInteractable = _data.AreaOfInteraction.GetNearestObject(
+                transform.position, _isInteractableFunc);
             if (_nearestDetectedInteractable != null)
             {
                 if (_nearestInteractable?.gameObject == _nearestDetectedInteractable) return;
                 if (!_nearestDetectedInteractable.TryGetComponent(out _nearestInteractable)) return;
 
-                _notifyInteractionHintCallback.Invoke(_data.ID, _nearestInteractable.UniqueID,
+                _notifyInteractionHintCallback.Invoke(_data.ID, _nearestInteractable.ID,
                     (int)_nearestInteractable.Type);
             }
             else
@@ -68,39 +117,11 @@ namespace JT.FGP
             }
         }
 
-        #endregion
-
-        #region IInteractable
-
-        public bool Interact()
+        private bool IsInteractableFunc(GameObject interactableObj)
         {
-            if (_nearestInteractable == null) return false;
-#if UNITY_EDITOR
-            Debug.Log($"[DEBUG] Interact with {_nearestInteractable}");
-#endif
-            return _nearestInteractable.Interact(_data.ID);
-        }
-
-        #endregion
-
-        #region Main
-
-        private void ListeonEquipWeaponCallback(string id, string elementID, Object weapon)
-        {
-            // Check if this entity is not the target ID, then abort process.
-            if (_data.ID != id) return;
-            if (elementID != $"{PhysicalWeaponEquipment.WEAPON_ID_INDEX}0") return;
-
-            // Check the weapon object.
-            if (weapon is not GenericWeapon)
-            {
-                // Remove weapon if equipped.
-                _data.Weapon = null;
-                return;
-            }
-
-            // Proceed dependency injection.
-            _data.Weapon = ((GenericWeapon)weapon).WeaponState;
+            if (interactableObj.TryGetComponent(out _tempInteractable))
+                return _tempInteractable.IsInteractable;
+            return true;
         }
 
         #endregion

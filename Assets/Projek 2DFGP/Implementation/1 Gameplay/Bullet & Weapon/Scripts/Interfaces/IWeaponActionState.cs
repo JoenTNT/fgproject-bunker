@@ -13,7 +13,7 @@ namespace JT.FGP
         /// <summary>
         /// Who use this weapon?
         /// </summary>
-        string OwnerOfState { get; set; }
+        string Owner { get; set; }
 
         /// <summary>
         /// Current action state.

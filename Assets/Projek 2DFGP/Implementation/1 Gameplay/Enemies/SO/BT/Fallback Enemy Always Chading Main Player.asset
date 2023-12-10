@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3207d60e07110a4f8df8737ad8e4f89, type: 3}
+  m_Name: Fallback Enemy Always Chading Main Player
+  m_EditorClassIdentifier: 
+  _debug: 0
+  _onEmptySequenceState: 2
+  _sequences:
+  - {fileID: 11400000, guid: 8b9eae85196da7a4387c531c4ef99a28, type: 2}
+  - {fileID: 11400000, guid: 332535c8f0564a84b82a2e9f9d1e7c63, type: 2}

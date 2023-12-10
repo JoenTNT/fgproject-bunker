@@ -11,9 +11,23 @@ namespace JT.FGP
     {
         #region Variable
 
+        [Header("Requirements")]
+        [SerializeField]
+        private EntityID _commandID = null;
+
+        [SerializeField]
+        private MonoBehaviour _button = null;
+
         [Header("Properties")]
         [SerializeField]
-        private UI_CommandControlData _data = null;
+        private string _targetID = string.Empty;
+
+        [Header("Optional")]
+        [SerializeField]
+        private CanvasGroup _alphaGroup = null;
+
+        [SerializeField, Min(0f)]
+        private float _onDisableAlpha = 0f;
 
         [Header("Game Events")]
         [SerializeField]
@@ -22,29 +36,53 @@ namespace JT.FGP
         [SerializeField]
         private GameEventStringBool _setActiveCommand = null;
 
+        // Runtime variable data.
+        private float _originAlpha = 0f;
+        private bool _isDisabled = false;
+
         #endregion
 
         #region Mono
 
         private void Awake()
         {
+            // Set initial data.
+            if (_alphaGroup != null)
+                _originAlpha = _alphaGroup.alpha;
+
             // Subscribe events
-            _data.ButtonClickEvent.OnClick.AddListener(RunCommand);
+            ((IClickEvent)_button).OnClick.AddListener(RunCommand);
             _setActiveCommand.AddListener(ListenSetActiveCommand);
         }
 
         private void OnDestroy()
         {
             // Unsubscribe events
-            _data.ButtonClickEvent.OnClick.RemoveListener(RunCommand);
+            ((IClickEvent)_button).OnClick.RemoveListener(RunCommand);
             _setActiveCommand.RemoveListener(ListenSetActiveCommand);
         }
-
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (_button is not IClickEvent)
+            {
+                _button = null;
+                Debug.LogWarning("[DEBUG] Object must implement \"IClickEvent\".", this);
+            }
+        }
+#endif
         #endregion
 
         #region ICommand
 
-        public void RunCommand() => _onCommand.Invoke(_data.TargetID);
+        public void RunCommand()
+        {
+            // Check command callback is disabled.
+            if (_isDisabled) return;
+
+            // Run command by calling event.
+            _onCommand.Invoke(_targetID);
+        }
 
         #endregion
 
@@ -53,54 +91,14 @@ namespace JT.FGP
         private void ListenSetActiveCommand(string commandID, bool active)
         {
             // Check if command ID is valid to be run.
-            if (_data.CommandID != commandID) return;
+            if (_commandID.ID != commandID) return;
 
             // Set active or deactive the UI interaction.
-            gameObject.SetActive(active);
+            if (_alphaGroup != null)
+                _alphaGroup.alpha = active ? _originAlpha : _onDisableAlpha;
+            else gameObject.SetActive(active);
+            _isDisabled = !active;
         }
-
-        #endregion
-    }
-
-    /// <summary>
-    /// Handle data for UI Command Control.
-    /// </summary>
-    [System.Serializable]
-    internal class UI_CommandControlData
-    {
-        #region Variable
-
-        [SerializeField]
-        private string _targetID = string.Empty;
-
-        [SerializeField]
-        private EntityID _commandID = null;
-
-        [SerializeField]
-        private UI_NonAlphaImageButton _button = null;
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Target control ID.
-        /// </summary>
-        public string TargetID
-        {
-            get => _targetID;
-            set => _targetID = value;
-        }
-
-        /// <summary>
-        /// UI Command Control ID.
-        /// </summary>
-        public string CommandID => _commandID.ID;
-
-        /// <summary>
-        /// Button click event.
-        /// </summary>
-        public IClickEvent ButtonClickEvent => _button;
 
         #endregion
     }

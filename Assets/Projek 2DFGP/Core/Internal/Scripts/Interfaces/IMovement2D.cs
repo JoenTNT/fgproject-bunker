@@ -10,16 +10,11 @@ namespace JT.FGP
         /// <summary>
         /// Move direction.
         /// </summary>
-        Vector2 Direction { get; set; }
+        Vector2 MoveDirection { get; set; }
 
         /// <summary>
         /// Speed of movement.
         /// </summary>
         float Speed { get; set; }
-
-        /// <summary>
-        /// Move method, run this in update.
-        /// </summary>
-        void Move();
     }
 }

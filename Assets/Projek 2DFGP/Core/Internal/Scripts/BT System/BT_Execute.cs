@@ -6,6 +6,7 @@
  * Single abstract node to execute in runtime whether it is a condition or action node.
  */
 
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace JT
@@ -16,7 +17,11 @@ namespace JT
     public abstract class BT_Execute : ScriptableObject, IBTState, IBTInitHandler
     {
         #region Variables
-
+#if UNITY_EDITOR
+        [Header("Debugger", order = 100)]
+        [SerializeField]
+        private bool _debug = false;
+#endif
         // Runtime variable data.
         private GameObject _objectRef = null;
         private BT_State _currentState = BT_State.None;
@@ -34,7 +39,12 @@ namespace JT
         /// Owner of behaviour tree.
         /// </summary>
         protected GameObject ObjectRef => _objectRef;
-
+#if UNITY_EDITOR
+        /// <summary>
+        /// Is debug mode activated?
+        /// </summary>
+        protected bool DebugMode => _debug;
+#endif
         #endregion
 
         #region Main
@@ -74,5 +84,15 @@ namespace JT
         public abstract void OnInit();
 
         #endregion
+#if UNITY_EDITOR
+        #region Main
+
+        /// <summary>
+        /// Each nodes of behaviour tree has variable keys to get data from controller.
+        /// </summary>
+        public virtual Dictionary<string, string> GetVariableKeys() => null;
+
+        #endregion
+#endif
     }
 }

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Walk Speed (Float)
   m_EditorClassIdentifier: 
   _paramKey: 
-  _paramValue: 2.25
+  _paramValue: 1.05

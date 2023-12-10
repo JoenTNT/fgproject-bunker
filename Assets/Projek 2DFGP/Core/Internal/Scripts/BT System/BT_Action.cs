@@ -14,21 +14,15 @@ namespace JT
     /// <summary>
     /// Behaviour tree action.
     /// </summary>
-    public abstract class BT_Action : BT_Execute, IBTConditional, IBTRuntimeAction
+    public abstract class BT_Action : BT_Execute, IBTRuntimeAction
     {
         #region BT Execute
 
         public sealed override bool IsAction => true;
 
-        public sealed override void Execute() => State = CalcStateCondition();
+        public sealed override void Execute() => State = BT_State.Running;
 
         public sealed override BT_Execute GetCopy(GameObject objRef) => base.GetCopy(objRef);
-
-        #endregion
-
-        #region IBTConditional
-
-        public abstract BT_State CalcStateCondition();
 
         #endregion
 

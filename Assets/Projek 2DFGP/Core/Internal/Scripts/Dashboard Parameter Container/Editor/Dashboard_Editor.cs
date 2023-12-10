@@ -225,7 +225,8 @@ namespace JT
 
             // Draw choosen type of the parameter.
             _tempParamElementRtve = _tempParamElement.FindPropertyRelative(PARAM_TYPE_PROPERTY_KEY);
-            //Debug.Log($"[DEBUG] Draw Element Index: {index}; List Amount: {_selectedIndexElementOfTypes.Count}");
+            if (index >= _selectedIndexElementOfTypes.Count)
+                _selectedIndexElementOfTypes.Add(System.Array.IndexOf(_eligibleTypes, _tempParamElementRtve.stringValue));
             int selected = _selectedIndexElementOfTypes[index];
             _tempTypeShortNameContent.text = selected < 0 ? "UNSET" : System.Type.GetType(_eligibleTypes[selected]).Name;
             rect.y += GUI.skin.box.CalcSize(_listTitleLabel).y;

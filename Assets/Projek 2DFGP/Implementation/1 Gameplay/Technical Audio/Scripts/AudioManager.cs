@@ -1,113 +1,106 @@
-#if FMOD
-using FMOD.Studio;
-using FMODUnity;
-#endif
 using JT.GameEvents;
 using UnityEngine;
 
 namespace JT.FGP
 {
+    /// <summary>
+    /// Manages audio informations.
+    /// </summary>
     public class AudioManager : MonoBehaviour
     {
         #region Variable
 
+        [Header("Requirements")]
         [SerializeField]
-        private AudioManagerData _data = new AudioManagerData();
+        private AudioSource _bgmSource = null;
 
+        [SerializeField]
+        private AudioClipCollectionSO _bgmClips = null;
+
+        [SerializeField]
+        private RuntimeAudioSettingSO _audioData = null;
+
+        [Header("Properties")]
+        [SerializeField]
+        private string _loopAudioKey = null;
+        
         [Header("Game Events")]
         [SerializeField]
         private GameEventNoParam _onAudioLoaded = null;
-#if FMOD
-        // Runtime variable data
-        private Bus _masterBus;
-        private Bus _bgmGroupBus;
-        private Bus _sfxGroupBus;
-#endif
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Registered BGM clips collection.
+        /// </summary>
+        public AudioClipCollectionSO BGMClips => _bgmClips;
+
+        /// <summary>
+        /// Runtime audio value informations.
+        /// </summary>
+        public RuntimeAudioSettingSO AudioData => _audioData;
+
         #endregion
 
         #region Mono
 
         private void Awake()
         {
-#if FMOD
-            _masterBus = RuntimeManager.GetBus("bus:/Master");
-            _bgmGroupBus = RuntimeManager.GetBus("bus:/Master/BGM");
-            _sfxGroupBus = RuntimeManager.GetBus("bus:/Master/SFX");
-#endif
+            // Subscribe events.
+            _audioData.OnDataUpdated += ListenOnDataUpdated;
+        }
+
+        private void OnDestroy()
+        {
+            // Unsubscribe events.
+            _audioData.OnDataUpdated -= ListenOnDataUpdated;
         }
 
         private void Start()
         {
-            _data.AudioData.LoadData();
+            // Load sound setting data.
+            _audioData.LoadData();
+
+            // Call for loaded audio values and data.
             _onAudioLoaded.Invoke();
-#if FMOD
-            if (!_data.BGMEmitter.IsPlaying())
-                _data.BGMEmitter.Play();
-#endif
+
+            // Set BGM audio.
+            _bgmSource.loop = true;
+            _bgmClips.PlaySound(_bgmSource, _loopAudioKey);
         }
 
-        private void Update()
-        {
-#if FMOD
-            _masterBus.setVolume(_data.AudioData.masterVolume);
-            _bgmGroupBus.setVolume(_data.AudioData.bgmVolume);
-            _sfxGroupBus.setVolume(_data.AudioData.sfxVolume);
-#endif
-        }
-
-        #endregion
-    }
-
-    /// <summary>
-    /// Handle data for audio manager.
-    /// </summary>
-    [System.Serializable]
-    internal class AudioManagerData
-    {
-        #region Variable
-
-        [SerializeField]
-        private AudioSettingValueData _audioData = null;
-#if FMOD
-        [Header("BGM References")]
-        [SerializeField]
-        private StudioEventEmitter _bgmEmitter = null;
-
-        [SerializeField]
-        private string _bgmParameter = string.Empty;
-
-        [SerializeField]
-        private float _bgmLabelValue = 0f;
-#endif
-        #endregion
-
-        #region Properties
-
-        public AudioSettingValueData AudioData => _audioData;
-#if FMOD
-        public StudioEventEmitter BGMEmitter => _bgmEmitter;
-
-        public string BGMParameter => _bgmParameter;
-
-        public float BGMLabel
-        {
-            get => _bgmLabelValue;
-            set => _bgmLabelValue = value;
-        }
-#endif
         #endregion
 
         #region Main
 
-        public void RestartBGM()
+        private void ListenOnDataUpdated()
         {
-#if FMOD
-            _bgmEmitter.Stop();
-            _bgmEmitter.SetParameter(_bgmParameter, _bgmLabelValue);
-            _bgmEmitter.Play();
-#else
-            
-#endif
+            // Always assign BGM volume.
+            _bgmSource.volume = _audioData.MasterVolume * _audioData.BGMVolume;
+        }
+
+        /// <summary>
+        /// To change background music.
+        /// </summary>
+        /// <param name="key">Registered specific key</param>
+        public void ChangeBGM(string key)
+        {
+            _bgmSource.Stop();
+            _bgmSource.time = 0;
+            _bgmClips.PlaySound(_bgmSource, key);
+        }
+
+        /// <summary>
+        /// To change background music.
+        /// </summary>
+        /// <param name="index">Registered index</param>
+        public void ChangeBGM(int index)
+        {
+            _bgmSource.Stop();
+            _bgmSource.time = 0;
+            _bgmClips.PlaySound(_bgmSource, index);
         }
 
         #endregion

@@ -76,17 +76,18 @@ namespace JT.FGP
             _tempCheck = true;
 
             // Check layer target
+            GameObject obj = collision.gameObject;
             if ((_limitTarget & LimitTarget.Layer) == LimitTarget.Layer)
-                _tempCheck &= _targetLayer == (_targetLayer | (1 << collision.gameObject.layer));
+                _tempCheck &= _targetLayer == (_targetLayer | (1 << obj.layer));
 
             // Check tag target
             if ((_limitTarget & LimitTarget.Tag) == LimitTarget.Tag)
-                _tempCheck &= collision.gameObject.CompareTag(_targetTag);
+                _tempCheck &= obj.CompareTag(_targetTag);
 
             if (!_tempCheck) return;
 
-            _inAreaObjects.Add(collision.gameObject);
-            OnEnterArea?.Invoke(collision.gameObject);
+            _inAreaObjects.Add(obj);
+            OnEnterArea?.Invoke(obj);
 #if UNITY_EDITOR
             //Debug.Log(_tempCheck
             //    ? $"Successfully Added: {collision}"
@@ -96,11 +97,12 @@ namespace JT.FGP
 
         private void OnTriggerExit2D(Collider2D collision)
         {
-            bool removed = _inAreaObjects.Remove(collision.gameObject);
+            GameObject obj = collision.gameObject;
+            bool removed = _inAreaObjects.Remove(obj);
 
             if (!removed) return;
 
-            OnExitArea?.Invoke(collision.gameObject);
+            OnExitArea?.Invoke(obj);
 #if UNITY_EDITOR
             //Debug.Log(removed
             //    ? $"Successfully Removed: {collision}"
@@ -153,6 +155,38 @@ namespace JT.FGP
             foreach (var tempObject in _inAreaObjects)
             {
                 if (!validationFunc(tempObject)) continue;
+
+                foundAny = true;
+                _tempDistance = Vector3.Distance(fromPosition, tempObject.transform.position);
+                if (_tempNearestTarget != null && nearestDist <= _tempDistance) continue;
+
+                _tempNearestTarget = tempObject;
+                nearestDist = _tempDistance;
+            }
+
+            // After validation, none of them are valid, so then return null.
+            if (!foundAny) return null;
+
+            return _tempNearestTarget;
+        }
+
+        /// <summary>
+        /// Search for the nearest object using custom validator instead.
+        /// </summary>
+        /// <param name="fromPosition">Position point to target object</param>
+        /// <param name="validationFunc">Game Object validator including "fromPosition"</param>
+        /// <returns>Nearest object from vector position</returns>
+        public GameObject GetNearestObject(Vector2 fromPosition, System.Func<Vector2, GameObject, bool> validationFunc)
+        {
+            // Check empty container.
+            if (_inAreaObjects.Count == 0) return null;
+
+            _tempNearestTarget = null;
+            float nearestDist = float.MaxValue;
+            bool foundAny = false;
+            foreach (var tempObject in _inAreaObjects)
+            {
+                if (!validationFunc(fromPosition, tempObject)) continue;
 
                 foundAny = true;
                 _tempDistance = Vector3.Distance(fromPosition, tempObject.transform.position);

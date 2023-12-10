@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3207d60e07110a4f8df8737ad8e4f89, type: 3}
+  m_Name: Fallback Enemy Default Logic (For Bullet Hell)
+  m_EditorClassIdentifier: 
+  _debug: 0
+  _onEmptySequenceState: 2
+  _sequences:
+  - {fileID: 11400000, guid: 542a2374facb15f4a9d5ed374996dd10, type: 2}
+  - {fileID: 11400000, guid: 483d2afff20e8c744b215848bbd73fa4, type: 2}

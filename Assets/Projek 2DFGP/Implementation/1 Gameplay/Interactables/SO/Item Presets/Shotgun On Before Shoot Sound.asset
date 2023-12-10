@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5bdbea63f2e2e746a0e883bd4db23f6, type: 3}
+  m_Name: Shotgun On Before Shoot Sound
+  m_EditorClassIdentifier: 
+  _audioKeys:
+  - key: Before Shot
+    clip: {fileID: 8300000, guid: 4d6b218326808914b8f928285b8055d5, type: 3}

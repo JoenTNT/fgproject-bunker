@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8583859468342633520}
   - component: {fileID: 8583859468342633521}
   - component: {fileID: 9072580931694607660}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Light 2D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63,7 +63,7 @@ MonoBehaviour:
   m_NormalMapQuality: 2
   m_UseNormalMap: 0
   m_ShadowIntensityEnabled: 0
-  m_ShadowIntensity: 0.75
+  m_ShadowIntensity: 0
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
@@ -127,11 +127,11 @@ GameObject:
   - component: {fileID: 8583859469333870815}
   - component: {fileID: 8583859469333870808}
   - component: {fileID: 8583859469333870811}
+  - component: {fileID: 8485290329346669162}
   - component: {fileID: 3533317075523475714}
-  - component: {fileID: 8583859469333870810}
-  - component: {fileID: 8583859469333870813}
+  - component: {fileID: 5924740614619555829}
   - component: {fileID: 4386873619105639549}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Normal Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -168,8 +168,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    _moveFunc: {fileID: 8583859469333870810}
-    _lookFunc: {fileID: 8583859469333870813}
+    _moveFunc: {fileID: 5924740614619555829}
+    _rotateFunc: {fileID: 8485290329346669162}
     _hitter: {fileID: 8583859469333870811}
     _bulletSprite: {fileID: 8583859469348273917}
     _dontPlaySoundOnShot: 1
@@ -199,6 +199,19 @@ MonoBehaviour:
   _maxOverlapHit: 2
   _doNotDamage: 0
   _hitEmitter: {fileID: 1201677890535595137}
+--- !u!114 &8485290329346669162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8583859469333870814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d9a55260dc9eba43854b8fe13e3d1c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pivotRotation: {fileID: 8583859469333870815}
 --- !u!114 &3533317075523475714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -212,7 +225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _attackPoint: 10
---- !u!114 &8583859469333870810
+--- !u!114 &5924740614619555829
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -221,26 +234,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8583859469333870814}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2661a5e9dc6e49049a828c216266eecd, type: 3}
+  m_Script: {fileID: 11500000, guid: f701b20fdbb08e540a18a8ef98cf41d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 5
-  _useRigidbody: 0
-  _rigidbody2D: {fileID: 0}
---- !u!114 &8583859469333870813
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8583859469333870814}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 061064b7fce695c49950a4ff671fc796, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _pivotRotation: {fileID: 8583859469333870815}
-  _lookMode: 0
+  _speedMultiplier: 5
 --- !u!114 &4386873619105639549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -258,7 +255,6 @@ MonoBehaviour:
     _multiplier: 1
     _timesUpOn: 0
     _isCountingUp: 0
-    _tempSeconds: 0
   _disableOnly: 1
 --- !u!1 &8583859469348273919
 GameObject:
@@ -271,7 +267,7 @@ GameObject:
   - component: {fileID: 8583859469348273916}
   - component: {fileID: 8583859469348273917}
   - component: {fileID: 1201677890535595137}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

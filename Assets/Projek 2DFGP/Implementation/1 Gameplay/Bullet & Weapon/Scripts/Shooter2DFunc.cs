@@ -5,7 +5,7 @@ namespace JT.FGP
     /// <summary>
     /// Handle shooter function of a weapon gun.
     /// </summary>
-    public class Shooter2DFunc : MonoBehaviour, IShootCommand<Bullet2DControl>
+    public class Shooter2DFunc : MonoBehaviour, IShootCommand<PhysicalAmmo2DControl>
     {
         #region Variables
 
@@ -27,6 +27,33 @@ namespace JT.FGP
 #endif
         #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// Physical ammo shoot push power/force.
+        /// </summary>
+        public float ShootForce
+        {
+            get => _shootForce;
+            set => _shootForce = value;
+        }
+
+        /// <summary>
+        /// The higher value the more unaccurate shots.
+        /// </summary>
+        public float AccuracyDegree
+        {
+            get => _accuracyAngle;
+            set
+            {
+                // Prevent negative value setter.
+                if (value < 0f) value = 0f;
+                _accuracyAngle = value;
+            }
+        }
+
+        #endregion
+
         #region Mono
 #if UNITY_EDITOR
         private void OnValidate()
@@ -40,22 +67,22 @@ namespace JT.FGP
         {
             // Initialize values.
             Vector2 right = transform.right;
+            Vector2 cPos = transform.position;
             float max = _accuracyAngle / 2f, min = -max;
+            Color color = Color.cyan;
 
             // Draw max angle shot.
-            Debug.DrawRay(transform.position, DirectionChangeByDegree(right, max) * _maxLengthDrawRay,
-                Color.cyan);
+            Debug.DrawRay(cPos, DirectionChangeByDegree(right, max) * _maxLengthDrawRay, color);
 
             // Draw min angle shot.
-            Debug.DrawRay(transform.position, DirectionChangeByDegree(right, min) * _maxLengthDrawRay,
-                Color.cyan);
+            Debug.DrawRay(cPos, DirectionChangeByDegree(right, min) * _maxLengthDrawRay, color);
         }
 #endif
         #endregion
 
         #region IShootCommand
 
-        public void Shoot(Bullet2DControl ammo)
+        public void Shoot(PhysicalAmmo2DControl ammo)
         {
             // Calculate facing forward of the weapon, set initial meta, and then shoot the bullet.
             ammo.transform.position = _shootPoint.position;

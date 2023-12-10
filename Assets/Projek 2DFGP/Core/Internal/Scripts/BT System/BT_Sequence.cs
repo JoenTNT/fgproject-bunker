@@ -6,6 +6,7 @@
  * Sequence nodes execute children in order until one child returns Failure or all children returns Success.
  */
 
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace JT
@@ -29,7 +30,6 @@ namespace JT
         // Runtime variable data.
         private BT_Execute _tempExecute = null;
         private int _currentIndex = -1;
-        private bool _loopRun = false;
         private bool _holdRun = false;
 
         #endregion
@@ -49,17 +49,21 @@ namespace JT
 
             // Set initial state.
             State = BT_State.Running;
-            _loopRun = true;
 
-            // Check index is final, then reset wack to zero.
-            if (_currentIndex == _sequences.Length - 1) _currentIndex = -1;
+            // Always add one when begin, check exceeding index, reset back to start index.
+            if (_currentIndex < 0) _currentIndex++;
+            else if (_sequences[_currentIndex].State == BT_State.Success) _currentIndex++;
+            else if (_sequences[_currentIndex].State == BT_State.Failed)
+            {
+                State = BT_State.Failed;
+                _currentIndex = -1;
+                return;
+            }
 
             // Loop through all executions.
-            while (_currentIndex <= _sequences.Length - 1)
+            int sequenceLen = _sequences.Length;
+            while (_currentIndex < sequenceLen)
             {
-                // Next process.
-                _currentIndex++;
-
                 // Execute sequence.
                 _tempExecute = _sequences[_currentIndex];
                 _tempExecute.Execute();
@@ -69,29 +73,35 @@ namespace JT
                     // Check if failed, finish the process with failed result.
                     case BT_State.Failed:
                         State = BT_State.Failed;
-                        _loopRun = _holdRun = false;
-                        break;
+                        _holdRun = false;
+                        goto CheckBroker;
 
                     // Check if running onto action, then pause the process.
                     case BT_State.Running when _tempExecute.IsAction:
                     case BT_State.Running when _tempExecute is IBTProcessHolder && ((IBTProcessHolder)_tempExecute).IsExecutionHold:
-                        _loopRun = false;
                         _holdRun = true;
-                        break;
-
-                    // All have been successfully run.
-                    case BT_State.Success when _currentIndex == _sequences.Length - 1:
-                        State = BT_State.Success;
-                        _loopRun = _holdRun = false;
-                        break;
+                        goto CheckBroker;
                 }
 
-                // Check loop run.
-                if (!_loopRun) break;
+                // Next process.
+                _currentIndex++;
+            }
+
+            // Check index is final, then reset sequence as success.
+            if (_currentIndex >= sequenceLen)
+            {
+                State = BT_State.Success;
+                _holdRun = false;
             }
 
             // Reset back to zero if only the execution is not being hold.
+        CheckBroker:
             if (!_holdRun) _currentIndex = -1;
+#if UNITY_EDITOR
+            if (DebugMode)
+                Debug.Log($"[DEBUG] Sequence Result, State: {State}; Latest Execution " +
+                    $"{_tempExecute} ({this})", ObjectRef);
+#endif
         }
 
         public override BT_Execute GetCopy(GameObject objRef)
@@ -110,7 +120,21 @@ namespace JT
             foreach (var seq in _sequences)
                 seq.OnInit();
         }
-
+#if UNITY_EDITOR
+        public override Dictionary<string, string> GetVariableKeys()
+        {
+            Dictionary<string, string> k = new();
+            int len = _sequences.Length;
+            for (int i = 0; i < len; i++)
+            {
+                var childKeys = _sequences[i].GetVariableKeys();
+                if (childKeys == null) continue;
+                foreach (var ck in childKeys)
+                    k[ck.Key] = ck.Value;
+            }
+            return k;
+        }
+#endif
         #endregion
 
         #region IBTTrunkNode

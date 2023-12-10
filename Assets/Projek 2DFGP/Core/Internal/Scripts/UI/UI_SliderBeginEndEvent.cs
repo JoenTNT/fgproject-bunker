@@ -24,11 +24,7 @@ namespace JT
 
         #region Mono
 
-        private void Awake()
-        {
-            if (_slider == null)
-                TryGetComponent(out _slider);
-        }
+        private void Awake() => TryGetComponent(out _slider);
 
         #endregion
 

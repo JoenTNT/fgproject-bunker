@@ -41,7 +41,20 @@ namespace JT
             /// <summary>
             /// Name of parameter.
             /// </summary>
-            public string ParameterName => _paramName;
+            public string ParameterName
+            {
+                get => _paramName;
+                set => _paramName = value;
+            }
+
+            /// <summary>
+            /// Type of parameter in string.
+            /// </summary>
+            public string ParameterType
+            {
+                get => _paramType;
+                set => _paramType = value;
+            }
 
             /// <summary>
             /// Parameter reference.
@@ -108,7 +121,39 @@ namespace JT
         /// </summary>
         /// <param name="bake"></param>
         public void RegisterBeforeBake(IBakedObject bake) => _bakeList.Add(bake);
+#if UNITY_EDITOR
+        public void RegisterAllKeys(Dictionary<string, string> keys)
+        {
+            // Recreate into dictionary.
+            Dictionary<string, ParamPair> p = new();
+            int len = _paramPairs.Length;
+            for (int i = 0; i < len; i++)
+            {
+                ParamPair pp = _paramPairs[i];
+                p[pp.ParameterName] = pp;
+            }
 
+            // Adding missing keys.
+            foreach (var key in keys)
+            {
+                if (p.ContainsKey(key.Key)) continue;
+                p[key.Key] = new ParamPair() {
+                    ParameterName = key.Key,
+                    ParameterType = key.Value,
+                };
+            }
+
+            // Reseting all parameters.
+            ParamPair[] newP = new ParamPair[p.Count];
+            int index = 0;
+            foreach (var updatedP in p)
+            {
+                newP[index] = updatedP.Value;
+                index++;
+            }
+            _paramPairs = newP;
+        }
+#endif
         #endregion
     }
 

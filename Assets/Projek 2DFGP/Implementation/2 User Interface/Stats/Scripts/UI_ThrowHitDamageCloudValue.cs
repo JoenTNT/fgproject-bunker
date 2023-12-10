@@ -45,18 +45,17 @@ namespace JT.FGP
         /// <summary>
         /// Rectangle transform of this game object.
         /// </summary>
-        public RectTransform rectTransform
-        {
-            get
-            {
-                if (_rectTransform != null) return _rectTransform;
-                return _rectTransform = (RectTransform)transform;
-            }
-        }
+        public RectTransform rectTransform => _rectTransform;
 
         #endregion
 
         #region Mono
+
+        private void Awake()
+        {
+            // Initialize data.
+            _rectTransform = (RectTransform)transform;
+        }
 
         private void Start()
         {
