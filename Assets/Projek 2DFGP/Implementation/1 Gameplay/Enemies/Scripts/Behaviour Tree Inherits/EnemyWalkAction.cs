@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -90,7 +91,18 @@ namespace JT.FGP
             // End of process.
             State = BT_State.Success;
         }
-
+#if UNITY_EDITOR
+        public override Dictionary<string, string> GetVariableKeys()
+            => new Dictionary<string, string>() {
+                { EC.CHASE_TARGET_KEY, typeof(ParamTransform).AssemblyQualifiedName },
+                { EC.WALK_SPEED_KEY, typeof(ParamFloat).AssemblyQualifiedName },
+                { EC.MOVE_TARGET_POSITION_KEY, typeof(ParamVector2).AssemblyQualifiedName },
+                { EC.ROTATION_FUNCTION_KEY, typeof(ParamComponent).AssemblyQualifiedName },
+                { EC.NAVMESH_AGENT_KEY, typeof(ParamComponent).AssemblyQualifiedName },
+                { EC.INSIDE_FOV_AREA_KEY, typeof(ParamComponent).AssemblyQualifiedName },
+                { EC.BLOCKER_LAYER_KEY, typeof(ParamLayerMask).AssemblyQualifiedName },
+            };
+#endif
         #endregion
 
         #region Main

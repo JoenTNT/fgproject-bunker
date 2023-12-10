@@ -30,6 +30,15 @@ namespace JT.FGP
 
         #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// Player entity ID.
+        /// </summary>
+        public string EntityID => _data.ID;
+
+        #endregion
+
         #region Mono
 
         private void Awake()

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -23,6 +24,9 @@ namespace JT.FGP
         [SerializeField]
         private BT_State _onCompleteLostTarget = BT_State.Failed;
 
+        [SerializeField]
+        private bool _neverLostTarget = false;
+
         // Initial variable references.
         private BakedDashboard _dashboard = null;
         private BakedParamFloat _chaseSpeedParam = null;
@@ -32,7 +36,9 @@ namespace JT.FGP
         private BakedParamFloat _attackRangeParam = null;
         private NavMeshAgent _agent = null;
         private InsideAreaObjectCollector2D _targetCollector = null;
-        private BakedParamLayerMask _blockerLayer = null;
+        private BakedParamLayerMask _blockerLayerParam = null;
+        private Animator _animator = null;
+        private BakedParamString _animMoveKeyParam = null;
 
         // Runtime variable data.
         private System.Func<Vector2, GameObject, bool> _isBlockedFunc = null;
@@ -60,11 +66,17 @@ namespace JT.FGP
             _rotateFunc = (DampingRotation2DFunc)@params[EC.ROTATION_FUNCTION_KEY];
             _agent = (NavMeshAgent)@params[EC.NAVMESH_AGENT_KEY];
             _targetCollector = (InsideAreaObjectCollector2D)@params[EC.INSIDE_FOV_AREA_KEY];
-            _blockerLayer = (BakedParamLayerMask)@params[EC.BLOCKER_LAYER_KEY];
+            _blockerLayerParam = (BakedParamLayerMask)@params[EC.BLOCKER_LAYER_KEY];
             _attackRangeParam = (BakedParamFloat)@params[EC.ATTACK_RANGE_KEY];
+            _animator = (Animator)@params[EC.ANIMATOR_KEY];
+            _animMoveKeyParam = (BakedParamString)@params[EC.ANIM_PARAM_MOVE_KEY];
 
             // Set initial data.
             _isBlockedFunc = IsTargetBlocked;
+
+            // Set initial settings.
+            _agent.updateRotation = false;
+            _agent.updateUpAxis = false;
         }
 
         public override void OnBeforeAction()
@@ -73,12 +85,15 @@ namespace JT.FGP
             _agent.speed = _chaseSpeedParam.Value;
             _agent.stoppingDistance = _attackRangeParam.Value;
             _isTargetLost = false;
+
+            // Begin run move animation.
+            _animator.SetBool(_animMoveKeyParam.Value, true);
         }
 
         public override void OnTickAction()
         {
             // Check for lost chase target.
-            if (_isTargetLost)
+            if (_isTargetLost && !_neverLostTarget)
             {
                 OnCheckNearestTarget();
                 OnTargetLost(_moveTargetPosParam);
@@ -96,6 +111,7 @@ namespace JT.FGP
             }
 
             // Check new target but nearer than the current target.
+            if (_neverLostTarget || _targetCollector == null) return;
             if (!_targetCollector.HasObject)
             {
                 SetTargetIsLost();
@@ -106,6 +122,26 @@ namespace JT.FGP
             OnCheckNearestTarget();
         }
 
+        public override void OnAfterAction()
+        {
+            // End run move animation.
+            _animator.SetBool(_animMoveKeyParam.Value, false);
+        }
+#if UNITY_EDITOR
+        public override Dictionary<string, string> GetVariableKeys()
+            => new Dictionary<string, string>() {
+                { EC.CHASE_TARGET_KEY, typeof(ParamTransform).AssemblyQualifiedName },
+                { EC.MOVE_TARGET_POSITION_KEY, typeof(ParamVector2).AssemblyQualifiedName },
+                { EC.CHASE_SPEED_KEY, typeof(ParamFloat).AssemblyQualifiedName },
+                { EC.ROTATION_FUNCTION_KEY, typeof(ParamComponent).AssemblyQualifiedName },
+                { EC.NAVMESH_AGENT_KEY, typeof(ParamComponent).AssemblyQualifiedName },
+                { EC.INSIDE_FOV_AREA_KEY, typeof(ParamComponent).AssemblyQualifiedName },
+                { EC.BLOCKER_LAYER_KEY, typeof(ParamLayerMask).AssemblyQualifiedName },
+                { EC.ATTACK_RANGE_KEY, typeof(ParamFloat).AssemblyQualifiedName },
+                { EC.ANIMATOR_KEY, typeof(ParamComponent).AssemblyQualifiedName },
+                { EC.ANIM_PARAM_MOVE_KEY, typeof(ParamString).AssemblyQualifiedName },
+            };
+#endif
         #endregion
 
         #region Main
@@ -115,11 +151,13 @@ namespace JT.FGP
             // Ignore empty target.
             if (target.Value == null) return;
 
-            Vector2 targetPos = target.Value.position;
-            _agent.SetDestination(targetPos);
+            _agent.SetDestination((Vector2)target.Value.position);
 
-            Vector2 thisObjPos = ObjectRef.transform.position;
-            _rotateFunc.SetTargetLookDirection(targetPos - thisObjPos);
+            // Ignore on direction zero only.
+            Vector2 desiredVel = _agent.desiredVelocity;
+            if (desiredVel == Vector2.zero) return;
+
+            _rotateFunc.SetTargetLookDirection(desiredVel);
             _rotateFunc.OnRotate();
         }
 
@@ -130,7 +168,7 @@ namespace JT.FGP
             Vector2 dir = _targetsPos - fromPos;
             float distance = Vector2.Distance(fromPos, _targetsPos);
             _blockedCount = Physics2D.RaycastNonAlloc(fromPos, dir.normalized, _hits,
-                distance, _blockerLayer.Value);
+                distance, _blockerLayerParam.Value);
 
             // Ignore if the target is blocked by something.
             if (_blockedCount > 0) return false;

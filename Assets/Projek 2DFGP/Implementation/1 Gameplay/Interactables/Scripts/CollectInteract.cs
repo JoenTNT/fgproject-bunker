@@ -8,7 +8,7 @@ namespace JT.FGP
     /// Handle taking item when interact.
     /// </summary>
     public class CollectInteract : InteractableComponent, ICollectable<IReadOnlyList<RuntimeInfoItem>>,
-        IRequiredReset
+        IHasRenderer<SpriteRenderer>, IRequiredReset 
     {
         #region Variable
 
@@ -24,7 +24,15 @@ namespace JT.FGP
         private int _initialAmount = -1; // Minus 1 means infinite.
 
         [SerializeField]
+        private bool _randomizeItemOnEnable = true; // TEMP: One single item only
+
+        [SerializeField]
         private bool _destroyOnCollect = false;
+
+        [Header("Optional")]
+        [SerializeField]
+        [Tooltip("Required if Randomize Item On Enable is ticked.")]
+        private ItemRegistrySO _itemRegistry = null;
 
         [Header("Game Events")]
         [SerializeField]
@@ -77,6 +85,10 @@ namespace JT.FGP
 
         private void OnEnable()
         {
+            // Check randomize item if required.
+            if (_randomizeItemOnEnable && _itemRegistry != null)
+                RegisterItem(new RuntimeInfoItem { ItemPreset = _itemRegistry.SelectRandom(), });
+
             // Initialize data.
             if (_items.Count <= 0)
             {
@@ -148,6 +160,14 @@ namespace JT.FGP
         #region ICollectable
 
         public IReadOnlyList<RuntimeInfoItem> Collect() => _items;
+
+        #endregion
+
+        #region IHasRenderer
+
+        public bool HasRenderer => _renderer != null;
+
+        public SpriteRenderer Renderer => _renderer;
 
         #endregion
 

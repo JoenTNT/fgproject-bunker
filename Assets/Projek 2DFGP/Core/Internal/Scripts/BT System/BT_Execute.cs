@@ -6,6 +6,7 @@
  * Single abstract node to execute in runtime whether it is a condition or action node.
  */
 
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace JT
@@ -83,5 +84,15 @@ namespace JT
         public abstract void OnInit();
 
         #endregion
+#if UNITY_EDITOR
+        #region Main
+
+        /// <summary>
+        /// Each nodes of behaviour tree has variable keys to get data from controller.
+        /// </summary>
+        public virtual Dictionary<string, string> GetVariableKeys() => null;
+
+        #endregion
+#endif
     }
 }

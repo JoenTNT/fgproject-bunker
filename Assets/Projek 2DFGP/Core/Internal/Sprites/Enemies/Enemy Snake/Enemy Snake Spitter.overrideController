@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Enemy Snake Spitter
+  m_Controller: {fileID: 9100000, guid: f940fc81704585343a6b3718ec9cd401, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 7b817fca2061155479573b7c212ed554, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: da32ef938bb5efb41b3c234067e5e608, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: b358921a61736df45ac98a6c86e2b97c, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 537a6e24d1b8a5d43a53068adca3b5ff, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 82888fdf01b896d4db5dbb89e8f9653f, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: f2803edcfa472bb4b993b35ed18dde47, type: 2}

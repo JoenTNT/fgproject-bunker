@@ -107,7 +107,7 @@ namespace JT.FGP
             }
 
             // Auto active and return object out from the pool.
-            _pool[_latestObjectIndex].gameObject.SetActive(_pool[_latestObjectIndex]);
+            _pool[_latestObjectIndex].SetActive(true);
             return _pool[_latestObjectIndex];
         }
 

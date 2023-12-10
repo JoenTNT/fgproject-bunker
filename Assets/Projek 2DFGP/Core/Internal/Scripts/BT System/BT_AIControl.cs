@@ -34,6 +34,15 @@ namespace JT
 
         #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// Root of behaviour tree.
+        /// </summary>
+        protected BT_Execute Root => _rootExecute;
+
+        #endregion
+
         #region Mono
 
         private void Start() => OnStartBehaviour();
@@ -87,9 +96,13 @@ namespace JT
                     _currentExecution = _rootExecute;
                 else if (_rootExecute is IBTTrunkNode)
                 {
-                    IBTTrunkNode trunk = (IBTTrunkNode)_rootExecute;
-                    if (trunk.NodeIndex == -1) _rootExecute.Execute(); // Re-execute invalid index.
-                    _currentExecution = trunk.GetCurrentLeafProcess();
+                    IBTTrunkNode trunkNode = (IBTTrunkNode)_rootExecute;
+                    if (trunkNode.NodeIndex < 0)
+                    {
+                        Update();
+                        return;
+                    }
+                    _currentExecution = trunkNode.GetCurrentLeafProcess();
                 }
 
                 // Convert to action.
@@ -115,10 +128,14 @@ namespace JT
 
         RunSingleAction:
             // Check if there's runtime action running, if not the abort process.
-            if (_runtimeAction == null || _runtimeAction.IsDone) return;
+            if (_runtimeAction == null) return;
 
             // Run current action running.
             _runtimeAction.OnTickAction();
+
+            // Check action process is done, then release the holder.
+            if (_runtimeAction.IsDone && _processHolder != null)
+                _processHolder.ReleaseHolder();
         }
 
         private void OnDisable()
@@ -155,5 +172,15 @@ namespace JT
         public virtual void OnInit() => _rootExecute.OnInit();
 
         #endregion
+#if UNITY_EDITOR
+        #region Main
+
+        [ContextMenu("Run Initialize On Editor")]
+        private void OnRunInitEditor() => RunInitOnEditor();
+
+        protected virtual void RunInitOnEditor() { }
+
+        #endregion
+#endif
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace JT.FGP
@@ -14,6 +15,13 @@ namespace JT.FGP
     public class EnemyWanderingAction : BT_Action
     {
         #region Variables
+
+        [Header("Settings")]
+        [SerializeField]
+        private BT_State _onObjectDetected = BT_State.Success;
+
+        [SerializeField]
+        private BT_State _onIdleTimeEnded = BT_State.Failed;
 
         // Initial variable references.
         private BakedDashboard _dashboard = null;
@@ -62,7 +70,7 @@ namespace JT.FGP
         public override void OnTickAction()
         {
             // Check interuption because enemy found target.
-            if (_targetCollector.HasObject)
+            if (_targetCollector != null && _targetCollector.HasObject)
             {
                 Vector2 thisObjPos = ObjectRef.transform.position;
                 _tempDetectedObj = _targetCollector.GetNearestObject(thisObjPos, IsTargetNotBlocked);
@@ -70,7 +78,7 @@ namespace JT.FGP
                 if (_tempDetectedObj != null)
                 {
                     _targetParam.Value = _tempDetectedObj.transform;
-                    State = BT_State.Failed;
+                    State = _onObjectDetected;
                     return;
                 }
             }
@@ -82,9 +90,20 @@ namespace JT.FGP
             _moveTargetPosParam.Value = GetRandWanderTargetPosition();
 
             // End action process.
-            State = BT_State.Success;
+            State = _onIdleTimeEnded;
         }
-
+#if UNITY_EDITOR
+        public override Dictionary<string, string> GetVariableKeys()
+            => new Dictionary<string, string>() {
+                { EC.CHASE_TARGET_KEY, typeof(ParamTransform).AssemblyQualifiedName },
+                { EC.IDLE_SECONDS_RANGE_KEY, typeof(ParamVector2).AssemblyQualifiedName },
+                { EC.WANDERING_PIVOT_POSITION_KEY, typeof(ParamVector2).AssemblyQualifiedName },
+                { EC.MAX_WANDERING_RADIUS_KEY, typeof(ParamFloat).AssemblyQualifiedName },
+                { EC.MOVE_TARGET_POSITION_KEY, typeof(ParamVector2).AssemblyQualifiedName },
+                { EC.INSIDE_FOV_AREA_KEY, typeof(ParamComponent).AssemblyQualifiedName },
+                { EC.BLOCKER_LAYER_KEY, typeof(ParamLayerMask).AssemblyQualifiedName },
+            };
+#endif
         #endregion
 
         #region Main

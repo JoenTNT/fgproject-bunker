@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace JT.FGP
@@ -24,6 +25,8 @@ namespace JT.FGP
         private EntityID _ownerID = null;
         private DampingRotation2DFunc _rotateFunc = null;
         private Shooter2DFunc _shooterFunc = null;
+        private Animator _animator = null;
+        private BakedParamString _attackTypeKeyParam = null;
 
         // Runtime variable data.
         private GameObjectPool _ammoPool = null;
@@ -51,6 +54,8 @@ namespace JT.FGP
             _shooterFunc = (Shooter2DFunc)@params[EC.SHOOTER_FUNCTION_KEY];
             _rotateFunc = (DampingRotation2DFunc)@params[EC.ROTATION_FUNCTION_KEY];
             _ownerID = (EntityID)@params[EC.OWNER_ID_KEY];
+            _animator = (Animator)@params[EC.ANIMATOR_KEY];
+            _attackTypeKeyParam = (BakedParamString)@params[EC.ANIM_PARAM_ATTACK_TYPE_KEY];
         }
 
         public override void OnBeforeAction()
@@ -68,6 +73,9 @@ namespace JT.FGP
             // Reset shoot attack declarations.
             _tempSecond = _attackAnticipationSecondParam.Value;
             _isShootDone = false;
+
+            // Begin run attack animation.
+            _animator.SetInteger(_attackTypeKeyParam.Value, 1);
         }
 
         public override void OnTickAction()
@@ -98,6 +106,25 @@ namespace JT.FGP
             State = BT_State.Success;
         }
 
+        public override void OnAfterAction()
+        {
+            // End run attack animation.
+            _animator.SetInteger(_attackTypeKeyParam.Value, 0);
+        }
+#if UNITY_EDITOR
+        public override Dictionary<string, string> GetVariableKeys()
+            => new Dictionary<string, string> {
+                { EC.SHOOTER_AMMO_TYPE_KEY, typeof(ParamString).AssemblyQualifiedName },
+                { EC.CHASE_TARGET_KEY, typeof(ParamTransform).AssemblyQualifiedName },
+                { EC.AFTER_ATTACK_REST_SECOND_KEY, typeof(ParamFloat).AssemblyQualifiedName },
+                { EC.ATTACK_ANTICIPATION_SECOND_KEY, typeof(ParamFloat).AssemblyQualifiedName },
+                { EC.SHOOTER_FUNCTION_KEY, typeof(ParamComponent).AssemblyQualifiedName },
+                { EC.ROTATION_FUNCTION_KEY, typeof(ParamComponent).AssemblyQualifiedName },
+                { EC.OWNER_ID_KEY, typeof(ParamComponent).AssemblyQualifiedName },
+                { EC.ANIMATOR_KEY, typeof(ParamComponent).AssemblyQualifiedName },
+                { EC.ANIM_PARAM_ATTACK_TYPE_KEY, typeof(ParamString).AssemblyQualifiedName },
+            };
+#endif
         #endregion
     }
 }

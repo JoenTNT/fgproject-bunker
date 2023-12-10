@@ -13,6 +13,14 @@ namespace JT.FGP
         [SerializeField]
         private Transform _pivotRotation = null;
 
+        [Header("Base Properties")]
+        [SerializeField]
+        private Vector3 _eulerOffset = Vector3.zero;
+
+        [SerializeField]
+        [Tooltip("Only works if the target pivot rotation object is child of any parent.")]
+        private bool _normalizeByParent = false;
+
         #endregion
 
         #region Properties
@@ -45,7 +53,15 @@ namespace JT.FGP
         /// </summary>
         /// <param name="zDegree">Target rotation degree</param>
         public void SetInstantRotationDegree(float zDegree)
-            => _pivotRotation.rotation = Quaternion.Euler(0f, 0f, zDegree);
+        {
+            // Set rotation by euler angle degree, then rotate by offset.
+            _pivotRotation.rotation = Quaternion.Euler(0f, 0f, zDegree);
+            _pivotRotation.Rotate(_eulerOffset);
+
+            // Normalize by parent rotation if needed.
+            if (_normalizeByParent && _pivotRotation.parent != null)
+                _pivotRotation.Rotate(-_pivotRotation.parent.eulerAngles);
+        }
 
         /// <summary>
         /// Set rotation using Z radian instantly.

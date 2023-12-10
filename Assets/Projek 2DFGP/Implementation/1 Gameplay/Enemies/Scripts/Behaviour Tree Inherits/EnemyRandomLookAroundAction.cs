@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -88,16 +89,22 @@ namespace JT.FGP
             // End of Process.
             State = _onFinishLookingAround;
         }
-
+#if UNITY_EDITOR
+        public override Dictionary<string, string> GetVariableKeys()
+            => new Dictionary<string, string>() {
+                { EC.ROTATION_FUNCTION_KEY, typeof(ParamComponent).AssemblyQualifiedName },
+                { EC.MOVE_TARGET_POSITION_KEY, typeof(ParamVector2).AssemblyQualifiedName },
+                { EC.STARING_SECOND_KEY, typeof(ParamFloat).AssemblyQualifiedName },
+                { EC.LOOK_AROUND_COUNT_KEY, typeof(ParamInt).AssemblyQualifiedName },
+                { EC.NAVMESH_AGENT_KEY, typeof(ParamComponent).AssemblyQualifiedName },
+            };
+#endif
         #endregion
 
         #region Main
 
         private void RandomTargetRotateDirection(DampingRotation2DFunc func)
-        {
-            Vector2 rc = Random.insideUnitCircle;
-            func.SetTargetLookDirection(rc);
-        }
+            => func.SetTargetLookDirection(Random.insideUnitCircle);
 
         #endregion
     }

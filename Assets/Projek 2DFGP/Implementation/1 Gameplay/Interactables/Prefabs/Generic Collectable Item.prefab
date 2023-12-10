@@ -95,6 +95,8 @@ GameObject:
   - component: {fileID: 3405898132247129440}
   - component: {fileID: 1307812346323625203}
   - component: {fileID: 3587139655456597500}
+  - component: {fileID: 1913105053353257633}
+  - component: {fileID: 5884206557327671479}
   m_Layer: 8
   m_Name: Generic Collectable Item
   m_TagString: Untagged
@@ -169,5 +171,38 @@ MonoBehaviour:
   _renderer: {fileID: 1867424324547627238}
   _items: []
   _initialAmount: 1
+  _randomizeItemOnEnable: 1
   _destroyOnCollect: 0
+  _itemRegistry: {fileID: 11400000, guid: 3ae89e04726541440a0edbe1caa568f3, type: 2}
   _onCollectItem: {fileID: 11400000, guid: ce876538ef1acbe468e92ea972c28729, type: 2}
+--- !u!114 &1913105053353257633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2033814521826135954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acc59f337907fa444815ba055beed742, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _onReleasePointCache: {fileID: 11400000, guid: a41bede307364174f8031802968a0858, type: 2}
+--- !u!114 &5884206557327671479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2033814521826135954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f775202ce03efd3458f1bc06c2754e8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _timer:
+    _initialTime: 30
+    _multiplier: 1
+    _timesUpOn: 0
+    _isCountingUp: 0
+  _disableOnly: 1

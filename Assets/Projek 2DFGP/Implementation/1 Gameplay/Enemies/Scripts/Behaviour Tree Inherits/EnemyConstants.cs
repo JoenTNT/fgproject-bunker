@@ -29,6 +29,12 @@ namespace JT.FGP
         public const string OWNER_ID_KEY = "Owner ID";
         public const string STARING_SECOND_KEY = "Staring Second";
         public const string LOOK_AROUND_COUNT_KEY = "Look Around Count";
+        public const string SPRITE_OBJECT_KEY = "Sprite Object";
+
+        // Animator properties.
+        public const string ANIMATOR_KEY = "Animator";
+        public const string ANIM_PARAM_MOVE_KEY = "Animator Move Parameter";
+        public const string ANIM_PARAM_ATTACK_TYPE_KEY = "Animator Attack Type Parameter";
 
         #endregion
     }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace JT.FGP
@@ -34,7 +35,12 @@ namespace JT.FGP
             // Get all references.
             _targetParam = (BakedParamTransform)_dashboard.Parameters[EnemyConstants.CHASE_TARGET_KEY];
         }
-
+#if UNITY_EDITOR
+        public override Dictionary<string, string> GetVariableKeys()
+            => new() {
+                { EnemyConstants.CHASE_TARGET_KEY, typeof(ParamTransform).AssemblyQualifiedName },
+            };
+#endif
         #endregion
     }
 }

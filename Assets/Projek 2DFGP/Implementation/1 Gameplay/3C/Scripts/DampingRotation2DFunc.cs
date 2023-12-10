@@ -17,6 +17,9 @@ namespace JT.FGP
         [SerializeField, Min(0.01f)]
         private float _damping = 1f;
 
+        [SerializeField, Min(0f)]
+        private float _snapDegreeBelow = .01f;
+
         //[SerializeField]
         //private bool _shortestPath = true;
 
@@ -65,7 +68,7 @@ namespace JT.FGP
             float step = _damping * Time.deltaTime;
             _currentDegree = Mathf.LerpAngle(_currentDegree, _targetDegree, step);
 
-            if (Mathf.Abs(_targetDegree - _currentDegree) < 0.01f)
+            if (Mathf.Abs(_targetDegree - _currentDegree) < _snapDegreeBelow)
                 _currentDegree = _targetDegree;
 
             SetInstantRotationDegree(_currentDegree);
@@ -85,12 +88,6 @@ namespace JT.FGP
         {
             // Assign target Z degree rotation.
             _targetDegree = zDegree;
-
-            //// Check required shortest path rotation.
-            //if (!_shortestPath) return;
-
-            //// Sync degree rotation value in euler angle.
-            //SyncShortestPath(ref _currentDegree, ref _targetDegree);
         }
 
         public void SetTargetRotationRadian(float zRadian)

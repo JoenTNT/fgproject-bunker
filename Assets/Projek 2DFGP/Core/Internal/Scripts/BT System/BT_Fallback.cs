@@ -7,6 +7,7 @@
  * These nodes are key in designing recovery behaviors for your autonomous agents.
  */
 
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace JT
@@ -51,11 +52,18 @@ namespace JT
             State = BT_State.Running;
 
             // Always add one when begin, check exceeding index, reset back to start index.
-            _currentIndex++;
-            if (_currentIndex >= _sequences.Length) _currentIndex = 0;
+            if (_currentIndex < 0) _currentIndex++;
+            else if (_sequences[_currentIndex].State == BT_State.Failed) _currentIndex++;
+            else if (_sequences[_currentIndex].State == BT_State.Success)
+            {
+                State = BT_State.Failed;
+                _currentIndex = -1;
+                return;
+            }
 
             // Loop through all executions.
-            while (_currentIndex < _sequences.Length)
+            int sequenceLen = _sequences.Length;
+            while (_currentIndex < sequenceLen)
             {
                 // Execute sequence.
                 _tempExecute = _sequences[_currentIndex];
@@ -81,7 +89,7 @@ namespace JT
             }
 
             // Check index is final, then reset sequence as failed.
-            if (_currentIndex >= _sequences.Length)
+            if (_currentIndex >= sequenceLen)
             {
                 State = BT_State.Failed;
                 _holdRun = false;
@@ -113,7 +121,21 @@ namespace JT
             foreach (var seq in _sequences)
                 seq.OnInit();
         }
-
+#if UNITY_EDITOR
+        public override Dictionary<string, string> GetVariableKeys()
+        {
+            Dictionary<string, string> k = new();
+            int len = _sequences.Length;
+            for (int i = 0; i < len; i++)
+            {
+                var childKeys = _sequences[i].GetVariableKeys();
+                if (childKeys == null) continue;
+                foreach (var ck in childKeys)
+                    k[ck.Key] = ck.Value;
+            }
+            return k;
+        }
+#endif
         #endregion
 
         #region IBTTrunkNode
